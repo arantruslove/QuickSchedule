@@ -1,0 +1,12 @@
+# Stage 1: Build the frontend
+FROM node:18 AS build
+WORKDIR /frontend
+COPY package*.json ./
+RUN npm install
+COPY . .
+RUN npm run build
+
+# Stage 2: Serve the frontend using Nginx
+FROM nginx:1.24.0
+COPY --from=build /frontend/dist /usr/share/nginx/html
+COPY nginx-static-3000.conf /etc/nginx/conf.d/nginx-static-3000.conf

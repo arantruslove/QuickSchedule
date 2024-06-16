@@ -1,0 +1,41 @@
+---
+- name: Test connectivity and install Git on EC2 instance
+  hosts: all
+  become: yes
+  tasks:
+    - name: Install git
+      package:
+        name: git
+        state: present
+
+    - name: Install docker
+      package:
+        name: docker
+        state: present
+
+    - name: Start docker service
+      service:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Add ec2-user to docker group
+      user:
+        name: ec2-user
+        groups: docker
+        append: yes
+
+    - name: Enable docker service to start on boot
+      systemd:
+        name: docker
+        enabled: yes
+        state: started
+        daemon_reload: yes
+
+    - name: Install docker compose
+      ansible.builtin.get_url:
+        url: "https://github.com/docker/compose/releases/latest/download/docker-compose-linux-x86_64"
+        dest: /usr/local/bin/docker-compose
+        mode: "0755"
+        force: no
+        validate_certs: yes

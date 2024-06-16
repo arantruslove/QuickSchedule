@@ -1,0 +1,13 @@
+.env
+.env.dev
+terraform.tfvars
+backend-config.hcl
+hosts.ini
+
+.terraform*
+*.rest
+
+node_modules/
+dist/
+__pycache__/
+env_site/

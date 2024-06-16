@@ -1,0 +1,59 @@
+version: "3.8"
+
+services:
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - django_admin_static:/nginx_static
+    depends_on:
+      - frontend
+      - backend
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: docker/Dockerfile.dev
+    volumes:
+      - ./frontend:/frontend
+      - node_modules:/frontend/node_modules
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: docker/Dockerfile.dev
+    command: ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+    volumes:
+      - ./backend:/backend
+      - django_admin_static:/backend/staticfiles
+    depends_on:
+      - db
+    environment:
+      - DEBUG=True
+      - TRUSTED_ORIGINS=http://localhost
+      - ALLOWED_HOSTS=localhost
+      - EMAIL_BACKEND=django.core.mail.backends.console.EmailBackend
+      - DB_NAME=test_database
+      - DB_USER=test_user
+      - DB_PASSWORD=test_password
+      - DB_HOST=db
+      - DB_PORT=5432
+      - SECRET_KEY=dev-secret-key
+
+  db:
+    image: postgres:16.3
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=test_database
+      - POSTGRES_USER=test_user
+      - POSTGRES_PASSWORD=test_password
+
+volumes:
+  pgdata:
+  node_modules:
+  django_admin_static:  

@@ -1,0 +1,46 @@
+version: "3.8"
+
+services:
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    volumes:
+      - django_admin_static:/nginx_static # Serve django admin static files
+    depends_on:
+      - frontend
+      - backend
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: docker/Dockerfile.prod
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: docker/Dockerfile.prod
+    volumes:
+      - django_admin_static:/backend/staticfiles # Django admin static files
+    environment:
+      - DEBUG=False
+      - SECRET_KEY=${SECRET_KEY:?}
+      - TRUSTED_ORIGINS=${TRUSTED_ORIGINS:?}
+      - ALLOWED_HOSTS=${ALLOWED_HOSTS:?}
+      - EMAIL_BACKEND=${EMAIL_BACKEND:?}
+      - EMAIL_HOST=${EMAIL_HOST:?}
+      - EMAIL_HOST_USER=${EMAIL_HOST_USER:?}
+      - EMAIL_HOST_PASSWORD=${EMAIL_HOST_PASSWORD:?}
+      - DB_HOST=${DB_HOST:?}
+      - DB_PORT=${DB_PORT:?}
+      - DB_NAME=${DB_NAME:?}
+      - DB_USER=${DB_USER:?}
+      - DB_PASSWORD=${DB_PASSWORD:?}
+
+    env_file:
+      - .env
+
+volumes:
+ django_admin_static:
