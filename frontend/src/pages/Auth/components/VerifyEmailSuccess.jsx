@@ -1,13 +1,17 @@
 import { Container, Row, Col, Card, Form, Button } from "react-bootstrap";
 import { useNavigate } from "react-router";
 
+import Logo from "../../../components/Logo";
+
 function verifyEmailSuccess() {
   const navigate = useNavigate();
   return (
     <Container className="mt-3">
-      <Row className="justify-content-center mb-2">
+      <Row className="justify-content-center">
         <Col className="text-center">
-          <h1 className="display-5">App Name Placholder</h1>
+          <h3>
+            <Logo />
+          </h3>
         </Col>
       </Row>
       <Row className="justify-content-center">

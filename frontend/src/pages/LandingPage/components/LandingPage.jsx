@@ -2,12 +2,16 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
+import Logo from "../../../components/Logo";
+
 function LandingPage() {
   return (
     <Container fluid className="min-vh-100 d-flex align-items-center bg-light">
       <Row className="justify-content-md-center">
         <Col md={8} className="text-center">
-          <h1 className="display-4 fw-bold">App Name Placeholder</h1>
+          <h1 className="display-6">
+            <Logo />
+          </h1>
           <p className="lead mt-4">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
             nec neque ipsum. Phasellus hendrerit blandit diam, ut scelerisque

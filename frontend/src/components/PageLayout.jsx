@@ -1,6 +1,8 @@
 import React from "react";
 import { Container, Row, Col, Nav, Card } from "react-bootstrap";
 
+import Logo from "./Logo";
+
 function PageLayout() {
   const sidebarStyle = {
     backgroundColor: "#F8FAFD",
@@ -17,22 +19,6 @@ function PageLayout() {
     boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
   };
 
-  const brandStyle = {
-    marginBottom: "30px",
-    fontWeight: "bold",
-    fontSize: "1.5em",
-    textAlign: "center",
-    fontFamily: "'Montserrat', sans-serif",
-  };
-
-  const scheduleStyle = {
-    color: "#007BFF", // Blue
-  };
-
-  const quickStyle = {
-    color: "#28A745", // Green
-  };
-
   return (
     <Container fluid>
       <Row className="vh-100">
@@ -45,10 +31,7 @@ function PageLayout() {
           style={sidebarStyle}
         >
           {/* Brand Area */}
-          <div style={brandStyle}>
-            <span style={quickStyle}>Quick</span>
-            <span style={scheduleStyle}>Schedule</span>
-          </div>
+          <Logo />
 
           <Nav className="flex-column" variant="pills">
             <Nav.Item>
@@ -79,10 +62,7 @@ function PageLayout() {
           {/* Top Section within Main Content */}
           <Row style={topbarStyle}>
             <Col>
-              <div style={brandStyle}>
-                <span style={quickStyle}>Quick</span>
-                <span style={scheduleStyle}>Schedule</span>
-              </div>
+              <Logo />
             </Col>
           </Row>
 

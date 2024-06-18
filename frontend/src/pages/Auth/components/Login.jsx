@@ -7,6 +7,8 @@ import Card from "react-bootstrap/Card";
 import Nav from "react-bootstrap/Nav";
 import { Link } from "react-router-dom";
 
+import Logo from "../../../components/Logo";
+
 function Login({
   email,
   password,
@@ -26,9 +28,11 @@ function Login({
       className="align-items-center justify-content-center"
       style={{ minHeight: "100vh" }}
     >
-      <Row className="justify-content-center mb-3 mt-3">
+      <Row className="justify-content-center  mt-3">
         <Col className="text-center">
-          <h1 className="display-5">App Name Placeholder</h1>
+          <h3>
+            <Logo />
+          </h3>
         </Col>
       </Row>
       <Row>

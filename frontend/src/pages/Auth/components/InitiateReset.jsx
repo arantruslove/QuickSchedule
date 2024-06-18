@@ -5,6 +5,8 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Card from "react-bootstrap/Card";
 
+import Logo from "../../../components/Logo";
+
 function InitiateReset({
   inputText,
   isEmailUnknown,
@@ -17,9 +19,11 @@ function InitiateReset({
       className="align-items-center justify-content-center"
       style={{ minHeight: "100vh" }}
     >
-      <Row className="justify-content-center mb-3 mt-3">
+      <Row className="justify-content-center mt-3">
         <Col className="text-center">
-          <h1 className="display-5">App Name Placholder</h1>
+          <h3>
+            <Logo />
+          </h3>
         </Col>
       </Row>
       <Row>
