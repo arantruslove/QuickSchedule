@@ -1,5 +1,15 @@
 import React from "react";
-import { Container, Row, Col, Nav, Card, Form, Button } from "react-bootstrap";
+import {
+  Container,
+  Row,
+  Col,
+  Nav,
+  Card,
+  Form,
+  Button,
+  Navbar,
+  NavDropdown,
+} from "react-bootstrap";
 import Logo from "./Logo"; // Ensure the path is correct based on your directory structure
 
 function PageLayout() {
@@ -21,12 +31,32 @@ function PageLayout() {
   return (
     <Container fluid>
       <Row className="vh-100">
+        {/* Top Navbar for mobile */}
+        <Navbar bg="light" expand="lg" className="d-md-none">
+          <Container>
+            <Navbar.Brand href="#home">
+              <Logo />
+            </Navbar.Brand>
+            <Navbar.Toggle aria-controls="basic-navbar-nav" />
+            <Navbar.Collapse id="basic-navbar-nav">
+              <Nav className="me-auto">
+                <Nav.Link href="#home">Home</Nav.Link>
+                <Nav.Link href="#link1">Link 1</Nav.Link>
+                <Nav.Link href="#link2">Link 2</Nav.Link>
+                <Nav.Link href="#disabled" disabled>
+                  Disabled
+                </Nav.Link>
+              </Nav>
+            </Navbar.Collapse>
+          </Container>
+        </Navbar>
+
         {/* Sidebar */}
         <Col
           xs={3}
           md={3}
           lg={2}
-          className="sidebar d-flex flex-column"
+          className="sidebar d-none d-md-flex flex-column"
           style={sidebarStyle}
         >
           {/* Brand Area */}
@@ -57,9 +87,9 @@ function PageLayout() {
         </Col>
 
         {/* Main Content */}
-        <Col xs={9} md={9} lg={10} className="content vh-100">
+        <Col xs={12} md={9} lg={10} className="content vh-100">
           {/* Top Section within Main Content */}
-          <Row style={topbarStyle}>
+          <Row style={topbarStyle} className="d-none d-md-flex">
             <Col>
               <Logo />
             </Col>
