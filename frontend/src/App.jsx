@@ -11,6 +11,7 @@ import VerifyEmailSuccess from "./pages/Auth/components/VerifyEmailSuccess";
 import AuthProvider from "./authentication/AuthProvider";
 import ResetPasswordContainer from "./pages/Auth/containers/ResetPasswordContainer";
 import InitiateResetContainer from "./pages/Auth/containers/InitiateResetContainer";
+import PageLayout from "./components/PageLayout";
 
 function App() {
   return (
@@ -38,6 +39,7 @@ function App() {
         />
         <Route path="/reset-password/*" element={<ResetPasswordContainer />} />
         <Route path="*" element={<PageNotFound />} />
+        <Route path="/playground" element={<PageLayout />} />
       </Routes>
     </AuthProvider>
   );
