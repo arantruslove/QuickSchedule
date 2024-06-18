@@ -4,7 +4,8 @@ import { Container, Row, Col, Nav } from "react-bootstrap";
 function PageLayout() {
   const navbarStyle = {
     backgroundColor: "#F8FAFD",
-    padding: "20px",
+    padding: "10px 20px", // Adjust padding for content spacing
+    height: "60px", // Set the height of the top bar
   };
 
   const brandStyle = {
@@ -53,8 +54,19 @@ function PageLayout() {
 
         {/* Main Content */}
         <Col xs={12} md={9} lg={10} className="content vh-100">
-          <h1>Main Content</h1>
-          <p>This is the main content area.</p>
+          {/* Top Section within Main Content */}
+          <Row style={navbarStyle}>
+            <Col>
+              <div style={brandStyle}>Top Section</div>
+            </Col>
+          </Row>
+
+          <Row>
+            <Col>
+              <h1>Main Content</h1>
+              <p>This is the main content area.</p>
+            </Col>
+          </Row>
         </Col>
       </Row>
     </Container>
