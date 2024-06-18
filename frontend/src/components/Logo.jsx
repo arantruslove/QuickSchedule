@@ -1,19 +1,23 @@
-/**QuickSchedule Logo*/
+import React from "react";
+
 function Logo() {
   const brandStyle = {
-    marginBottom: "30px",
     fontWeight: "bold",
     fontSize: "1.5em",
     textAlign: "center",
     fontFamily: "'Montserrat', sans-serif",
-  };
-
-  const scheduleStyle = {
-    color: "#007BFF", // Green
+    marginBottom: "30px",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+    whiteSpace: "nowrap",
   };
 
   const quickStyle = {
-    color: "#28A745", // Blue
+    color: "#007BFF", // Blue
+  };
+
+  const scheduleStyle = {
+    color: "#28A745", // Green
   };
 
   return (
