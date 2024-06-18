@@ -1,17 +1,26 @@
-import React from "react";
-import { Container, Row, Col, Nav } from "react-bootstrap";
+import { Container, Row, Col, Nav, Card } from "react-bootstrap";
 
 function PageLayout() {
-  const navbarStyle = {
+  const sidebarStyle = {
     backgroundColor: "#F8FAFD",
-    padding: "10px 20px", // Adjust padding for content spacing
-    height: "60px", // Set the height of the top bar
+    padding: "20px",
+    height: "100vh", // Ensure the sidebar spans the full height of the viewport
+    borderRight: "1px solid #ddd",
+  };
+
+  const topbarStyle = {
+    backgroundColor: "#F8FAFD",
+    padding: "10px 20px",
+    height: "60px",
+    borderBottom: "1px solid #ddd",
+    boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
   };
 
   const brandStyle = {
     marginBottom: "30px",
     fontWeight: "bold",
     fontSize: "1.5em",
+    textAlign: "center",
   };
 
   return (
@@ -19,16 +28,16 @@ function PageLayout() {
       <Row className="vh-100">
         {/* Sidebar */}
         <Col
-          xs={12}
+          xs={3}
           md={3}
           lg={2}
-          className="sidebar vh-100 d-flex flex-column"
-          style={navbarStyle}
+          className="sidebar d-flex flex-column"
+          style={sidebarStyle}
         >
           {/* Brand Area */}
-          <div style={brandStyle}>My Brand</div>
+          <div style={brandStyle}>QuickSchedule</div>
 
-          <Nav className="flex-column">
+          <Nav className="flex-column" variant="pills">
             <Nav.Item>
               <Nav.Link href="#home" className="nav-link-custom">
                 Home
@@ -53,18 +62,25 @@ function PageLayout() {
         </Col>
 
         {/* Main Content */}
-        <Col xs={12} md={9} lg={10} className="content vh-100">
+        <Col xs={9} md={9} lg={10} className="content vh-100">
           {/* Top Section within Main Content */}
-          <Row style={navbarStyle}>
+          <Row style={topbarStyle}>
             <Col>
               <div style={brandStyle}>Top Section</div>
             </Col>
           </Row>
 
-          <Row>
+          <Row className="p-4">
             <Col>
-              <h1>Main Content</h1>
-              <p>This is the main content area.</p>
+              <Card>
+                <Card.Body>
+                  <Card.Title>Main Content</Card.Title>
+                  <Card.Text>
+                    This is the main content area. It is styled using
+                    Bootstrap's Card component for a cleaner look.
+                  </Card.Text>
+                </Card.Body>
+              </Card>
             </Col>
           </Row>
         </Col>
