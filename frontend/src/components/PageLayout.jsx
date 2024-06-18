@@ -1,3 +1,4 @@
+import React from "react";
 import { Container, Row, Col, Nav, Card } from "react-bootstrap";
 
 function PageLayout() {
@@ -21,6 +22,15 @@ function PageLayout() {
     fontWeight: "bold",
     fontSize: "1.5em",
     textAlign: "center",
+    fontFamily: "'Montserrat', sans-serif",
+  };
+
+  const scheduleStyle = {
+    color: "#007BFF", // Blue
+  };
+
+  const quickStyle = {
+    color: "#28A745", // Green
   };
 
   return (
@@ -35,7 +45,10 @@ function PageLayout() {
           style={sidebarStyle}
         >
           {/* Brand Area */}
-          <div style={brandStyle}>QuickSchedule</div>
+          <div style={brandStyle}>
+            <span style={quickStyle}>Quick</span>
+            <span style={scheduleStyle}>Schedule</span>
+          </div>
 
           <Nav className="flex-column" variant="pills">
             <Nav.Item>
@@ -66,7 +79,10 @@ function PageLayout() {
           {/* Top Section within Main Content */}
           <Row style={topbarStyle}>
             <Col>
-              <div style={brandStyle}>Top Section</div>
+              <div style={brandStyle}>
+                <span style={quickStyle}>Quick</span>
+                <span style={scheduleStyle}>Schedule</span>
+              </div>
             </Col>
           </Row>
 
