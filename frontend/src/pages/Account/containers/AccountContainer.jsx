@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 
 import Account from "../components/Account";
@@ -6,11 +6,27 @@ import { AuthContext } from "../../../authentication/AuthProvider";
 import {
   removeRefreshAccessTokens,
   deleteUser,
+  getAccountDetails,
 } from "../../../services/accountRequests";
 
 function AccountContainer() {
+  const [isLoading, setIsLoading] = useState(true);
+  const [email, setEmail] = useState("");
+
   const navigate = useNavigate();
   const { updateLoginStatus } = useContext(AuthContext);
+
+  useEffect(() => {
+    const effectFunction = async () => {
+      const response = await getAccountDetails();
+      const data = await response.json();
+      const email = data["email"];
+
+      setEmail(email);
+      setIsLoading(false);
+    };
+    effectFunction();
+  }, []);
 
   const handleLogoutClick = async () => {
     // Logs out the user
@@ -33,13 +49,18 @@ function AccountContainer() {
     }
   };
 
-  return (
-    <Account
-      onLogoutClick={handleLogoutClick}
-      onChangePasswordClick={handleChangePasswordClick}
-      onDeleteAccountClick={handleDeleteAccountClick}
-    />
-  );
+  if (isLoading) {
+    return null;
+  } else {
+    return (
+      <Account
+        email={email}
+        onLogoutClick={handleLogoutClick}
+        onChangePasswordClick={handleChangePasswordClick}
+        onDeleteAccountClick={handleDeleteAccountClick}
+      />
+    );
+  }
 }
 
 export default AccountContainer;

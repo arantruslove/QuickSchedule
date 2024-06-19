@@ -1,7 +1,8 @@
 import PageLayout from "../../../components/PageLayout";
-import { Card, Form, Button } from "react-bootstrap";
+import { Card, Button } from "react-bootstrap";
 
 function Account({
+  email,
   onLogoutClick,
   onChangePasswordClick,
   onDeleteAccountClick,
@@ -10,35 +11,31 @@ function Account({
     <PageLayout>
       <Card>
         <Card.Body>
-          <Card.Title>Account</Card.Title>
-          <Form>
-            <Form.Group>
-              <Form.Label className="d-block">Email address:</Form.Label>
-              <Form.Label className="d-block">user@example.com</Form.Label>
-            </Form.Group>
+          <Card.Title className="mb-3">Account</Card.Title>
+          <div className="mb-3">
+            <strong>Email address:</strong>
+            <div className="text-muted">{email}</div>
+          </div>
 
+          <div className="d-flex justify-content-start mt-4">
             <Button
               variant="secondary"
-              className="mt-3"
+              className="me-2"
               onClick={onLogoutClick}
             >
               Logout
             </Button>
             <Button
               variant="primary"
-              className="mt-3"
+              className="me-2"
               onClick={onChangePasswordClick}
             >
               Change Password
             </Button>
-            <Button
-              variant="danger"
-              className="mt-3"
-              onClick={onDeleteAccountClick}
-            >
+            <Button variant="danger" onClick={onDeleteAccountClick}>
               Delete Account
             </Button>
-          </Form>
+          </div>
         </Card.Body>
       </Card>
     </PageLayout>
