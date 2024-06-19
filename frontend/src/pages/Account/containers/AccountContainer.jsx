@@ -5,7 +5,6 @@ import Account from "../components/Account";
 import { AuthContext } from "../../../authentication/AuthProvider";
 import {
   removeRefreshAccessTokens,
-  initiatePasswordReset,
   deleteUser,
 } from "../../../services/accountRequests";
 
@@ -32,6 +31,7 @@ function AccountContainer() {
     if (response.ok) {
       await updateLoginStatus();
     }
+  };
 
   return (
     <Account
