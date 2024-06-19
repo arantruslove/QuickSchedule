@@ -1,18 +1,8 @@
 import React from "react";
-import {
-  Container,
-  Row,
-  Col,
-  Nav,
-  Card,
-  Form,
-  Button,
-  Navbar,
-  NavDropdown,
-} from "react-bootstrap";
+import { Container, Row, Col, Nav, Navbar } from "react-bootstrap";
 import Logo from "./Logo"; // Ensure the path is correct based on your directory structure
 
-function PageLayout() {
+function PageLayout({ children }) {
   const sidebarStyle = {
     backgroundColor: "#F8FAFD",
     padding: "20px",
@@ -39,13 +29,13 @@ function PageLayout() {
             </Navbar.Brand>
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav">
-              <Nav className="me-auto">
-                <Nav.Link href="#home">Home</Nav.Link>
-                <Nav.Link href="#link1">Link 1</Nav.Link>
-                <Nav.Link href="#link2">Link 2</Nav.Link>
-                <Nav.Link href="#disabled" disabled>
-                  Disabled
-                </Nav.Link>
+              <Nav className="flex-column" variant="pills">
+                <Nav.Link href="#home">Schedule</Nav.Link>
+                <Nav.Link href="#link1">Create Schedule</Nav.Link>
+                <Nav.Link href="#link2">All Courses</Nav.Link>
+                <Nav.Link href="#link3">Course Search</Nav.Link>
+                <Nav.Link href="#disabled">Create Course</Nav.Link>
+                <Nav.Link href="#account">Account</Nav.Link>
               </Nav>
             </Navbar.Collapse>
           </Container>
@@ -63,26 +53,12 @@ function PageLayout() {
           <Logo />
 
           <Nav className="flex-column" variant="pills">
-            <Nav.Item>
-              <Nav.Link href="#home" className="nav-link-custom">
-                Home
-              </Nav.Link>
-            </Nav.Item>
-            <Nav.Item>
-              <Nav.Link href="#link1" className="nav-link-custom">
-                Link 1
-              </Nav.Link>
-            </Nav.Item>
-            <Nav.Item>
-              <Nav.Link href="#link2" className="nav-link-custom">
-                Link 2
-              </Nav.Link>
-            </Nav.Item>
-            <Nav.Item>
-              <Nav.Link href="#disabled" className="nav-link-custom" disabled>
-                Disabled
-              </Nav.Link>
-            </Nav.Item>
+            <Nav.Link href="#home">Schedule</Nav.Link>
+            <Nav.Link href="#link1">Create Schedule</Nav.Link>
+            <Nav.Link href="#link2">All Courses</Nav.Link>
+            <Nav.Link href="#link3">Course Search</Nav.Link>
+            <Nav.Link href="#disabled">Create Course</Nav.Link>
+            <Nav.Link href="/account">Account</Nav.Link>
           </Nav>
         </Col>
 
@@ -96,39 +72,7 @@ function PageLayout() {
           </Row>
 
           <Row className="p-4">
-            <Col>
-              <Card>
-                <Card.Header as="h5">Form Title</Card.Header>
-                <Card.Body>
-                  <Card.Title>Main Content</Card.Title>
-                  <Card.Text>
-                    This is the main content area. It is styled using
-                    Bootstrap's Card component for a cleaner look.
-                  </Card.Text>
-
-                  <Form>
-                    <Form.Group controlId="formBasicEmail">
-                      <Form.Label>Email address</Form.Label>
-                      <Form.Control type="email" placeholder="Enter email" />
-                    </Form.Group>
-
-                    <Form.Group controlId="formBasicPassword" className="mt-3">
-                      <Form.Label>Password</Form.Label>
-                      <Form.Control type="password" placeholder="Password" />
-                    </Form.Group>
-
-                    <Form.Group controlId="formBasicCheckbox" className="mt-3">
-                      <Form.Check type="checkbox" label="Check me out" />
-                    </Form.Group>
-
-                    <Button variant="primary" type="submit" className="mt-3">
-                      Submit
-                    </Button>
-                  </Form>
-                </Card.Body>
-                <Card.Footer className="text-muted">2 days ago</Card.Footer>
-              </Card>
-            </Col>
+            <Col>{children}</Col>
           </Row>
         </Col>
       </Row>
