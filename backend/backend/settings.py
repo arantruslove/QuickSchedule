@@ -80,6 +80,7 @@ INSTALLED_APPS = [
     "corsheaders",
     # Custom apps
     "accounts",
+    "plans",
 ]
 
 MIDDLEWARE = [
