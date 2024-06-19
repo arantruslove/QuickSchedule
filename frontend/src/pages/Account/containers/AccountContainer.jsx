@@ -1,39 +1,30 @@
-import { useState, useEffect, useContext } from "react";
+import { useContext } from "react";
+import { useNavigate } from "react-router-dom";
 
-import {
-  deleteUser,
-  getAccountDetails,
-} from "../../../services/accountRequests";
-import { removeRefreshAccessTokens } from "../../../services/accountRequests";
-import { AuthContext } from "../../../authentication/AuthProvider";
 import Account from "../components/Account";
+import { AuthContext } from "../../../authentication/AuthProvider";
+import {
+  removeRefreshAccessTokens,
+  initiatePasswordReset,
+  deleteUser,
+} from "../../../services/accountRequests";
 
-/**Account information page container. */
 function AccountContainer() {
-  const [isLoading, setIsLoading] = useState(true);
-  const [email, setEmail] = useState("");
-
+  const navigate = useNavigate();
   const { updateLoginStatus } = useContext(AuthContext);
 
-  useEffect(() => {
-    const effectFunction = async () => {
-      const response = await getAccountDetails();
-      const data = await response.json();
-      setEmail(data["email"]);
-
-      setIsLoading(false);
-    };
-
-    effectFunction();
-  }, []);
-
-  const handleLogOutButtonClick = async () => {
-    // Logging out the user
+  const handleLogoutClick = async () => {
+    // Logs out the user
     await removeRefreshAccessTokens();
     await updateLoginStatus();
   };
 
-  const handleDeleteButtonClick = async () => {
+  const handleChangePasswordClick = () => {
+    // Navigates to initiate password reset page
+    navigate("/initiate-password-reset/");
+  };
+
+  const handleDeleteAccountClick = async () => {
     // Deletes the user's account and logs them out
     const response = await deleteUser();
 
@@ -41,19 +32,14 @@ function AccountContainer() {
     if (response.ok) {
       await updateLoginStatus();
     }
-  };
 
-  if (isLoading) {
-    return null;
-  } else {
-    return (
-      <Account
-        email={email}
-        onLogoutButtonClick={handleLogOutButtonClick}
-        onDeleteButtonClick={handleDeleteButtonClick}
-      />
-    );
-  }
+  return (
+    <Account
+      onLogoutClick={handleLogoutClick}
+      onChangePasswordClick={handleChangePasswordClick}
+      onDeleteAccountClick={handleDeleteAccountClick}
+    />
+  );
 }
 
 export default AccountContainer;

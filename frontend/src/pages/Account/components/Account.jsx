@@ -1,34 +1,47 @@
-import { useNavigate } from "react-router-dom";
-import { ListGroup, Button } from "react-bootstrap";
+import PageLayout from "../../../components/PageLayout";
+import { Card, Form, Button } from "react-bootstrap";
 
-/**Page component that displays account details.*/
-function Account({ email, onLogoutButtonClick, onDeleteButtonClick }) {
-  const navigate = useNavigate();
-
+function Account({
+  onLogoutClick,
+  onChangePasswordClick,
+  onDeleteAccountClick,
+}) {
   return (
-    <ListGroup>
-      <ListGroup.Item
-        as="li"
-        className="d-flex justify-content-between align-items-start"
-      >
-        <div className="ms-2 me-auto">
-          <div className="fw-bold">Email</div>
-          {email}
-        </div>
-      </ListGroup.Item>
-      <Button variant="secondary" onClick={onLogoutButtonClick}>
-        Logout
-      </Button>
-      <Button
-        variant="success"
-        onClick={() => navigate("/initiate-password-reset/")}
-      >
-        Change Password
-      </Button>
-      <Button variant="danger" onClick={onDeleteButtonClick}>
-        Delete Account
-      </Button>
-    </ListGroup>
+    <PageLayout>
+      <Card>
+        <Card.Body>
+          <Card.Title>Account</Card.Title>
+          <Form>
+            <Form.Group>
+              <Form.Label className="d-block">Email address:</Form.Label>
+              <Form.Label className="d-block">user@example.com</Form.Label>
+            </Form.Group>
+
+            <Button
+              variant="secondary"
+              className="mt-3"
+              onClick={onLogoutClick}
+            >
+              Logout
+            </Button>
+            <Button
+              variant="primary"
+              className="mt-3"
+              onClick={onChangePasswordClick}
+            >
+              Change Password
+            </Button>
+            <Button
+              variant="danger"
+              className="mt-3"
+              onClick={onDeleteAccountClick}
+            >
+              Delete Account
+            </Button>
+          </Form>
+        </Card.Body>
+      </Card>
+    </PageLayout>
   );
 }
 
