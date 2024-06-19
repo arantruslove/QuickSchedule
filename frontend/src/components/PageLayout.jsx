@@ -26,7 +26,7 @@ function PageLayout({ children }) {
         {/* Top Navbar for mobile */}
         <Navbar bg="light" expand="lg" className="d-md-none">
           <Container>
-            <Navbar.Brand href="#home">
+            <Navbar.Brand>
               <Logo />
             </Navbar.Brand>
             <Navbar.Toggle aria-controls="basic-navbar-nav" />

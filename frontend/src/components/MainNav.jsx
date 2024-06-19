@@ -20,36 +20,36 @@ function MainNav() {
         Home
       </Nav.Link>
       <Nav.Link
-        eventKey=""
+        eventKey="generate-schedule"
         onClick={() => {
-          navigate("/create-schedule");
+          navigate("/generate-schedule");
         }}
       >
-        Create Schedule
+        Generate Schedule
       </Nav.Link>
       <Nav.Link
-        eventKey="/all-courses"
+        eventKey="/all-plans"
         onClick={() => {
-          navigate("/all-courses");
+          navigate("/all-plans");
         }}
       >
-        All Courses
+        All Plans
       </Nav.Link>
       <Nav.Link
-        eventKey="/course-search"
+        eventKey="/search-plans"
         onClick={() => {
-          navigate("/course-search");
+          navigate("/search-plans");
         }}
       >
-        Course Search
+        Search Plans
       </Nav.Link>
       <Nav.Link
-        eventKey="/create-course"
+        eventKey="/create-plan"
         onClick={() => {
-          navigate("/create-course");
+          navigate("/create-plan");
         }}
       >
-        Create Course
+        Create Plan
       </Nav.Link>
       <Nav.Link eventKey="/account" onClick={() => navigate("/account")}>
         Account
