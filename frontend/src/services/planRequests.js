@@ -16,3 +16,9 @@ export async function createPrivatePlan(data) {
   const response = await apiClient.post(url, true, data);
   return response;
 }
+
+export async function getPrivatePlans() {
+  const url = `${BASE_URL}/private-plans/`;
+  const response = await apiClient.get(url, true);
+  return response;
+}
