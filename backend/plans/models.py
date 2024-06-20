@@ -11,6 +11,18 @@ class PrivatePlan(models.Model):
     to generate schedules.
     """
 
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+
     title = models.CharField()
-    user = models.ForeignKey(User, on_delete=models.CASCADE)  # Owner
     is_user_author = models.BooleanField()
+
+
+class Topic(models.Model):
+    """
+    Topic that is associated with a Plan instance.
+    """
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    private_plan = models.ForeignKey(PrivatePlan, on_delete=models.CASCADE)
+
+    title = models.CharField()
