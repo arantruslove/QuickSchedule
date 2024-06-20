@@ -5,7 +5,7 @@ import LandingPage from "./pages/LandingPage/components/LandingPage";
 import PageNotFound from "./pages/PageNotFound/PageNotFound";
 import LoginContainer from "./pages/Auth/containers/LoginContainer";
 import SignUpContainer from "./pages/Auth/containers/SignUpContainer";
-import AccountContainer from "./pages/Account/containers/AccountContainer";
+import AccountContainer from "./pages/AccountTab/containers/AccountContainer";
 import VerifyEmail from "./pages/Auth/components/VerifyEmail";
 import VerifyEmailSuccess from "./pages/Auth/components/VerifyEmailSuccess";
 import AuthProvider from "./authentication/AuthProvider";
@@ -13,6 +13,7 @@ import ResetPasswordContainer from "./pages/Auth/containers/ResetPasswordContain
 import InitiateResetContainer from "./pages/Auth/containers/InitiateResetContainer";
 import CreatePlanContainer from "./pages/CreatePlanTab/containers/CreatePlanContainer";
 import MainLayout from "./components/MainLayout";
+import PrivatePlanContainer from "./pages/CreatePlanTab/containers/PrivatePlanContainer";
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
           }
         >
           <Route path="/create-plan" element={<CreatePlanContainer />} />
+          <Route path="/create-plan/*" element={<PrivatePlanContainer />} />
           <Route path="/account" element={<AccountContainer />} />
         </Route>
 
