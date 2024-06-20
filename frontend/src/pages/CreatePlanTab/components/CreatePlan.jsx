@@ -1,12 +1,5 @@
 import React from "react";
-import {
-  Card,
-  Button,
-  InputGroup,
-  Form,
-  ListGroup,
-  Badge,
-} from "react-bootstrap";
+import { Card, Button, InputGroup, Form, ListGroup } from "react-bootstrap";
 
 function CreatePlan({ planTitle, onInputChange, onSubmitClick }) {
   return (
@@ -31,7 +24,7 @@ function CreatePlan({ planTitle, onInputChange, onSubmitClick }) {
           </Button>
         </InputGroup>
         <div style={{ overflowY: "auto", flexGrow: 1 }}>
-          <ListGroup as="ol" numbered>
+          <ListGroup as="ol">
             {[...Array(5).keys()].map((index) => (
               <ListGroup.Item
                 key={index}
@@ -40,11 +33,16 @@ function CreatePlan({ planTitle, onInputChange, onSubmitClick }) {
               >
                 <div className="ms-2 me-auto">
                   <div className="fw-bold">Subheading</div>
-                  Cras justo odio
+                  id: 1
                 </div>
-                <Badge bg="primary" pill>
-                  14
-                </Badge>
+                <Button
+                  bg="primary"
+                  size="sm"
+                  pill
+                  onClick={() => console.log("Badge has been clicked!")}
+                >
+                  Edit Title
+                </Button>
               </ListGroup.Item>
             ))}
           </ListGroup>
