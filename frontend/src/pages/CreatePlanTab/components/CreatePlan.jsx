@@ -52,6 +52,9 @@ function CreatePlan({
                   key={privatePlan["id"]}
                   as="li"
                   className="d-flex justify-content-between align-items-start"
+                  action="true"
+                  style={{ cursor: "pointer" }}
+                  onClick={() => console.log("Placeholder!")}
                 >
                   <div className="ms-2 me-auto">
                     <div className="fw-bold">{privatePlan["title"]}</div>
