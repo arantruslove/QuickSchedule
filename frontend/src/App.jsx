@@ -19,7 +19,6 @@ function App() {
     <AuthProvider value={true}>
       <Routes>
         {/* Private Routes */}
-
         <Route
           element={
             <PrivateRoute>
@@ -28,7 +27,6 @@ function App() {
           }
         >
           <Route path="/create-plan" element={<CreatePlanContainer />} />
-
           <Route path="/account" element={<AccountContainer />} />
         </Route>
 

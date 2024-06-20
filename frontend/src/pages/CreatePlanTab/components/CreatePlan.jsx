@@ -8,7 +8,7 @@ import {
   Badge,
 } from "react-bootstrap";
 
-function CreatePlan() {
+function CreatePlan({ planTitle, onInputChange, onSubmitClick }) {
   return (
     <Card style={{ height: "80vh" }}>
       <Card.Body
@@ -17,8 +17,18 @@ function CreatePlan() {
         <Card.Title className="mb-3">Create Plan</Card.Title>
         <InputGroup className="mb-3">
           <InputGroup.Text>Plan Title</InputGroup.Text>
-          <Form.Control placeholder="Enter plan title" />
-          <Button variant="outline-secondary">Submit</Button>
+          <Form.Control
+            placeholder="Enter plan title"
+            value={planTitle}
+            onChange={(event) => onInputChange(event.target.value)}
+          />
+          <Button
+            onClick={onSubmitClick}
+            variant="outline-secondary"
+            disabled={false}
+          >
+            Submit
+          </Button>
         </InputGroup>
         <div style={{ overflowY: "auto", flexGrow: 1 }}>
           <ListGroup as="ol" numbered>
