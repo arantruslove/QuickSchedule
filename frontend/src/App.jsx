@@ -11,21 +11,26 @@ import VerifyEmailSuccess from "./pages/Auth/components/VerifyEmailSuccess";
 import AuthProvider from "./authentication/AuthProvider";
 import ResetPasswordContainer from "./pages/Auth/containers/ResetPasswordContainer";
 import InitiateResetContainer from "./pages/Auth/containers/InitiateResetContainer";
-import PageLayout from "./components/PageLayout";
+import CreatePlanContainer from "./pages/CreatePlanTab/containers/CreatePlanContainer";
+import MainLayout from "./components/MainLayout";
 
 function App() {
   return (
     <AuthProvider value={true}>
       <Routes>
         {/* Private Routes */}
+
         <Route
-          path="/account"
           element={
             <PrivateRoute>
-              <AccountContainer />
+              <MainLayout />
             </PrivateRoute>
           }
-        />
+        >
+          <Route path="/create-plan" element={<CreatePlanContainer />} />
+
+          <Route path="/account" element={<AccountContainer />} />
+        </Route>
 
         {/* Public Routes */}
         <Route path="" element={<LandingPage />} />
@@ -39,7 +44,6 @@ function App() {
         />
         <Route path="/reset-password/*" element={<ResetPasswordContainer />} />
         <Route path="*" element={<PageNotFound />} />
-        <Route path="/playground" element={<PageLayout />} />
       </Routes>
     </AuthProvider>
   );

@@ -1,10 +1,11 @@
 import React from "react";
+import { Outlet } from "react-router-dom";
 import { Container, Row, Col, Navbar } from "react-bootstrap";
 import Logo from "./Logo"; // Ensure the path is correct based on your directory structure
 
 import MainNav from "./MainNav";
 
-function PageLayout({ children }) {
+function MainLayout() {
   const sidebarStyle = {
     backgroundColor: "#F8FAFD",
     padding: "20px",
@@ -59,7 +60,9 @@ function PageLayout({ children }) {
           </Row>
 
           <Row className="p-4">
-            <Col>{children}</Col>
+            <Col>
+              <Outlet />
+            </Col>
           </Row>
         </Col>
       </Row>
@@ -67,4 +70,4 @@ function PageLayout({ children }) {
   );
 }
 
-export default PageLayout;
+export default MainLayout;
