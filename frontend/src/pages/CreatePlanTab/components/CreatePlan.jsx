@@ -17,10 +17,8 @@ function CreatePlan() {
         <Card.Title className="mb-3">Create Plan</Card.Title>
         <InputGroup className="mb-3">
           <InputGroup.Text>Plan Title</InputGroup.Text>
-          <Form.Control placeholder="Recipient's username" />
-          <Button variant="outline-secondary" id="button-addon2">
-            Button
-          </Button>
+          <Form.Control placeholder="Enter plan title" />
+          <Button variant="outline-secondary">Submit</Button>
         </InputGroup>
         <div style={{ overflowY: "auto", flexGrow: 1 }}>
           <ListGroup as="ol" numbered>
