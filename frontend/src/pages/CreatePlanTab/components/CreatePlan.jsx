@@ -14,6 +14,7 @@ function CreatePlan({
   privatePlansData,
   onInputChange,
   onSubmitClick,
+  onTabClick,
 }) {
   return (
     <Card style={{ height: "80vh" }}>
@@ -54,7 +55,7 @@ function CreatePlan({
                   className="d-flex justify-content-between align-items-start"
                   action="true"
                   style={{ cursor: "pointer" }}
-                  onClick={() => console.log("Placeholder!")}
+                  onClick={() => onTabClick(privatePlan["id"])}
                 >
                   <div className="ms-2 me-auto">
                     <div className="fw-bold">{privatePlan["title"]}</div>

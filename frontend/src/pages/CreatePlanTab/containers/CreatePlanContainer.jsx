@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 import CreatePlan from "../components/CreatePlan";
 import {
@@ -10,6 +11,8 @@ function CreatePlanContainer() {
   const [isLoading, setIsLoading] = useState(true);
   const [planTitle, setPlanTitle] = useState("");
   const [privatePlansData, setPrivatePlansData] = useState([]);
+
+  const navigate = useNavigate();
 
   const getPrivatePlansData = async () => {
     const response = await getPrivatePlans();
@@ -37,6 +40,10 @@ function CreatePlanContainer() {
     setPlanTitle("");
   };
 
+  const handleTabClick = (privatePlanId) => {
+    navigate(`/create-plan/${privatePlanId}`);
+  };
+
   return (
     <CreatePlan
       isLoading={isLoading}
@@ -44,6 +51,7 @@ function CreatePlanContainer() {
       privatePlansData={privatePlansData}
       onInputChange={handleInputChange}
       onSubmitClick={handleSubmitClick}
+      onTabClick={handleTabClick}
     />
   );
 }
