@@ -11,8 +11,6 @@ class PrivatePlan(models.Model):
     to generate schedules.
     """
 
-    name = models.CharField()
+    title = models.CharField()
     user = models.ForeignKey(User, on_delete=models.CASCADE)  # Owner
     is_user_author = models.BooleanField()
-
-

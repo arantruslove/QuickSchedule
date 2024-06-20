@@ -6,7 +6,7 @@ const BASE_URL = `${BACKEND_URL}/plans`;
 /**Create a new PrivatePlan instance
  *
  * Requires the fields:
- * - name
+ * - title
  *
  */
 export async function createPrivatePlan(data) {

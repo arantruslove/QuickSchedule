@@ -12,7 +12,7 @@ function CreatePlanContainer() {
   };
 
   const handleSubmitClick = async () => {
-    await createPrivatePlan({ name: planTitle });
+    await createPrivatePlan({ title: planTitle });
     setPlanTitle("");
   };
 
