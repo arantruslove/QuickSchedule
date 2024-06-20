@@ -49,18 +49,15 @@ function AccountContainer() {
     }
   };
 
-  if (isLoading) {
-    return null;
-  } else {
-    return (
-      <Account
-        email={email}
-        onLogoutClick={handleLogoutClick}
-        onChangePasswordClick={handleChangePasswordClick}
-        onDeleteAccountClick={handleDeleteAccountClick}
-      />
-    );
-  }
+  return (
+    <Account
+      isLoading={isLoading}
+      email={email}
+      onLogoutClick={handleLogoutClick}
+      onChangePasswordClick={handleChangePasswordClick}
+      onDeleteAccountClick={handleDeleteAccountClick}
+    />
+  );
 }
 
 export default AccountContainer;
