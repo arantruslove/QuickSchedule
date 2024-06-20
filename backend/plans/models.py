@@ -23,6 +23,6 @@ class Topic(models.Model):
     """
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    private_plan = models.ForeignKey(PrivatePlan, on_delete=models.CASCADE)
+    private_plan = models.ForeignKey(PrivatePlan, on_delete=models.CASCADE, null=True)
 
     title = models.CharField()
