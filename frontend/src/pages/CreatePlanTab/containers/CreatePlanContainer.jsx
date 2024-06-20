@@ -15,9 +15,11 @@ function CreatePlanContainer() {
     const response = await getPrivatePlans();
     const data = await response.json();
 
-    // Ordering from most recent to least
-    setPrivatePlansData(data.reverse());
-    setIsLoading(false);
+    if (response.ok) {
+      // Ordering from most recent to least
+      setPrivatePlansData(data.reverse());
+      setIsLoading(false);
+    }
   };
 
   useEffect(() => {
