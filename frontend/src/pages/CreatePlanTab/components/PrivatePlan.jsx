@@ -23,6 +23,7 @@ function PrivatePlan({
   onSubmitClick,
   onEditTopicHours,
   onEditTopicTitle,
+  onDeleteTopic,
 }) {
   const [displayEditModal, setDisplayEditModal] = useState(false);
   const [modalId, setModalId] = useState(0);
@@ -135,7 +136,11 @@ function PrivatePlan({
                       >
                         Edit Title
                       </Button>
-                      <Button variant="danger" size="sm">
+                      <Button
+                        variant="danger"
+                        size="sm"
+                        onClick={() => onDeleteTopic(topic["id"])}
+                      >
                         Delete
                       </Button>
                     </ButtonGroup>

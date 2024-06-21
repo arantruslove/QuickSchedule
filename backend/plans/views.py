@@ -39,7 +39,7 @@ def private_plan_list_view(request):
         return Response(serializer.data)
 
 
-@api_view(["POST", "PATCH"])
+@api_view(["POST", "PATCH", "DELETE"])
 @permission_classes([IsAuthenticated])
 def topic_view(request, pk=None):
 
@@ -60,7 +60,13 @@ def topic_view(request, pk=None):
         """Partially updates a Topic instance by pk."""
         data = request.data
 
-        topic = Topic.objects.get(pk=pk)
+        try:
+            topic = Topic.objects.get(pk=pk)
+        except:
+            return Response(
+                {"detail": f"Topic {pk} does not exist."},
+                status=status.HTTP_404_NOT_FOUND,
+            )
         if request.user != topic.user:
             return Response(
                 {"detail": "You are not authorized to view this resource."},
@@ -74,6 +80,26 @@ def topic_view(request, pk=None):
             return Response({"detail": "Successfully updated the topic."})
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    if request.method == "DELETE":
+        """Deletes a Topic instance by pk."""
+        try:
+            topic = Topic.objects.get(pk=pk)
+        except:
+            return Response(
+                {"detail": f"Topic {pk} does not exist."},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+
+        # Enforcing authorization
+        if request.user != topic.user:
+            return Response(
+                {"detail": "You are not authorized to view this resource."},
+                status=status.HTTP_403_FORBIDDEN,
+            )
+
+        topic.delete()
+        return Response({"detail": f"Topic {pk} has been deleted."})
 
 
 @api_view(["GET"])

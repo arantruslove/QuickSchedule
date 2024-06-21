@@ -44,7 +44,7 @@ export async function getTopicsofPrivatePlan(privatePlanId) {
   return response;
 }
 
-/**Creates a new Topic associated with the PrivatePlan
+/**Updates a Topic by pk.
  *
  * Updatable fields :
  * - title
@@ -53,5 +53,12 @@ export async function getTopicsofPrivatePlan(privatePlanId) {
 export async function updateTopic(pk, data) {
   const url = `${BASE_URL}/topic/${pk}/`;
   const response = await apiClient.patch(url, true, data);
+  return response;
+}
+
+/**Deletes a Topic by pk. */
+export async function deleteTopic(pk) {
+  const url = `${BASE_URL}/topic/${pk}/`;
+  const response = await apiClient.delete(url, true);
   return response;
 }

@@ -5,6 +5,7 @@ import PrivatePlan from "../components/PrivatePlan";
 import { getLastUrlSegment } from "../../../services/utils";
 import {
   createTopic,
+  deleteTopic,
   getTopicsofPrivatePlan,
   updateTopic,
 } from "../../../services/planRequests";
@@ -70,6 +71,14 @@ function PrivatePlanContainer() {
     }
   };
 
+  const handleDeleteTopic = async (topicId) => {
+    const response = await deleteTopic(topicId);
+
+    if (response.ok) {
+      getTopicsData();
+    }
+  };
+
   return (
     <PrivatePlan
       isLoading={isLoading}
@@ -81,6 +90,7 @@ function PrivatePlanContainer() {
       onSubmitClick={handleSubmitClick}
       onEditTopicHours={handleEditTopicHours}
       onEditTopicTitle={handleEditTopicTitle}
+      onDeleteTopic={handleDeleteTopic}
     />
   );
 }
