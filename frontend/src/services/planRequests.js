@@ -17,8 +17,22 @@ export async function createPrivatePlan(data) {
   return response;
 }
 
+/**Gets the list of PrivatePlans that are associated with the user.*/
 export async function getPrivatePlans() {
   const url = `${BASE_URL}/private-plans/`;
   const response = await apiClient.get(url, true);
+  return response;
+}
+
+/**Creates a new Topic associated with the PrivatePlan
+ *
+ * Requires the fields:
+ * - private_plan
+ * - title
+ *
+ */
+export async function createTopic(data) {
+  const url = `${BASE_URL}/topic/`;
+  const response = await apiClient.post(url, true, data);
   return response;
 }
