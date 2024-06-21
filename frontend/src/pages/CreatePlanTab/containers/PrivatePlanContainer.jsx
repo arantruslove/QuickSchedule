@@ -52,6 +52,15 @@ function PrivatePlanContainer() {
     }
   };
 
+  const handleEditTopicHours = async (hours, topicId) => {
+    const data = { hours: hours };
+    const response = await updateTopic(topicId, data);
+
+    if (response.ok) {
+      getTopicsData();
+    }
+  };
+
   const handleEditTopicTitle = async (title, topicId) => {
     const data = { title: title };
     const response = await updateTopic(topicId, data);
@@ -70,6 +79,7 @@ function PrivatePlanContainer() {
       onNewTopicTitleChange={handleNewTopicTitleChange}
       onNewTopicHoursClick={handleNewTopicHoursClick}
       onSubmitClick={handleSubmitClick}
+      onEditTopicHours={handleEditTopicHours}
       onEditTopicTitle={handleEditTopicTitle}
     />
   );

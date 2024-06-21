@@ -21,6 +21,7 @@ function PrivatePlan({
   onNewTopicTitleChange,
   onNewTopicHoursClick,
   onSubmitClick,
+  onEditTopicHours,
   onEditTopicTitle,
 }) {
   const [displayEditModal, setDisplayEditModal] = useState(false);
@@ -93,7 +94,6 @@ function PrivatePlan({
                     key={topic["id"]}
                     as="li"
                     className="d-flex justify-content-between align-items-start"
-                    onClick={() => console.log("Placeholder!")}
                   >
                     <div className="ms-2 me-auto">
                       <div className="fw-bold">{topic["title"]}</div>
@@ -116,7 +116,9 @@ function PrivatePlan({
                           {hourOptions.map((hours, index) => (
                             <Dropdown.Item
                               key={index}
-                              onClick={() => onNewTopicHoursClick(hours)}
+                              onClick={() =>
+                                onEditTopicHours(hours, topic["id"])
+                              }
                             >
                               {hours}
                             </Dropdown.Item>
