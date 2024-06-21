@@ -87,7 +87,7 @@ def topic_list_view(request):
                     status=status.HTTP_403_FORBIDDEN,
                 )
 
-            topics = Topic.objects.filter(private_plan=private_plan_id)
+            topics = Topic.objects.filter(private_plan=private_plan_id).order_by("id")
             serializer = TopicSerializer(topics, many=True)
 
         return Response(serializer.data)
