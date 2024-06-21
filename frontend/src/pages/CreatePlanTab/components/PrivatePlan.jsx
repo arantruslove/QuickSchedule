@@ -20,6 +20,10 @@ function PrivatePlan({
   const placeholderData = [{ id: 1, title: "Placeholder Title" }];
   const hourOptions = [0.5, 1, 1.5, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
+  const maxItemsBeforeScroll = 5; // Set the number of items before scroll
+  const itemHeight = 34; // Approximate height of each item
+  const dropdownMaxHeight = maxItemsBeforeScroll * itemHeight;
+
   return (
     <Card style={{ height: "80vh" }}>
       <Card.Body
@@ -38,16 +42,16 @@ function PrivatePlan({
             title={`${newTopicHours} hours`}
             align="end"
           >
-            {hourOptions.map((hours, index) => {
-              return (
+            <div style={{ maxHeight: dropdownMaxHeight, overflowY: "auto" }}>
+              {hourOptions.map((hours, index) => (
                 <Dropdown.Item
                   key={index}
                   onClick={() => onNewTopicHoursClick(hours)}
                 >
                   {hours}
                 </Dropdown.Item>
-              );
-            })}
+              ))}
+            </div>
           </DropdownButton>
           <Button variant="outline-secondary" onClick={onSubmitClick}>
             Submit
@@ -75,13 +79,13 @@ function PrivatePlan({
                     <div className="fw-bold">{privatePlan["title"]}</div>
                   </div>
                   {/* <Button
-                bg="primary"
-                size="sm"
-                pill="true"
-                onClick={() => console.log("Badge has been clicked!")}
-              >
-                Edit Title
-              </Button> */}
+                    bg="primary"
+                    size="sm"
+                    pill="true"
+                    onClick={() => console.log("Badge has been clicked!")}
+                  >
+                    Edit Title
+                  </Button> */}
                 </ListGroup.Item>
               ))}
             </ListGroup>
