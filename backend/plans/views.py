@@ -54,7 +54,7 @@ def topic_view(request):
             serializer.save()
             return Response({"detail": "Successfully created private plan."})
         else:
-            return Response(serializer.errors)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(["GET"])
