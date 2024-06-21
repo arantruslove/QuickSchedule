@@ -26,3 +26,4 @@ class Topic(models.Model):
     private_plan = models.ForeignKey(PrivatePlan, on_delete=models.CASCADE, null=True)
 
     title = models.CharField()
+    hours = models.FloatField()

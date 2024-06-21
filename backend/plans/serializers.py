@@ -12,4 +12,4 @@ class PrivatePlanSerializer(serializers.ModelSerializer):
 class TopicSerializer(serializers.ModelSerializer):
     class Meta:
         model = Topic
-        fields = ["id", "user", "private_plan", "title"]
+        fields = ["id", "user", "private_plan", "title", "hours"]

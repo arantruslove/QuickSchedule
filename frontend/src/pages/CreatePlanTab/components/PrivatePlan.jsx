@@ -74,6 +74,7 @@ function PrivatePlan({
                 <ListGroup.Item
                   key={topic["id"]}
                   as="li"
+                  
                   className="d-flex justify-content-between align-items-start"
                   onClick={() => console.log("Placeholder!")}
                 >
@@ -84,7 +85,7 @@ function PrivatePlan({
                     <DropdownButton
                       variant="secondary"
                       as={ButtonGroup}
-                      title="1h"
+                      title={`${topic["hours"]}h`}
                       id="bg-nested-dropdown"
                       size="sm"
                       drop="start"

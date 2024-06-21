@@ -22,7 +22,7 @@ function PrivatePlanContainer() {
   };
   useEffect(() => {
     getTopicsData();
-  });
+  }, []);
 
   // Getting the PrivatePlan id
   const url = useLocation().pathname;
@@ -38,7 +38,11 @@ function PrivatePlanContainer() {
   };
 
   const handleSubmitClick = async () => {
-    const data = { private_plan: privatePlanId, title: newTopicTitle };
+    const data = {
+      private_plan: privatePlanId,
+      title: newTopicTitle,
+      hours: newTopicHours,
+    };
     const response = await createTopic(data);
 
     if (response.ok) {

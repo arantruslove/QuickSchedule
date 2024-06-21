@@ -29,7 +29,7 @@ export async function getPrivatePlans() {
  * Requires the fields:
  * - private_plan
  * - title
- *
+ * - hours
  */
 export async function createTopic(data) {
   const url = `${BASE_URL}/topic/`;
