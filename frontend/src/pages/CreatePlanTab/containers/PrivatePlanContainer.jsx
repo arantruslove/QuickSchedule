@@ -1,13 +1,28 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 
 import PrivatePlan from "../components/PrivatePlan";
 import { getLastUrlSegment } from "../../../services/utils";
-import { createTopic } from "../../../services/planRequests";
+import {
+  createTopic,
+  getTopicsofPrivatePlan,
+} from "../../../services/planRequests";
 
 function PrivatePlanContainer() {
+  const [isLoading, setIsLoading] = useState(true);
+  const [topicsData, setTopicsData] = useState([]);
   const [newTopicTitle, setNewTopicTitle] = useState("");
   const [newTopicHours, setNewTopicHours] = useState(2);
+
+  const getTopicsData = async () => {
+    const response = await getTopicsofPrivatePlan(privatePlanId);
+    const data = await response.json();
+    setTopicsData(data);
+    setIsLoading(false);
+  };
+  useEffect(() => {
+    getTopicsData();
+  });
 
   // Getting the PrivatePlan id
   const url = useLocation().pathname;
@@ -24,16 +39,18 @@ function PrivatePlanContainer() {
 
   const handleSubmitClick = async () => {
     const data = { private_plan: privatePlanId, title: newTopicTitle };
-    console.log(data);
     const response = await createTopic(data);
 
     if (response.ok) {
       setNewTopicTitle("");
+      await getTopicsData();
     }
   };
 
   return (
     <PrivatePlan
+      isLoading={isLoading}
+      topicsData={topicsData}
       newTopicTitle={newTopicTitle}
       newTopicHours={newTopicHours}
       onNewTopicTitleChange={handleNewTopicTitleChange}

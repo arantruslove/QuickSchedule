@@ -10,14 +10,15 @@ import {
 } from "react-bootstrap";
 
 function PrivatePlan({
+  isLoading,
+  topicsData,
   newTopicTitle,
   newTopicHours,
   onNewTopicTitleChange,
   onNewTopicHoursClick,
   onSubmitClick,
 }) {
-  const isLoading = false;
-  const placeholderData = [{ id: 1, title: "Placeholder Title" }];
+  // Variables
   const hourOptions = [0.5, 1, 1.5, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
   const maxItemsBeforeScroll = 5; // Set the number of items before scroll
@@ -68,15 +69,15 @@ function PrivatePlan({
         ) : (
           <div style={{ overflowY: "auto", flexGrow: 1 }}>
             <ListGroup as="ol" numbered="true">
-              {placeholderData.map((privatePlan) => (
+              {topicsData.map((topic) => (
                 <ListGroup.Item
-                  key={privatePlan["id"]}
+                  key={topic["id"]}
                   as="li"
                   className="d-flex justify-content-between align-items-start"
                   onClick={() => console.log("Placeholder!")}
                 >
                   <div className="ms-2 me-auto">
-                    <div className="fw-bold">{privatePlan["title"]}</div>
+                    <div className="fw-bold">{topic["title"]}</div>
                   </div>
                   {/* <Button
                     bg="primary"

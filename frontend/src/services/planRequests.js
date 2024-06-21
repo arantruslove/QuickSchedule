@@ -36,3 +36,10 @@ export async function createTopic(data) {
   const response = await apiClient.post(url, true, data);
   return response;
 }
+
+/**Gets the list of Topics associate with a PrivatePlan. */
+export async function getTopicsofPrivatePlan(privatePlanId) {
+  const url = `${BASE_URL}/topics/?private_plan_id=${privatePlanId}`;
+  const response = await apiClient.get(url, true);
+  return response;
+}
