@@ -61,6 +61,12 @@ def topic_view(request, pk=None):
         data = request.data
 
         topic = Topic.objects.get(pk=pk)
+        if request.user != topic.user:
+            return Response(
+                {"detail": "You are not authorized to view this resource."},
+                status=status.HTTP_403_FORBIDDEN,
+            )
+
         serializer = TopicSerializer(topic, data=data, partial=True)
 
         if serializer.is_valid():
