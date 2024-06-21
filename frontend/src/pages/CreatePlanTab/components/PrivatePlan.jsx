@@ -52,33 +52,42 @@ function PrivatePlan({
           style={{ display: "flex", flexDirection: "column", height: "100%" }}
         >
           <Card.Title className="mb-3">Create Plan</Card.Title>
-          <InputGroup className="mb-3">
-            <InputGroup.Text>Topic Title</InputGroup.Text>
-            <Form.Control
-              placeholder="Enter topic title"
-              value={newTopicTitle}
-              onChange={(event) => onNewTopicTitleChange(event.target.value)}
-            />
-            <DropdownButton
-              variant="outline-secondary"
-              title={`${newTopicHours}h`}
-              align="end"
-            >
-              <div style={{ maxHeight: dropdownMaxHeight, overflowY: "auto" }}>
-                {hourOptions.map((hours, index) => (
-                  <Dropdown.Item
-                    key={index}
-                    onClick={() => onNewTopicHoursClick(hours)}
-                  >
-                    {hours}
-                  </Dropdown.Item>
-                ))}
-              </div>
-            </DropdownButton>
-            <Button variant="outline-secondary" onClick={onSubmitClick}>
-              Submit
-            </Button>
-          </InputGroup>
+          <Form
+            onSubmit={(event) => {
+              event.preventDefault();
+              onSubmitClick();
+            }}
+          >
+            <InputGroup className="mb-3">
+              <InputGroup.Text>Topic Title</InputGroup.Text>
+              <Form.Control
+                placeholder="Enter topic title"
+                value={newTopicTitle}
+                onChange={(event) => onNewTopicTitleChange(event.target.value)}
+              />
+              <DropdownButton
+                variant="outline-secondary"
+                title={`${newTopicHours}h`}
+                align="end"
+              >
+                <div
+                  style={{ maxHeight: dropdownMaxHeight, overflowY: "auto" }}
+                >
+                  {hourOptions.map((hours, index) => (
+                    <Dropdown.Item
+                      key={index}
+                      onClick={() => onNewTopicHoursClick(hours)}
+                    >
+                      {hours}
+                    </Dropdown.Item>
+                  ))}
+                </div>
+              </DropdownButton>
+              <Button variant="outline-secondary" type="submit">
+                Submit
+              </Button>
+            </InputGroup>
+          </Form>
 
           {isLoading ? (
             <div

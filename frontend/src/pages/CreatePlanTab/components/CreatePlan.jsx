@@ -22,21 +22,24 @@ function CreatePlan({
         style={{ display: "flex", flexDirection: "column", height: "100%" }}
       >
         <Card.Title className="mb-3">Create Plan</Card.Title>
-        <InputGroup className="mb-3">
-          <InputGroup.Text>Plan Title</InputGroup.Text>
-          <Form.Control
-            placeholder="Enter plan title"
-            value={planTitle}
-            onChange={(event) => onInputChange(event.target.value)}
-          />
-          <Button
-            onClick={onSubmitClick}
-            variant="outline-secondary"
-            disabled={false}
-          >
-            Submit
-          </Button>
-        </InputGroup>
+        <Form
+          onSubmit={(event) => {
+            event.preventDefault();
+            onSubmitClick();
+          }}
+        >
+          <InputGroup className="mb-3">
+            <InputGroup.Text>Plan Title</InputGroup.Text>
+            <Form.Control
+              placeholder="Enter plan title"
+              value={planTitle}
+              onChange={(event) => onInputChange(event.target.value)}
+            />
+            <Button variant="outline-secondary" type="submit">
+              Submit
+            </Button>
+          </InputGroup>
+        </Form>
 
         {isLoading ? (
           <div

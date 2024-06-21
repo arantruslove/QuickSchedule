@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
@@ -11,6 +11,14 @@ function TextInputModal({
   onSubmitClick,
 }) {
   const [inputText, setInputText] = useState("");
+  const inputRef = useRef(null);
+
+  // Focus the input when the modal is shown
+  useEffect(() => {
+    if (show && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [show]);
 
   // Event handling
   const handleInputTextChange = (newText) => {
@@ -18,32 +26,32 @@ function TextInputModal({
   };
 
   return (
-    <Modal show={show} onHide={handleClose} centered="true">
+    <Modal show={show} onHide={handleClose} centered>
       <Modal.Header closeButton>
         <Modal.Title>{heading}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <div className="mb-3">
+        <Form
+          className="mb-3"
+          onSubmit={(event) => {
+            event.preventDefault();
+            onSubmitClick(inputText);
+            setInputText("");
+          }}
+        >
           <Form.Control
+            ref={inputRef}
             placeholder={inputPlaceholder}
             value={inputText}
             onChange={(event) => handleInputTextChange(event.target.value)}
           />
-        </div>
+        </Form>
       </Modal.Body>
       <Modal.Footer>
         <Button variant="secondary" onClick={handleClose}>
           Close
         </Button>
-        <Button
-          variant="primary"
-          onClick={() => {
-            {
-              onSubmitClick(inputText);
-              setInputText("");
-            }
-          }}
-        >
+        <Button variant="primary" onClick={() => onSubmitClick(inputText)}>
           Submit
         </Button>
       </Modal.Footer>
