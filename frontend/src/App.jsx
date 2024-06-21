@@ -14,6 +14,7 @@ import InitiateResetContainer from "./pages/Auth/containers/InitiateResetContain
 import CreatePlanContainer from "./pages/CreatePlanTab/containers/CreatePlanContainer";
 import MainLayout from "./components/MainLayout";
 import PrivatePlanContainer from "./pages/CreatePlanTab/containers/PrivatePlanContainer";
+import GenerateSchedule from "./pages/GenerateScheduleTab/components/GenerateSchedule";
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
             </PrivateRoute>
           }
         >
+          <Route path="/generate-schedule" element={<GenerateSchedule />} />
           <Route path="/create-plan" element={<CreatePlanContainer />} />
           <Route path="/create-plan/*" element={<PrivatePlanContainer />} />
           <Route path="/account" element={<AccountContainer />} />
