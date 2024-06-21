@@ -71,6 +71,39 @@ async function post(url, authenticated, body = null) {
 }
 
 /**
+ * Sends a PATCH request to the specified URL.
+ * @param {string} url - The URL to send the request to.
+ * @param {boolean} authenticated - Indicates whether the request requires authentication.
+ * @param {object} body - The request body to be sent as JSON.
+ * @returns {Promise<Response>} - A Promise that resolves to the response of the request.
+ */
+async function patch(url, authenticated, body = null) {
+  const options = {
+    method: "PATCH",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+      "X-CSRFToken": csrftoken,
+    },
+  };
+
+  // Fetch access token and add as authorization header if required
+  if (authenticated) {
+    const authToken = Cookies.get("auth_token");
+    options["headers"]["Authorization"] = `Token ${authToken}`;
+  }
+
+  // Adding JSON body if passed as an argument
+  if (body) {
+    options["body"] = JSON.stringify(body);
+  }
+
+  const response = await fetch(url, options);
+
+  return response;
+}
+
+/**
  * Sends a PUT request to the specified URL.
  * @param {string} url - The URL to send the request to.
  * @param {boolean} authenticated - Indicates whether the request requires authentication.
@@ -138,6 +171,7 @@ async function del(url, authenticated) {
 export const apiClient = {
   get: (url, authenticated) => get(url, authenticated),
   post: (url, authenticated, body) => post(url, authenticated, body),
+  patch: (url, authenticated, body) => patch(url, authenticated, body),
   put: (url, authenticated, body) => put(url, authenticated, body),
   delete: (url, authenticated) => del(url, authenticated),
 };

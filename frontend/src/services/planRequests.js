@@ -43,3 +43,15 @@ export async function getTopicsofPrivatePlan(privatePlanId) {
   const response = await apiClient.get(url, true);
   return response;
 }
+
+/**Creates a new Topic associated with the PrivatePlan
+ *
+ * Updatable fields :
+ * - title
+ * - hours
+ */
+export async function updateTopic(pk, data) {
+  const url = `${BASE_URL}/topic/${pk}/`;
+  const response = await apiClient.patch(url, true, data);
+  return response;
+}

@@ -21,6 +21,7 @@ function PrivatePlan({
   onNewTopicTitleChange,
   onNewTopicHoursClick,
   onSubmitClick,
+  onEditTopicTitle,
 }) {
   const [displayEditModal, setDisplayEditModal] = useState(false);
   const [modalId, setModalId] = useState(0);
@@ -33,11 +34,16 @@ function PrivatePlan({
 
   return (
     <>
+      {/* Text input modal */}
       <TextInputModal
         heading="Edit Topic Title"
         inputPlaceholder="Enter new topic title"
         show={displayEditModal}
         handleClose={() => setDisplayEditModal(false)}
+        onSubmitClick={(title) => {
+          onEditTopicTitle(title, modalId);
+          setDisplayEditModal(false);
+        }}
       />
       <Card style={{ height: "80vh" }}>
         <Card.Body

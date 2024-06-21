@@ -6,6 +6,7 @@ import { getLastUrlSegment } from "../../../services/utils";
 import {
   createTopic,
   getTopicsofPrivatePlan,
+  updateTopic,
 } from "../../../services/planRequests";
 
 function PrivatePlanContainer() {
@@ -51,6 +52,15 @@ function PrivatePlanContainer() {
     }
   };
 
+  const handleEditTopicTitle = async (title, topicId) => {
+    const data = { title: title };
+    const response = await updateTopic(topicId, data);
+
+    if (response.ok) {
+      getTopicsData();
+    }
+  };
+
   return (
     <PrivatePlan
       isLoading={isLoading}
@@ -60,6 +70,7 @@ function PrivatePlanContainer() {
       onNewTopicTitleChange={handleNewTopicTitleChange}
       onNewTopicHoursClick={handleNewTopicHoursClick}
       onSubmitClick={handleSubmitClick}
+      onEditTopicTitle={handleEditTopicTitle}
     />
   );
 }
