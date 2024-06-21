@@ -24,6 +24,17 @@ export async function getPrivatePlan(pk) {
   return response;
 }
 
+/**Updates a PrivatePlan by pk.
+ *
+ * Updatable fields:
+ * - title
+ */
+export async function updatePrivatePlan(pk, data) {
+  const url = `${BASE_URL}/private-plan/${pk}/`;
+  const response = await apiClient.patch(url, true, data);
+  return response;
+}
+
 /**Gets the list of PrivatePlans that are associated with the user.*/
 export async function getPrivatePlans() {
   const url = `${BASE_URL}/private-plans/`;
@@ -53,7 +64,7 @@ export async function getTopicsofPrivatePlan(privatePlanId) {
 
 /**Updates a Topic by pk.
  *
- * Updatable fields :
+ * Updatable fields:
  * - title
  * - hours
  */

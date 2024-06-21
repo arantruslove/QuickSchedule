@@ -10,7 +10,7 @@ from plans.serializers import PrivatePlanSerializer, TopicSerializer
 # Create your views here.
 
 
-@api_view(["GET", "POST"])
+@api_view(["GET", "POST", "PATCH", "DELETE"])
 @permission_classes([IsAuthenticated])
 def private_plan_view(request, pk=None):
 
@@ -50,6 +50,56 @@ def private_plan_view(request, pk=None):
         else:
             return Response(serializer.errors)
 
+    if request.method == "PATCH":
+        """Partial update of a PrivatePlan instance by pk."""
+        data = request.data
+
+        # Obtaing PrivatePlan instance
+        try:
+            private_plan = PrivatePlan.objects.get(pk=pk)
+        except:
+            return Response(
+                {"detail": f"PrivatePlan {pk} does not exist."},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+
+        # Checking if the user is authorized to access the PrivatePlan
+        if request.user != private_plan.user:
+            return Response(
+                {"detail": "You are not authorized to view this resource."},
+                status=status.HTTP_403_FORBIDDEN,
+            )
+
+        serializer = PrivatePlanSerializer(private_plan, data, partial=True)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    if request.method == "DELETE":
+        """Deleting a PrivatePlan instance by pk."""
+
+        # Obtaing PrivatePlan instance
+        try:
+            private_plan = PrivatePlan.objects.get(pk=pk)
+        except:
+            return Response(
+                {"detail": f"PrivatePlan {pk} does not exist."},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+
+        # Checking if the user is authorized to access the PrivatePlan
+        if request.user != private_plan.user:
+            return Response(
+                {"detail": "You are not authorized to view this resource."},
+                status=status.HTTP_403_FORBIDDEN,
+            )
+
+        private_plan.delete()
+        return Response({"detail": f"PrivatePlan {pk} has been successfully deleted."})
+
 
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
@@ -75,7 +125,7 @@ def topic_view(request, pk=None):
         serializer = TopicSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
-            return Response({"detail": "Successfully created private plan."})
+            return Response(serializer.data)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -100,7 +150,7 @@ def topic_view(request, pk=None):
 
         if serializer.is_valid():
             serializer.save()
-            return Response({"detail": "Successfully updated the topic."})
+            return Response(serializer.data)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

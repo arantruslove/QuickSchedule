@@ -5,6 +5,7 @@ import CreatePlan from "../components/CreatePlan";
 import {
   createPrivatePlan,
   getPrivatePlans,
+  updatePrivatePlan,
 } from "../../../services/planRequests";
 
 function CreatePlanContainer() {
@@ -44,6 +45,15 @@ function CreatePlanContainer() {
     navigate(`/create-plan/${privatePlanId}`);
   };
 
+  const handleEditPlanTitle = async (title, id) => {
+    const data = { title: title };
+    const response = await updatePrivatePlan(id, data);
+
+    if (response.ok) {
+      await getPrivatePlansData();
+    }
+  };
+
   return (
     <CreatePlan
       isLoading={isLoading}
@@ -52,6 +62,7 @@ function CreatePlanContainer() {
       onInputChange={handleInputChange}
       onSubmitClick={handleSubmitClick}
       onTabClick={handleTabClick}
+      onEditPlanTitle={handleEditPlanTitle}
     />
   );
 }
