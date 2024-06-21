@@ -39,9 +39,9 @@ def private_plan_list_view(request):
         return Response(serializer.data)
 
 
-@api_view(["POST"])
+@api_view(["POST", "PATCH"])
 @permission_classes([IsAuthenticated])
-def topic_view(request):
+def topic_view(request, pk=None):
 
     if request.method == "POST":
         """Creating a Topic instance."""
@@ -53,6 +53,19 @@ def topic_view(request):
         if serializer.is_valid():
             serializer.save()
             return Response({"detail": "Successfully created private plan."})
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    if request.method == "PATCH":
+        """Partially updates a Topic instance by pk."""
+        data = request.data
+
+        topic = Topic.objects.get(pk=pk)
+        serializer = TopicSerializer(topic, data=data, partial=True)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"detail": "Successfully updated the topic."})
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
