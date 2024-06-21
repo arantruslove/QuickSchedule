@@ -25,8 +25,13 @@ function TextInputModal({
     setInputText(newText);
   };
 
+  const intermediateHandleClose = () => {
+    setInputText("");
+    handleClose();
+  };
+
   return (
-    <Modal show={show} onHide={handleClose} centered>
+    <Modal show={show} onHide={intermediateHandleClose} centered>
       <Modal.Header closeButton>
         <Modal.Title>{heading}</Modal.Title>
       </Modal.Header>
@@ -48,7 +53,7 @@ function TextInputModal({
         </Form>
       </Modal.Body>
       <Modal.Footer>
-        <Button variant="secondary" onClick={handleClose}>
+        <Button variant="secondary" onClick={intermediateHandleClose}>
           Close
         </Button>
         <Button variant="primary" onClick={() => onSubmitClick(inputText)}>
