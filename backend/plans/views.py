@@ -10,9 +10,32 @@ from plans.serializers import PrivatePlanSerializer, TopicSerializer
 # Create your views here.
 
 
-@api_view(["POST"])
+@api_view(["GET", "POST"])
 @permission_classes([IsAuthenticated])
-def private_plan_view(request):
+def private_plan_view(request, pk=None):
+
+    if request.method == "GET":
+        """Getting a PrivatePlan instance data by pk."""
+
+        # Obtaing PrivatePlan instance
+        try:
+            private_plan = PrivatePlan.objects.get(pk=pk)
+        except:
+            return Response(
+                {"detail": f"PrivatePlan {pk} does not exist."},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+
+        # Checking if the user is authorized to access the PrivatePlan
+        if request.user != private_plan.user:
+            return Response(
+                {"detail": "You are not authorized to view this resource."},
+                status=status.HTTP_403_FORBIDDEN,
+            )
+
+        # Ensuring valid data has been provided
+        serializer = PrivatePlanSerializer(private_plan)
+        return Response(serializer.data)
 
     if request.method == "POST":
         """Creating a PrivatPlan instance."""

@@ -4,6 +4,7 @@ import { useLocation } from "react-router-dom";
 import PrivatePlan from "../components/PrivatePlan";
 import { getLastUrlSegment } from "../../../services/utils";
 import {
+  getPrivatePlan,
   createTopic,
   deleteTopic,
   getTopicsofPrivatePlan,
@@ -12,23 +13,38 @@ import {
 
 function PrivatePlanContainer() {
   const [isLoading, setIsLoading] = useState(true);
+  const [privatePlanTitle, setPrivatePlanTitle] = useState("");
   const [topicsData, setTopicsData] = useState([]);
   const [newTopicTitle, setNewTopicTitle] = useState("");
   const [newTopicHours, setNewTopicHours] = useState(2);
 
-  const getTopicsData = async () => {
-    const response = await getTopicsofPrivatePlan(privatePlanId);
-    const data = await response.json();
-    setTopicsData(data);
-    setIsLoading(false);
-  };
-  useEffect(() => {
-    getTopicsData();
-  }, []);
-
   // Getting the PrivatePlan id
   const url = useLocation().pathname;
   const privatePlanId = getLastUrlSegment(url);
+
+  // Fetching page data
+  const getPageData = async () => {
+    try {
+      const [response1, response2] = await Promise.all([
+        getTopicsofPrivatePlan(privatePlanId),
+        getPrivatePlan(privatePlanId),
+      ]);
+
+      const [data1, data2] = await Promise.all([
+        response1.json(),
+        response2.json(),
+      ]);
+
+      setTopicsData(data1);
+      setPrivatePlanTitle(data2["title"]);
+      setIsLoading(false);
+    } catch {
+      console.log("There has been an error");
+    }
+  };
+  useEffect(() => {
+    getPageData();
+  }, []);
 
   // Event handling
   const handleNewTopicTitleChange = (newTitle) => {
@@ -49,7 +65,7 @@ function PrivatePlanContainer() {
 
     if (response.ok) {
       setNewTopicTitle("");
-      await getTopicsData();
+      await getPageData();
     }
   };
 
@@ -58,7 +74,7 @@ function PrivatePlanContainer() {
     const response = await updateTopic(topicId, data);
 
     if (response.ok) {
-      getTopicsData();
+      getPageData();
     }
   };
 
@@ -67,7 +83,7 @@ function PrivatePlanContainer() {
     const response = await updateTopic(topicId, data);
 
     if (response.ok) {
-      getTopicsData();
+      getPageData();
     }
   };
 
@@ -75,13 +91,14 @@ function PrivatePlanContainer() {
     const response = await deleteTopic(topicId);
 
     if (response.ok) {
-      getTopicsData();
+      getPageData();
     }
   };
 
   return (
     <PrivatePlan
       isLoading={isLoading}
+      privatePlanTitle={privatePlanTitle}
       topicsData={topicsData}
       newTopicTitle={newTopicTitle}
       newTopicHours={newTopicHours}

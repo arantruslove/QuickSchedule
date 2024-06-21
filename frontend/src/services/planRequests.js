@@ -17,6 +17,13 @@ export async function createPrivatePlan(data) {
   return response;
 }
 
+/**Gets a PrivatePlan instance by pk. */
+export async function getPrivatePlan(pk) {
+  const url = `${BASE_URL}/private-plan/${pk}/`;
+  const response = await apiClient.get(url, true);
+  return response;
+}
+
 /**Gets the list of PrivatePlans that are associated with the user.*/
 export async function getPrivatePlans() {
   const url = `${BASE_URL}/private-plans/`;

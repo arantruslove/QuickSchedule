@@ -9,12 +9,14 @@ import {
   DropdownButton,
   Dropdown,
   ButtonGroup,
+  Placeholder,
 } from "react-bootstrap";
 
 import TextInputModal from "../../../components/TextInputModal";
 
 function PrivatePlan({
   isLoading,
+  privatePlanTitle,
   topicsData,
   newTopicTitle,
   newTopicHours,
@@ -51,7 +53,15 @@ function PrivatePlan({
         <Card.Body
           style={{ display: "flex", flexDirection: "column", height: "100%" }}
         >
-          <Card.Title className="mb-3">Create Plan</Card.Title>
+          {isLoading ? (
+            <Card.Title className="mb-3">
+              {" "}
+              <Placeholder size="xs" />
+            </Card.Title>
+          ) : (
+            <Card.Title className="mb-3">{privatePlanTitle}</Card.Title>
+          )}
+
           <Form
             onSubmit={(event) => {
               event.preventDefault();
