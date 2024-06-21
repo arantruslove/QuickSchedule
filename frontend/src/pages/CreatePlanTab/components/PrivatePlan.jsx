@@ -7,6 +7,7 @@ import {
   Spinner,
   DropdownButton,
   Dropdown,
+  ButtonGroup,
 } from "react-bootstrap";
 
 function PrivatePlan({
@@ -40,7 +41,7 @@ function PrivatePlan({
           />
           <DropdownButton
             variant="outline-secondary"
-            title={`${newTopicHours} hours`}
+            title={`${newTopicHours}h`}
             align="end"
           >
             <div style={{ maxHeight: dropdownMaxHeight, overflowY: "auto" }}>
@@ -79,14 +80,38 @@ function PrivatePlan({
                   <div className="ms-2 me-auto">
                     <div className="fw-bold">{topic["title"]}</div>
                   </div>
-                  {/* <Button
-                    bg="primary"
-                    size="sm"
-                    pill="true"
-                    onClick={() => console.log("Badge has been clicked!")}
-                  >
-                    Edit Title
-                  </Button> */}
+                  <ButtonGroup>
+                    <DropdownButton
+                      variant="secondary"
+                      as={ButtonGroup}
+                      title="1h"
+                      id="bg-nested-dropdown"
+                      size="sm"
+                      drop="start"
+                    >
+                      <div
+                        style={{
+                          maxHeight: dropdownMaxHeight,
+                          overflowY: "auto",
+                        }}
+                      >
+                        {hourOptions.map((hours, index) => (
+                          <Dropdown.Item
+                            key={index}
+                            onClick={() => onNewTopicHoursClick(hours)}
+                          >
+                            {hours}
+                          </Dropdown.Item>
+                        ))}
+                      </div>
+                    </DropdownButton>
+                    <Button variant="primary" size="sm">
+                      Edit Title
+                    </Button>
+                    <Button variant="danger" size="sm">
+                      Delete
+                    </Button>
+                  </ButtonGroup>
                 </ListGroup.Item>
               ))}
             </ListGroup>
