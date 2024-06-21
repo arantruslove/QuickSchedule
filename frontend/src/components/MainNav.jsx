@@ -1,18 +1,17 @@
 import { Nav } from "react-bootstrap";
 import { useLocation, useNavigate } from "react-router-dom";
 
+import { getFirstUrlSegment } from "../services/utils";
+
 function MainNav() {
   const location = useLocation();
+  const locationKey = getFirstUrlSegment(location["pathname"]);
   const navigate = useNavigate();
 
   return (
-    <Nav
-      className="flex-column"
-      variant="pills"
-      activeKey={location["pathname"]}
-    >
+    <Nav className="flex-column" variant="pills" activeKey={locationKey}>
       <Nav.Link
-        eventKey="/home"
+        eventKey="home"
         onClick={() => {
           navigate("/home");
         }}
@@ -27,7 +26,7 @@ function MainNav() {
       >
         Generate Schedule
       </Nav.Link>
-      <Nav.Link
+      {/* <Nav.Link
         eventKey="/all-plans"
         onClick={() => {
           navigate("/all-plans");
@@ -42,16 +41,16 @@ function MainNav() {
         }}
       >
         Search Plans
-      </Nav.Link>
+      </Nav.Link> */}
       <Nav.Link
-        eventKey="/create-plan"
+        eventKey="create-plan"
         onClick={() => {
           navigate("/create-plan");
         }}
       >
         Create Plan
       </Nav.Link>
-      <Nav.Link eventKey="/account" onClick={() => navigate("/account")}>
+      <Nav.Link eventKey="account" onClick={() => navigate("/account")}>
         Account
       </Nav.Link>
     </Nav>
