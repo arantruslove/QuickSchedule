@@ -35,6 +35,13 @@ export async function updatePrivatePlan(pk, data) {
   return response;
 }
 
+/**Deletes a PrivatePlan by pk. */
+export async function deletePrivatePlan(pk) {
+  const url = `${BASE_URL}/private-plan/${pk}/`;
+  const response = await apiClient.delete(url, true);
+  return response;
+}
+
 /**Gets the list of PrivatePlans that are associated with the user.*/
 export async function getPrivatePlans() {
   const url = `${BASE_URL}/private-plans/`;

@@ -19,6 +19,7 @@ function CreatePlan({
   onSubmitClick,
   onTabClick,
   onEditPlanTitle,
+  onDeletePlan,
 }) {
   const [displayEditModal, setDisplayEditModal] = useState(false);
   const [modalId, setModalId] = useState(0);
@@ -94,7 +95,14 @@ function CreatePlan({
                       >
                         Edit Title
                       </Button>
-                      <Button variant="danger" size="sm">
+                      <Button
+                        variant="danger"
+                        size="sm"
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          onDeletePlan(privatePlan["id"]);
+                        }}
+                      >
                         Delete
                       </Button>
                     </ButtonGroup>

@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import CreatePlan from "../components/CreatePlan";
 import {
   createPrivatePlan,
+  deletePrivatePlan,
   getPrivatePlans,
   updatePrivatePlan,
 } from "../../../services/planRequests";
@@ -54,6 +55,13 @@ function CreatePlanContainer() {
     }
   };
 
+  const handleDeletePlan = async (id) => {
+    const response = await deletePrivatePlan(id);
+    if (response.ok) {
+      await getPrivatePlansData();
+    }
+  };
+
   return (
     <CreatePlan
       isLoading={isLoading}
@@ -63,6 +71,7 @@ function CreatePlanContainer() {
       onSubmitClick={handleSubmitClick}
       onTabClick={handleTabClick}
       onEditPlanTitle={handleEditPlanTitle}
+      onDeletePlan={handleDeletePlan}
     />
   );
 }
