@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Card, Nav } from "react-bootstrap";
 
-import AllocateHours from "./AllocateHours";
+import AllocateHoursContainer from "../containers/AllocateHoursContainer";
 import SelectPlans from "./SelectPlans";
 import ScheduleInformation from "./ScheduleInformation";
 import MakeAdjustments from "./MakeAdjustments";
@@ -35,7 +35,7 @@ function GenerateSchedule() {
       </Nav>
 
       {/* Main component rendered depends on tab selected */}
-      {tabNumber === 1 && <AllocateHours />}
+      {tabNumber === 1 && <AllocateHoursContainer />}
       {tabNumber === 2 && <SelectPlans />}
       {tabNumber === 3 && <ScheduleInformation />}
       {tabNumber === 4 && <MakeAdjustments />}
