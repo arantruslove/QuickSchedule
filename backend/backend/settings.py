@@ -81,6 +81,7 @@ INSTALLED_APPS = [
     # Custom apps
     "accounts",
     "plans",
+    # "schedule",
 ]
 
 MIDDLEWARE = [
