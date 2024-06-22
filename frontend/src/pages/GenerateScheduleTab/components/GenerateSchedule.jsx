@@ -1,13 +1,38 @@
-import { useState } from "react";
-import { Card, Nav } from "react-bootstrap";
+import { useState, useEffect } from "react";
+import { Card, Nav, Spinner } from "react-bootstrap";
 
+import {
+  createFormDraft,
+  getFormDraft,
+} from "../../../services/scheduleRequests";
 import AllocateHoursContainer from "../containers/AllocateHoursContainer";
 import SelectPlans from "./SelectPlans";
 import ScheduleInformation from "./ScheduleInformation";
 import MakeAdjustments from "./MakeAdjustments";
 
 function GenerateSchedule() {
+  const [isLoading, setIsLoading] = useState(true);
   const [tabNumber, setTabNumber] = useState(1);
+  const [formDraftData, setFormDraftData] = useState(null);
+
+  const updatePageData = async () => {
+    let response = await getFormDraft();
+
+    // Create a ScheduleFormDraft instance if it does not already exist
+    if (response.status === 404) {
+      response = await createFormDraft();
+    }
+
+    if (response.ok) {
+      const data = await response.json();
+      setFormDraftData(data);
+      setIsLoading(false);
+    }
+  };
+  useEffect(() => {
+    updatePageData();
+  }, []);
+
   return (
     <Card style={{ height: "80vh" }}>
       {/* Navbar */}
@@ -34,11 +59,25 @@ function GenerateSchedule() {
         </Nav.Item>
       </Nav>
 
-      {/* Main component rendered depends on tab selected */}
-      {tabNumber === 1 && <AllocateHoursContainer />}
-      {tabNumber === 2 && <SelectPlans />}
-      {tabNumber === 3 && <ScheduleInformation />}
-      {tabNumber === 4 && <MakeAdjustments />}
+      {isLoading ? (
+        <div
+          className="d-flex justify-content-center align-items-center"
+          style={{ height: "100vh" }}
+        >
+          <Spinner animation="border" variant="primary" />
+        </div>
+      ) : (
+        <>
+          {tabNumber === 1 && (
+            <AllocateHoursContainer
+              fetchedDatesToHours={formDraftData["daily_study_hours"]}
+            />
+          )}
+          {tabNumber === 2 && <SelectPlans />}
+          {tabNumber === 3 && <ScheduleInformation />}
+          {tabNumber === 4 && <MakeAdjustments />}
+        </>
+      )}
     </Card>
   );
 }
