@@ -20,12 +20,11 @@ function AllocateHours({
   weekNumber,
   onWeekNumberDecrement,
   onWeekNumberIncrement,
+  onHoursClick,
 }) {
-  console.log(datesToHours);
   // Obtaining the current week data
   const formattedDatesHoursDays = addFormattedDateDay(datesToHours);
   const weekByWeekData = splitByWeek(formattedDatesHoursDays);
-  // console.log(weekByWeekData);
   const currentWeekData = weekByWeekData[weekNumber];
 
   return (
@@ -54,14 +53,14 @@ function AllocateHours({
               className="d-flex justify-content-between align-items-start"
             >
               <div className="ms-2 me-auto fw-bold">
-                {dateObj.formattedDate} ({dateObj.day})
+                {dateObj.formattedDate} - {dateObj.day}
               </div>
 
               <DropdownButton
                 variant="outline-secondary"
                 as={ButtonGroup}
                 title={`${dateObj.hours}h`}
-                id={`dropdown-${index}`}
+                id={`dropdown-${dateObj.day}`}
                 size="sm"
                 drop="start"
               >
@@ -71,8 +70,13 @@ function AllocateHours({
                     overflowY: "auto",
                   }}
                 >
-                  {HOUR_OPTIONS.map((hours, idx) => (
-                    <Dropdown.Item key={idx}>{hours}</Dropdown.Item>
+                  {HOUR_OPTIONS.map((hours, index) => (
+                    <Dropdown.Item
+                      key={index}
+                      onClick={() => onHoursClick(hours, dateObj.isoDate)}
+                    >
+                      {hours}
+                    </Dropdown.Item>
                   ))}
                 </div>
               </DropdownButton>
