@@ -33,9 +33,9 @@ function AllocateHours({
     <Card.Body
       style={{ display: "flex", flexDirection: "column", height: "80%" }}
     >
-      <div className="d-flex justify-content-between align-items-center  fw-bold">
-        Specify the number of hours to study on each day
-        <Pagination>
+      <Card.Title className="mb-3 d-flex justify-content-between align-items-center">
+        <div>Specify the Number of Hours to Study on Each Day</div>
+        <Pagination className="mb-0">
           <Pagination.Prev
             disabled={weekNumber === 0}
             onClick={onWeekNumberDecrement}
@@ -45,7 +45,7 @@ function AllocateHours({
             onClick={onWeekNumberIncrement}
           />
         </Pagination>
-      </div>
+      </Card.Title>
       <div style={{ overflowY: "auto", flexGrow: 1 }}>
         <ListGroup>
           {currentWeekData.map((dateObj, index) => (
