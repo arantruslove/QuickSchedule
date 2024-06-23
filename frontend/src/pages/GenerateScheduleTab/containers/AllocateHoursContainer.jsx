@@ -5,7 +5,7 @@ import {
   getISODatesToZeroHours,
   updateManyHours,
   updateSingleHours,
-} from "../dateFormat";
+} from "../allocateHoursUtils";
 import {
   createFormDraft,
   getFormDraft,

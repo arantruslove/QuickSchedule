@@ -8,7 +8,7 @@ import {
   Button,
 } from "react-bootstrap";
 
-import { addFormattedDateDay, splitByWeek } from "../dateFormat";
+import { addFormattedDateDay, splitByWeek } from "../allocateHoursUtils";
 
 // Determining when the dropdown should start scrolling
 const HOUR_OPTIONS = [0, 0.5, 1, 1.5, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
