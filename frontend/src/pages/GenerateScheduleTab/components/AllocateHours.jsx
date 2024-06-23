@@ -5,6 +5,7 @@ import {
   DropdownButton,
   Dropdown,
   Pagination,
+  Button,
 } from "react-bootstrap";
 
 import { addFormattedDateDay, splitByWeek } from "../dateFormat";
@@ -21,6 +22,7 @@ function AllocateHours({
   onWeekNumberDecrement,
   onWeekNumberIncrement,
   onHoursClick,
+  onZeroAllHours,
 }) {
   // Obtaining the current week data
   const formattedDatesHoursDays = addFormattedDateDay(datesToHours);
@@ -83,6 +85,11 @@ function AllocateHours({
             </ListGroup.Item>
           ))}
         </ListGroup>
+      </div>
+      <div className="d-flex justify-content-start">
+        <Button variant="secondary" onClick={onZeroAllHours}>
+          Zero All Hours
+        </Button>
       </div>
     </Card.Body>
   );

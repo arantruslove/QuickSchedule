@@ -45,11 +45,28 @@ function AllocateHoursContainer({ fetchedDatesToHours }) {
       newHours
     );
 
-    // Saving the input hours on the server
+    // Saving the updated hours on the server
     const data = { daily_study_hours: updatedDatesToHours };
     const response = await updateFormDraft(data);
 
     // Updating on the frontend if successfully saved on the server
+    if (response.ok) {
+      setDatesToHours(updatedDatesToHours);
+    }
+  };
+
+  const handleZeroAllHours = async () => {
+    // Creating a new array with all hours set to zero
+    const updatedDatesToHours = datesToHours.map((dateToHours) => ({
+      ...dateToHours,
+      hours: 0,
+    }));
+
+    // Save the updated hours on the server
+    const data = { daily_study_hours: updatedDatesToHours };
+    const response = await updateFormDraft(data);
+
+    // Updating the state with the new hours
     if (response.ok) {
       setDatesToHours(updatedDatesToHours);
     }
@@ -62,6 +79,7 @@ function AllocateHoursContainer({ fetchedDatesToHours }) {
       onWeekNumberDecrement={handleWeekNumberDecrement}
       onWeekNumberIncrement={handleWeekNumberIncrement}
       onHoursClick={handleHoursClick}
+      onZeroAllHours={handleZeroAllHours}
     />
   );
 }
