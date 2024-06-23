@@ -10,3 +10,4 @@ class ScheduleFormDraft(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
     daily_study_hours = models.JSONField(null=True)
+    plan_selection_status = models.JSONField(null=True)

@@ -1,13 +1,13 @@
 import { Card, ListGroup, Form } from "react-bootstrap";
 
-function SelectPlans({ plansData }) {
-  console.log(plansData);
+function SelectPlans({ plansData, onCheckChange }) {
   return (
     <Card.Body
       style={{ display: "flex", flexDirection: "column", height: "80%" }}
     >
-      <Card.Title className="mb-3">Select Plans for Schedule</Card.Title>
-
+      <Card.Title className="mb-3">
+        Select Plans to Include in the Schedule
+      </Card.Title>
       <div style={{ overflowY: "auto", flexGrow: 1 }}>
         <ListGroup as="ol" numbered="true">
           {plansData.map((plan) => (
@@ -23,8 +23,10 @@ function SelectPlans({ plansData }) {
               <Form.Check
                 reverse
                 name="group1"
-                // type={type}
-                // id={`reverse-${type}-1`}
+                checked={plan["is_selected"]}
+                onChange={() => {
+                  onCheckChange(plan["id"]);
+                }}
               />
             </ListGroup.Item>
           ))}
