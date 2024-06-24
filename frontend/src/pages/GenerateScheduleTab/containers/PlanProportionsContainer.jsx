@@ -51,7 +51,11 @@ function PlanProportionsContainer() {
         "percent_allocated",
         ""
       );
-      defaultPlansData = addFieldToObjects(defaultPlansData, "exam_date", null);
+      defaultPlansData = addFieldToObjects(
+        defaultPlansData,
+        "exam_date",
+        "T00:00:00.000Z"
+      );
 
       // Syncing with any existing draft data on the server
       // 'details' refers to the plans' percentage time allocation and exam dates
