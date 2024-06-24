@@ -17,11 +17,21 @@ import AllocateHours from "../components/AllocateHours";
 const NUMBER_DAYS_TO_RENDER = 182; // Half a year
 const defaultDatesToHours = getISODatesToZeroHours(NUMBER_DAYS_TO_RENDER);
 
-function AllocateHoursContainer() {
+// Utility functions
+const computeTotalHours = (dateToHours) => {
+  let total = 0;
+  for (const object of dateToHours) {
+    total = total + object["hours"];
+  }
+  return total;
+};
+
+function AllocateHoursContainer({ onComplete, onIncomplete }) {
   const [isLoading, setIsLoading] = useState(true);
   const [weekNumber, setWeekNumber] = useState(0);
   const [datesToHours, setDatesToHours] = useState(null);
 
+  // useEffects
   const updatePageData = async () => {
     let response = await getFormDraft();
 
@@ -51,9 +61,25 @@ function AllocateHoursContainer() {
       setIsLoading(false);
     }
   };
+
+  // Fetching initial page data
   useEffect(() => {
     updatePageData();
   }, []);
+
+  // Determine whether this section is complete based on whether any hours have been
+  // registered
+  useEffect(() => {
+    if (datesToHours) {
+      const totalHours = computeTotalHours(datesToHours);
+
+      if (totalHours === 0) {
+        onIncomplete();
+      } else {
+        onComplete();
+      }
+    }
+  }, [datesToHours]);
 
   // Event handling
   const handleWeekNumberDecrement = () => {

@@ -24,7 +24,23 @@ const computeTotalPercent = (plansData) => {
   return total;
 };
 
-function PlanProportionsContainer() {
+/**Checks if all the input dates in plansData are valid. */
+const areInputDatesValid = (plansData) => {
+  for (const object of plansData) {
+    const dateToTest = object["exam_date"];
+    const referenceDate = new Date(dateToTest);
+    try {
+      // Will throw an error if the date used to initialise the Date object is not
+      // valid
+      referenceDate.toISOString();
+    } catch {
+      return false;
+    }
+  }
+  return true;
+};
+
+function PlanProportionsContainer({ onComplete, onIncomplete }) {
   const [isLoading, setIsLoading] = useState(true);
   const [plansData, setPlansData] = useState(null);
   const [totalPercent, setTotalPercent] = useState(0);
@@ -73,9 +89,21 @@ function PlanProportionsContainer() {
     }
   };
 
+  // Fetch initial page data
   useEffect(() => {
     updatePageData();
   }, []);
+
+  // Check if the section is completet
+  useEffect(() => {
+    if (plansData) {
+      if (areInputDatesValid(plansData) && totalPercent === 100) {
+        onComplete();
+      } else {
+        onIncomplete();
+      }
+    }
+  }, [plansData]);
 
   // Event handling
   const handlePercentChange = async (newPercent, id) => {

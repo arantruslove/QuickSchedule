@@ -10,10 +10,23 @@ import { updateManySelectedStatus, switchBool } from "../selectPlansUtils";
 import { addFieldToObjects } from "../utils";
 import SelectPlans from "../components/SelectPlans";
 
-function SelectPlansContainer() {
+// Utility functions
+const areAnySelected = (plansData) => {
+  let anySelected = false;
+  for (const object of plansData) {
+    if (object["is_selected"]) {
+      anySelected = true;
+      break;
+    }
+  }
+  return anySelected;
+};
+
+function SelectPlansContainer({ onComplete, onIncomplete }) {
   const [isLoading, setIsLoading] = useState(true);
   const [plansData, setPlansData] = useState(null);
 
+  // useEffects
   const updatePageData = async () => {
     const [plansResponse, formsResponse] = await Promise.all([
       getPrivatePlans(),
@@ -38,7 +51,6 @@ function SelectPlansContainer() {
           defaultPlansData,
           savedPlansData
         );
-        console.log(initialPlansData);
       } else {
         initialPlansData = defaultPlansData;
       }
@@ -47,9 +59,23 @@ function SelectPlansContainer() {
     }
   };
 
+  // Fetching the initial page data
   useEffect(() => {
     updatePageData();
   }, []);
+
+  // Checking whether this section has been completed or not
+  useEffect(() => {
+    if (plansData) {
+      const anySelected = areAnySelected(plansData);
+
+      if (anySelected) {
+        onComplete();
+      } else {
+        onIncomplete();
+      }
+    }
+  }, [plansData]);
 
   // Event handling
   const handleCheckChange = async (planId) => {
