@@ -6,11 +6,8 @@ import {
   getFormDraft,
   updateFormDraft,
 } from "../../../services/scheduleRequests";
-import {
-  updateManySelectedStatus,
-  addFieldToObjects,
-  switchBool,
-} from "../selectPlansUtils";
+import { updateManySelectedStatus, switchBool } from "../selectPlansUtils";
+import { addFieldToObjects } from "../utils";
 import SelectPlans from "../components/SelectPlans";
 
 function SelectPlansContainer() {
@@ -26,7 +23,7 @@ function SelectPlansContainer() {
     if (plansResponse.ok) {
       const fetchedPlansData = await plansResponse.json();
       // Add is_selected field to the data with a default of false
-      const defaultPlansData = addFieldToObjects(
+      let defaultPlansData = addFieldToObjects(
         fetchedPlansData,
         "is_selected",
         false
@@ -36,7 +33,6 @@ function SelectPlansContainer() {
       const savedPlansData = savedFormData["plan_selection_status"];
       let initialPlansData;
       if (savedPlansData) {
-        // console.log(savedPlansData);
         // Updating from the server if not null
         initialPlansData = updateManySelectedStatus(
           defaultPlansData,

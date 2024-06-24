@@ -11,3 +11,4 @@ class ScheduleFormDraft(models.Model):
 
     daily_study_hours = models.JSONField(null=True)
     plan_selection_status = models.JSONField(null=True)
+    plan_details = models.JSONField(null=True)

@@ -3,7 +3,7 @@ import { Card, Nav } from "react-bootstrap";
 
 import AllocateHoursContainer from "../containers/AllocateHoursContainer";
 import SelectPlansContainer from "../containers/SelectPlansContainer";
-import ScheduleInformation from "./ScheduleInformation";
+import PlanProportionsContainer from "../containers/PlanProportionsContainer";
 import MakeAdjustments from "./MakeAdjustments";
 
 function GenerateSchedule() {
@@ -25,7 +25,7 @@ function GenerateSchedule() {
         </Nav.Item>
         <Nav.Item>
           <Nav.Link eventKey={3} onClick={() => setTabNumber(3)}>
-            Schedule Information
+            Plan Time Allocation
           </Nav.Link>
         </Nav.Item>
         <Nav.Item>
@@ -37,7 +37,7 @@ function GenerateSchedule() {
 
       {tabNumber === 1 && <AllocateHoursContainer />}
       {tabNumber === 2 && <SelectPlansContainer />}
-      {tabNumber === 3 && <ScheduleInformation />}
+      {tabNumber === 3 && <PlanProportionsContainer />}
       {tabNumber === 4 && <MakeAdjustments />}
     </Card>
   );
