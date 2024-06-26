@@ -148,12 +148,18 @@ export function plansDictToList(plansDict) {
   for (const planId of Object.keys(plansDict)) {
     const planInfo = plansDict[planId];
     const planObject = {};
+    for (const key of Object.keys(planInfo)) {
+      planObject[key] = planInfo[key];
+    }
     planObject["id"] = planId;
-    planObject["title"] = planInfo["title"];
-    planObject["is_selected"] = planInfo["is_selected"];
 
     plansList.push(planObject);
   }
+
+  // Order from largest id (added most recently) to smallest (added least recently)
+  plansList.sort((planObject1, planObject2) => {
+    return planObject2["id"] - planObject1["id"];
+  });
 
   return plansList;
 }
