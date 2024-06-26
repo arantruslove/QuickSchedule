@@ -6,8 +6,7 @@ import {
   getFormDraft,
   updateFormDraft,
 } from "../../../services/scheduleRequests";
-import { completeISODate } from "../PlanDetailsUtils";
-import { plansListToDict } from "../utils";
+import { plansListToDict, completeISODate } from "../utils";
 import PlanDetails from "../components/PlanDetails";
 
 const computeTotalPercent = (plansDict) => {

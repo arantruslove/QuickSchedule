@@ -165,3 +165,13 @@ export function plansDictToList(plansDict) {
 
   return plansList;
 }
+
+/**Truncate the time part of the ISO format date. */
+export function truncateISODate(dateToTruncate) {
+  return dateToTruncate.split("T")[0];
+}
+
+/**Add back the time part of the ISO date and set it to midnight. */
+export function completeISODate(truncatedDate) {
+  return `${truncatedDate}T00:00:00.000Z`;
+}
