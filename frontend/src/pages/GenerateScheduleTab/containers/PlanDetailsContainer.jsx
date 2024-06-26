@@ -100,6 +100,10 @@ function PlanDetailsContainer({ onComplete, onIncomplete }) {
 
   // Event handling
   const handlePercentChange = async (newPercent, id) => {
+    // Negative numbers are not allowed
+    if (Number(newPercent) < 0) {
+      return null;
+    }
     const updatedPlansDict = { ...plansDict };
     updatedPlansDict[id]["percent_allocated"] = newPercent;
 
