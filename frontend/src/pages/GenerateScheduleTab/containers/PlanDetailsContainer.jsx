@@ -6,29 +6,22 @@ import {
   getFormDraft,
   updateFormDraft,
 } from "../../../services/scheduleRequests";
-import {
-  filterByIsSelected,
-  updateExamDatesPercentsAllocated,
-  updateSinglePercent,
-  updateSingleExamDate,
-  completeISODate,
-} from "../PlanDetailsUtils";
-import { addFieldToObjects } from "../utils";
+import { completeISODate } from "../PlanDetailsUtils";
+import { plansListToDict } from "../utils";
 import PlanDetails from "../components/PlanDetails";
 
-const computeTotalPercent = (plansData) => {
+const computeTotalPercent = (plansDict) => {
   let total = 0;
-  for (const object of plansData) {
-    total = total + Number(object["percent_allocated"]);
+  for (const planDetails of Object.values(plansDict)) {
+    total += Number(planDetails["percent_allocated"]);
   }
   return total;
 };
 
 /**Checks if all the input dates in plansData are valid. */
-const areInputDatesValid = (plansData) => {
-  for (const object of plansData) {
-    const dateToTest = object["exam_date"];
-    const referenceDate = new Date(dateToTest);
+const areInputDatesValid = (plansDict) => {
+  for (const planDetails of Object.values(plansDict)) {
+    const referenceDate = new Date(planDetails["exam_date"]);
     try {
       // Will throw an error if the date used to initialise the Date object is not
       // valid
@@ -42,7 +35,7 @@ const areInputDatesValid = (plansData) => {
 
 function PlanDetailsContainer({ onComplete, onIncomplete }) {
   const [isLoading, setIsLoading] = useState(true);
-  const [plansData, setPlansData] = useState(null);
+  const [plansDict, setPlansDict] = useState(null);
   const [totalPercent, setTotalPercent] = useState(0);
 
   const updatePageData = async () => {
@@ -52,39 +45,39 @@ function PlanDetailsContainer({ onComplete, onIncomplete }) {
     ]);
 
     if (plansResponse.ok && formsResponse.ok) {
-      // Filtering plans by whether they have been selected
-      const plans = await plansResponse.json();
+      const privatePlansList = await plansResponse.json();
       const savedFormData = await formsResponse.json();
+      const planSelectionDict = savedFormData["plan_selection_status"];
 
-      const filteredBySelectedPlans = filterByIsSelected(
-        plans,
-        savedFormData["plan_selection_status"]
-      );
+      // Filtering out is_selected = false values
+      const selectedPlansList = privatePlansList.filter((plan) => {
+        const isSelected = planSelectionDict[plan["id"]]["is_selected"];
+        return isSelected;
+      });
 
-      // Adding default percent_allocated and exam_date fields
-      let defaultPlansData = addFieldToObjects(
-        filteredBySelectedPlans,
-        "percent_allocated",
-        ""
-      );
-      defaultPlansData = addFieldToObjects(
-        defaultPlansData,
-        "exam_date",
-        "T00:00:00.000Z"
-      );
+      // Creating plans data structure base with default exam date and percent
+      // allocated fields
+      const initialPlansDict = plansListToDict(selectedPlansList, {
+        percent_allocated: 0,
+        exam_date: "T00:00:00Z",
+      });
 
       // Syncing with any existing draft data on the server
       // 'details' refers to the plans' percentage time allocation and exam dates
-      let initialPlansData = defaultPlansData;
-      const savedPlansData = savedFormData["plan_details"];
-      if (savedPlansData) {
-        initialPlansData = updateExamDatesPercentsAllocated(
-          initialPlansData,
-          savedPlansData
-        );
+      const savedPlansDetails = savedFormData["plan_details"];
+      if (savedPlansDetails) {
+        for (const planId of Object.keys(initialPlansDict)) {
+          if (savedPlansDetails[planId]) {
+            initialPlansDict[planId]["percent_allocated"] =
+              savedPlansDetails[planId]["percent_allocated"];
+            initialPlansDict[planId]["exam_date"] =
+              savedPlansDetails[planId]["exam_date"];
+          }
+        }
       }
-      setTotalPercent(computeTotalPercent(initialPlansData));
-      setPlansData(initialPlansData);
+
+      setTotalPercent(computeTotalPercent(initialPlansDict));
+      setPlansDict(initialPlansDict);
       setIsLoading(false);
     }
   };
@@ -96,47 +89,44 @@ function PlanDetailsContainer({ onComplete, onIncomplete }) {
 
   // Check if the section is completet
   useEffect(() => {
-    if (plansData) {
-      if (areInputDatesValid(plansData) && totalPercent === 100) {
+    if (plansDict) {
+      if (areInputDatesValid(plansDict) && totalPercent === 100) {
         onComplete();
       } else {
         onIncomplete();
       }
     }
-  }, [plansData]);
+  }, [plansDict]);
 
   // Event handling
   const handlePercentChange = async (newPercent, id) => {
-    const updatedPlansData = updateSinglePercent(plansData, id, newPercent);
+    const updatedPlansDict = { ...plansDict };
+    updatedPlansDict[id]["percent_allocated"] = newPercent;
 
     // Save on the server
-    const data = { plan_details: updatedPlansData };
+    const data = { plan_details: updatedPlansDict };
     const response = await updateFormDraft(data);
 
     if (response.ok) {
-      setPlansData(updatedPlansData);
+      setPlansDict(updatedPlansDict);
 
       // Update the total percent to display
-      let total = 0;
-      for (const object of updatedPlansData) {
-        total = total + Number(object["percent_allocated"]);
-      }
-
+      const total = computeTotalPercent(updatedPlansDict);
       setTotalPercent(total);
     }
   };
 
   const handleDateChange = async (newExamDate, id) => {
     // Adding back time part of the ISO format date (set to midnight)
-    const completeDate = completeISODate(newExamDate);
-    const updatedPlansData = updateSingleExamDate(plansData, id, completeDate);
+    const updatedPlansDict = { ...plansDict };
+    updatedPlansDict[id]["exam_date"] = completeISODate(newExamDate);
 
     // Save on the server
-    const data = { plan_details: updatedPlansData };
+    const data = { plan_details: updatedPlansDict };
     const response = await updateFormDraft(data);
 
     if (response.ok) {
-      setPlansData(updatedPlansData);
+      setPlansDict(updatedPlansDict);
     }
   };
 
@@ -151,7 +141,7 @@ function PlanDetailsContainer({ onComplete, onIncomplete }) {
         </div>
       ) : (
         <PlanDetails
-          plansData={plansData}
+          plansDict={plansDict}
           totalPercent={totalPercent}
           onPercentChange={handlePercentChange}
           onDateChange={handleDateChange}

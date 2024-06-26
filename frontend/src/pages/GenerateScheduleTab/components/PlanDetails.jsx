@@ -1,14 +1,18 @@
 import React from "react";
 import { Card, ListGroup, Form } from "react-bootstrap";
 
+import { plansDictToList } from "../utils";
 import { truncateISODate } from "../PlanDetailsUtils";
 
 function PlanDetails({
-  plansData,
+  plansDict,
   totalPercent,
   onPercentChange,
   onDateChange,
 }) {
+  // Formatting to list for presentation
+  const plansList = plansDictToList(plansDict);
+
   const totalPercentStyle = {
     color: totalPercent === 100 ? "green" : "red",
   };
@@ -22,7 +26,7 @@ function PlanDetails({
       </Card.Title>
       <div style={{ overflowY: "auto", flexGrow: 1 }}>
         <ListGroup as="ol" numbered>
-          {plansData.map((plan) => (
+          {plansList.map((plan) => (
             <ListGroup.Item
               key={plan["id"]}
               as="li"

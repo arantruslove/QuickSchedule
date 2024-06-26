@@ -37,7 +37,6 @@ function SelectPlansContainer({ onComplete, onIncomplete }) {
       let initialPlansDict = plansListToDict(fetchedPlansList, {
         is_selected: false,
       });
-      console.log(initialPlansDict);
 
       const savedFormDict = await formsResponse.json();
       const savedPlansDict = savedFormDict["plan_selection_status"];
