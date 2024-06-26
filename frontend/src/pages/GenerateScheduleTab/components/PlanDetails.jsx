@@ -1,8 +1,7 @@
 import React from "react";
 import { Card, ListGroup, Form } from "react-bootstrap";
 
-import { plansDictToList } from "../utils";
-import { truncateISODate } from "../PlanDetailsUtils";
+import { plansDictToList, truncateISODate } from "../utils";
 
 function PlanDetails({
   plansDict,
