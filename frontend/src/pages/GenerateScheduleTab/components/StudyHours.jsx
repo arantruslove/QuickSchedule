@@ -8,7 +8,7 @@ import {
   Button,
 } from "react-bootstrap";
 
-import { addFormattedDateDay, splitByWeek } from "../studyHoursUtils";
+import { formatDatesInList, splitByWeek } from "../utils";
 
 // Determining when the dropdown should start scrolling
 const HOUR_OPTIONS = [0, 0.5, 1, 1.5, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
@@ -25,7 +25,7 @@ function StudyHours({
   onZeroAllHours,
 }) {
   // Obtaining the current week data
-  const formattedDatesHoursDays = addFormattedDateDay(datesToHours);
+  const formattedDatesHoursDays = formatDatesInList(datesToHours);
   const weekByWeekData = splitByWeek(formattedDatesHoursDays);
   const currentWeekData = weekByWeekData[weekNumber];
 
@@ -55,13 +55,13 @@ function StudyHours({
               className="d-flex justify-content-between align-items-start"
             >
               <div className="ms-2 me-auto fw-bold">
-                {dateObj.formattedDate} - {dateObj.day}
+                {dateObj.formatted_date} - {dateObj.day}
               </div>
 
               <DropdownButton
                 variant="outline-secondary"
                 as={ButtonGroup}
-                title={`${dateObj.hours}h`}
+                title={`${dateObj.study_hours}h`}
                 id={`dropdown-${dateObj.day}`}
                 size="sm"
                 drop="start"
@@ -75,7 +75,7 @@ function StudyHours({
                   {HOUR_OPTIONS.map((hours, index) => (
                     <Dropdown.Item
                       key={index}
-                      onClick={() => onHoursClick(hours, dateObj.isoDate)}
+                      onClick={() => onHoursClick(hours, dateObj.iso_date)}
                     >
                       {hours}
                     </Dropdown.Item>

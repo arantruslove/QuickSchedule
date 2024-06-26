@@ -8,3 +8,111 @@ export function addFieldToObjects(listToAddFieldsTo, fieldName, value) {
 
   return updatedList;
 }
+
+/******************************************
+ * Handling date and time utility functions
+ ******************************************/
+// Constants
+const MONTH_STR_REP = {
+  0: "January",
+  1: "February",
+  2: "March",
+  3: "April",
+  4: "May",
+  5: "June",
+  6: "July",
+  7: "August",
+  8: "September",
+  9: "October",
+  10: "November",
+  11: "December",
+};
+
+const DAY_STR_REP = {
+  0: "Sunday",
+  1: "Monday",
+  2: "Tuesday",
+  3: "Wednesday",
+  4: "Thursday",
+  5: "Friday",
+  6: "Saturday",
+};
+
+/**Sets the time part of the ISO 8106 representation to midnight. */
+function getDateOnly() {
+  const dateOnly = new Date();
+  dateOnly.setHours(0, 0, 0, 0);
+  return dateOnly;
+}
+
+/**Sorts a list of ISO format dates in order of earliest to latest. */
+function orderISODates(datesToOrder) {
+  datesToOrder.sort((date1, date2) => {
+    const date1Obj = new Date(date1);
+    const date2Obj = new Date(date2);
+    return date1Obj - date2Obj;
+  });
+}
+
+/**Starting from today, gets a list of ISO format dates in consecutive days returning
+ * a dictionary of nDays keys.
+ */
+export function getISODatesToZeroHours(nDays) {
+  const datesToHours = {};
+  for (let i = 0; i < nDays; i++) {
+    const date = getDateOnly();
+    date.setDate(date.getDate() + i);
+    const isoDate = date.toISOString();
+
+    // Setting to zero hours
+    datesToHours[isoDate] = 0;
+  }
+  return datesToHours;
+}
+
+/**Format dates to a list with extra fields such as day, */
+export function formatDatesInList(datesToHours) {
+  const datesList = Object.keys(datesToHours);
+  orderISODates(datesList); // Ordering the list of dates
+
+  const formattedList = [];
+  for (const isoDate of datesList) {
+    // Getting the formatted date representation
+    const dateObj = new Date(isoDate);
+    const formattedRepresentation = `${dateObj.getDate()} ${
+      MONTH_STR_REP[dateObj.getMonth()]
+    } ${dateObj.getFullYear()}`;
+
+    // Creating an object with all the necessary fields
+    // snake_case used for fields to align with server variable conventions
+    const formattedDateObj = {};
+    formattedDateObj["iso_date"] = isoDate;
+    formattedDateObj["formatted_date"] = formattedRepresentation;
+    formattedDateObj["day"] = DAY_STR_REP[dateObj.getDay()]; // Day of the week
+    formattedDateObj["study_hours"] = datesToHours[isoDate];
+
+    formattedList.push(formattedDateObj);
+  }
+
+  return formattedList;
+}
+
+/**Split into a list of sublists where each sublist corresponds to a week. */
+export function splitByWeek(inputDates) {
+  const weekByWeekDates = [];
+
+  let week = [];
+  for (const dateObj of inputDates) {
+    week.push(dateObj);
+    if (dateObj["day"] === "Sunday") {
+      weekByWeekDates.push(week);
+      week = [];
+    }
+  }
+
+  // Append the remaining week if it is not empty
+  if (week.length != 0) {
+    weekByWeekDates.push(week);
+  }
+  return weekByWeekDates;
+}

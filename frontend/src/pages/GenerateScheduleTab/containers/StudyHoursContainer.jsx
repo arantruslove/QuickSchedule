@@ -1,11 +1,7 @@
 import { useState, useEffect } from "react";
 import { Spinner } from "react-bootstrap";
 
-import {
-  getISODatesToZeroHours,
-  updateManyHours,
-  updateSingleHours,
-} from "../studyHoursUtils";
+import { getISODatesToZeroHours } from "../utils";
 import {
   createFormDraft,
   getFormDraft,
@@ -15,14 +11,14 @@ import StudyHours from "../components/StudyHours";
 
 // Constants
 const NUMBER_DAYS_TO_RENDER = 182; // Half a year
-const defaultDatesToHours = getISODatesToZeroHours(NUMBER_DAYS_TO_RENDER);
+const initialDatesToHours = getISODatesToZeroHours(NUMBER_DAYS_TO_RENDER);
 
 // Utility functions
 const computeTotalHours = (dateToHours) => {
-  let total = 0;
-  for (const object of dateToHours) {
-    total = total + object["hours"];
-  }
+  const hoursList = Object.values(dateToHours);
+  const total = hoursList.reduce((accumulator, currentValue) => {
+    return accumulator + currentValue;
+  });
   return total;
 };
 
@@ -44,17 +40,20 @@ function StudyHoursContainer({ onComplete, onIncomplete }) {
       const data = await response.json();
       const fetchedDatesToHours = data["daily_study_hours"];
 
-      let initialDatesToHours;
       if (fetchedDatesToHours) {
         // Update the default hours with those saved on the server from the previous session
-        initialDatesToHours = updateManyHours(
-          defaultDatesToHours,
-          fetchedDatesToHours
+        const defaultDates = Object.keys(initialDatesToHours);
+        const savedDates = Object.keys(fetchedDatesToHours);
+        const commonDates = defaultDates.filter((item) =>
+          new Set(savedDates).has(item)
         );
+        for (const date of commonDates) {
+          initialDatesToHours[date] = fetchedDatesToHours[date];
+        }
       } else {
         // If the server does not have any data saved from the previous session then use
         // the default of zero hours for each date
-        initialDatesToHours = defaultDatesToHours;
+        null;
       }
 
       setDatesToHours(initialDatesToHours);
@@ -91,11 +90,8 @@ function StudyHoursContainer({ onComplete, onIncomplete }) {
   };
 
   const handleHoursClick = async (newHours, isoDate) => {
-    const updatedDatesToHours = updateSingleHours(
-      datesToHours,
-      isoDate,
-      newHours
-    );
+    const updatedDatesToHours = { ...datesToHours };
+    updatedDatesToHours[isoDate] = newHours;
 
     // Saving the updated hours on the server
     const data = { daily_study_hours: updatedDatesToHours };
@@ -109,10 +105,10 @@ function StudyHoursContainer({ onComplete, onIncomplete }) {
 
   const handleZeroAllHours = async () => {
     // Creating a new array with all hours set to zero
-    const updatedDatesToHours = datesToHours.map((dateToHours) => ({
-      ...dateToHours,
-      hours: 0,
-    }));
+    const updatedDatesToHours = { ...datesToHours };
+    for (const date of Object.keys(updatedDatesToHours)) {
+      updatedDatesToHours[date] = 0;
+    }
 
     // Save the updated hours on the server
     const data = { daily_study_hours: updatedDatesToHours };
