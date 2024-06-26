@@ -1,9 +1,9 @@
 import React from "react";
 import { Card, ListGroup, Form } from "react-bootstrap";
 
-import { truncateISODate } from "../planProportionsUtils";
+import { truncateISODate } from "../PlanDetailsUtils";
 
-function PlanProportions({
+function PlanDetails({
   plansData,
   totalPercent,
   onPercentChange,
@@ -62,4 +62,4 @@ function PlanProportions({
   );
 }
 
-export default PlanProportions;
+export default PlanDetails;

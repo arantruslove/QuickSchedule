@@ -3,15 +3,14 @@ import { Card, Nav } from "react-bootstrap";
 
 import StudyHoursContainer from "../containers/StudyHoursContainer";
 import SelectPlansContainer from "../containers/SelectPlansContainer";
-import PlanProportionsContainer from "../containers/PlanProportionsContainer";
+import PlanDetailsContainer from "../containers/PlanDetailsContainer";
 import TopicHoursContainer from "../containers/TopicHoursContainer";
 
 function GenerateSchedule() {
   const [tabNumber, setTabNumber] = useState(1);
   const [isStudyHoursComplete, setIsStudyHoursComplete] = useState(false);
   const [isSelectPlansComplete, setIsSelectPlansComplete] = useState(false);
-  const [isPlanProportionsComplete, setIsPlanProportionsComplete] =
-    useState(false);
+  const [isPlanDetailsComplete, setIsPlanDetailsComplete] = useState(false);
 
   return (
     <Card style={{ height: "80vh" }}>
@@ -55,7 +54,7 @@ function GenerateSchedule() {
               !(
                 isStudyHoursComplete &&
                 isSelectPlansComplete &&
-                isPlanProportionsComplete
+                isPlanDetailsComplete
               )
             }
             onClick={() => setTabNumber(4)}
@@ -82,9 +81,9 @@ function GenerateSchedule() {
         />
       )}
       {tabNumber === 3 && (
-        <PlanProportionsContainer
-          onComplete={() => setIsPlanProportionsComplete(true)}
-          onIncomplete={() => setIsPlanProportionsComplete(false)}
+        <PlanDetailsContainer
+          onComplete={() => setIsPlanDetailsComplete(true)}
+          onIncomplete={() => setIsPlanDetailsComplete(false)}
         />
       )}
       {tabNumber === 4 && <TopicHoursContainer />}

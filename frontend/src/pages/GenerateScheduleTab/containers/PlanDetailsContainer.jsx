@@ -12,9 +12,9 @@ import {
   updateSinglePercent,
   updateSingleExamDate,
   completeISODate,
-} from "../planProportionsUtils";
+} from "../PlanDetailsUtils";
 import { addFieldToObjects } from "../utils";
-import PlanProportions from "../components/PlanProportions";
+import PlanDetails from "../components/PlanDetails";
 
 const computeTotalPercent = (plansData) => {
   let total = 0;
@@ -40,7 +40,7 @@ const areInputDatesValid = (plansData) => {
   return true;
 };
 
-function PlanProportionsContainer({ onComplete, onIncomplete }) {
+function PlanDetailsContainer({ onComplete, onIncomplete }) {
   const [isLoading, setIsLoading] = useState(true);
   const [plansData, setPlansData] = useState(null);
   const [totalPercent, setTotalPercent] = useState(0);
@@ -150,7 +150,7 @@ function PlanProportionsContainer({ onComplete, onIncomplete }) {
           <Spinner animation="border" variant="primary" />
         </div>
       ) : (
-        <PlanProportions
+        <PlanDetails
           plansData={plansData}
           totalPercent={totalPercent}
           onPercentChange={handlePercentChange}
@@ -161,4 +161,4 @@ function PlanProportionsContainer({ onComplete, onIncomplete }) {
   );
 }
 
-export default PlanProportionsContainer;
+export default PlanDetailsContainer;
