@@ -5,7 +5,6 @@ import { plansDictToList } from "../utils";
 function SelectPlans({ plansDict, onCheckChange }) {
   // Converting to list data format for display in the list group
   const plansList = plansDictToList(plansDict);
-  console.log(plansList);
 
   return (
     <Card.Body

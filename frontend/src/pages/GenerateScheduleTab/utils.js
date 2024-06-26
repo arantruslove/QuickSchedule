@@ -124,16 +124,18 @@ export function splitByWeek(inputDates) {
 
 /**Converts a list of plans data structure into a dictionary format where id is the key
  * and value is another dictionary with relevant fields associated with the plan.
- * Default is_selected = false
  */
-export function plansListToDict(plansList) {
+export function plansListToDict(plansList, extraKeyValues = {}) {
   const plansDict = {};
 
   for (const plan of plansList) {
     const planInfo = {};
     // Setting the fields
     planInfo["title"] = plan["title"];
-    planInfo["is_selected"] = false;
+    // Including extra key-values
+    for (const [key, value] of Object.entries(extraKeyValues)) {
+      planInfo[key] = value;
+    }
 
     const planId = plan["id"];
     plansDict[planId] = planInfo;

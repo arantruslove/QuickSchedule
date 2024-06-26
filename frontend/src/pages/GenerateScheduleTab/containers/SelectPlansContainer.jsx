@@ -34,7 +34,10 @@ function SelectPlansContainer({ onComplete, onIncomplete }) {
     if (plansResponse.ok) {
       // Converting current plans list to dictionary format
       const fetchedPlansList = await plansResponse.json();
-      let initialPlansDict = plansListToDict(fetchedPlansList);
+      let initialPlansDict = plansListToDict(fetchedPlansList, {
+        is_selected: false,
+      });
+      console.log(initialPlansDict);
 
       const savedFormDict = await formsResponse.json();
       const savedPlansDict = savedFormDict["plan_selection_status"];
