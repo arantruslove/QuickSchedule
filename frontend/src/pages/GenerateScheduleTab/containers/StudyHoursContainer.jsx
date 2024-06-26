@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Spinner } from "react-bootstrap";
 
-import { getISODatesToZeroHours } from "../utils";
+import { getISODatesToZeroHours, computeTotalHours } from "../utils";
 import {
   createFormDraft,
   getFormDraft,
@@ -12,15 +12,6 @@ import StudyHours from "../components/StudyHours";
 // Constants
 const NUMBER_DAYS_TO_RENDER = 182; // Half a year
 const initialDatesToHours = getISODatesToZeroHours(NUMBER_DAYS_TO_RENDER);
-
-// Utility functions
-const computeTotalHours = (dateToHours) => {
-  const hoursList = Object.values(dateToHours);
-  const total = hoursList.reduce((accumulator, currentValue) => {
-    return accumulator + currentValue;
-  });
-  return total;
-};
 
 function StudyHoursContainer({ onComplete, onIncomplete }) {
   const [isLoading, setIsLoading] = useState(true);

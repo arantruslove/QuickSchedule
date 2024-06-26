@@ -164,3 +164,15 @@ export function truncateISODate(dateToTruncate) {
 export function completeISODate(truncatedDate) {
   return `${truncatedDate}T00:00:00.000Z`;
 }
+
+/*********************************************
+ * Utility functions for TopicHours components
+ *********************************************/
+
+export function computeTotalHours(datesToHours) {
+  const hoursList = Object.values(datesToHours);
+  const total = hoursList.reduce((accumulator, currentValue) => {
+    return accumulator + currentValue;
+  });
+  return total;
+}

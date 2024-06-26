@@ -59,7 +59,7 @@ function GenerateSchedule() {
             }
             onClick={() => setTabNumber(4)}
           >
-            Make Adjustments
+            Allocate Topic Hours
           </Nav.Link>
         </Nav.Item>
       </Nav>
