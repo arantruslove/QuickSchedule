@@ -1,6 +1,12 @@
 import { Card, ListGroup, Form } from "react-bootstrap";
 
-function SelectPlans({ plansData, onCheckChange }) {
+import { plansDictToList } from "../utils";
+
+function SelectPlans({ plansDict, onCheckChange }) {
+  // Converting to list data format for display in the list group
+  const plansList = plansDictToList(plansDict);
+  console.log(plansList);
+
   return (
     <Card.Body
       style={{ display: "flex", flexDirection: "column", height: "80%" }}
@@ -10,7 +16,7 @@ function SelectPlans({ plansData, onCheckChange }) {
       </Card.Title>
       <div style={{ overflowY: "auto", flexGrow: 1 }}>
         <ListGroup as="ol" numbered="true">
-          {plansData.map((plan) => (
+          {plansList.map((plan) => (
             <ListGroup.Item
               key={plan["id"]}
               as="li"

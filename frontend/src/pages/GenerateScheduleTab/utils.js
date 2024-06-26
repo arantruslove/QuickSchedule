@@ -12,6 +12,7 @@ export function addFieldToObjects(listToAddFieldsTo, fieldName, value) {
 /******************************************
  * Handling date and time utility functions
  ******************************************/
+
 // Constants
 const MONTH_STR_REP = {
   0: "January",
@@ -115,4 +116,44 @@ export function splitByWeek(inputDates) {
     weekByWeekDates.push(week);
   }
   return weekByWeekDates;
+}
+
+/******************************************
+ * Handling date and time utility functions
+ ******************************************/
+
+/**Converts a list of plans data structure into a dictionary format where id is the key
+ * and value is another dictionary with relevant fields associated with the plan.
+ * Default is_selected = false
+ */
+export function plansListToDict(plansList) {
+  const plansDict = {};
+
+  for (const plan of plansList) {
+    const planInfo = {};
+    // Setting the fields
+    planInfo["title"] = plan["title"];
+    planInfo["is_selected"] = false;
+
+    const planId = plan["id"];
+    plansDict[planId] = planInfo;
+  }
+  return plansDict;
+}
+
+/**Converts a plans dictionary data structure back into the list format. */
+export function plansDictToList(plansDict) {
+  const plansList = [];
+
+  for (const planId of Object.keys(plansDict)) {
+    const planInfo = plansDict[planId];
+    const planObject = {};
+    planObject["id"] = planId;
+    planObject["title"] = planInfo["title"];
+    planObject["is_selected"] = planInfo["is_selected"];
+
+    plansList.push(planObject);
+  }
+
+  return plansList;
 }

@@ -6,25 +6,23 @@ import {
   getFormDraft,
   updateFormDraft,
 } from "../../../services/scheduleRequests";
-import { updateManySelectedStatus, switchBool } from "../selectPlansUtils";
-import { addFieldToObjects } from "../utils";
+import { plansListToDict } from "../utils";
 import SelectPlans from "../components/SelectPlans";
 
 // Utility functions
-const areAnySelected = (plansData) => {
-  let anySelected = false;
-  for (const object of plansData) {
-    if (object["is_selected"]) {
-      anySelected = true;
-      break;
+const areAnySelected = (plansDict) => {
+  for (const planId of Object.keys(plansDict)) {
+    const selectedStatus = plansDict[planId]["is_selected"];
+    if (selectedStatus) {
+      return true;
     }
   }
-  return anySelected;
+  return false;
 };
 
 function SelectPlansContainer({ onComplete, onIncomplete }) {
   const [isLoading, setIsLoading] = useState(true);
-  const [plansData, setPlansData] = useState(null);
+  const [plansDict, setplansDict] = useState(null);
 
   // useEffects
   const updatePageData = async () => {
@@ -34,27 +32,22 @@ function SelectPlansContainer({ onComplete, onIncomplete }) {
     ]);
 
     if (plansResponse.ok) {
-      const fetchedPlansData = await plansResponse.json();
-      // Add is_selected field to the data with a default of false
-      let defaultPlansData = addFieldToObjects(
-        fetchedPlansData,
-        "is_selected",
-        false
-      );
+      // Converting current plans list to dictionary format
+      const fetchedPlansList = await plansResponse.json();
+      let initialPlansDict = plansListToDict(fetchedPlansList);
 
-      const savedFormData = await formsResponse.json();
-      const savedPlansData = savedFormData["plan_selection_status"];
-      let initialPlansData;
-      if (savedPlansData) {
-        // Updating from the server if not null
-        initialPlansData = updateManySelectedStatus(
-          defaultPlansData,
-          savedPlansData
-        );
-      } else {
-        initialPlansData = defaultPlansData;
+      const savedFormDict = await formsResponse.json();
+      const savedPlansDict = savedFormDict["plan_selection_status"];
+
+      // Updating savded statuses from the server if any are saved
+      if (savedPlansDict) {
+        const allPlanIds = Object.keys(initialPlansDict);
+        for (const planId of allPlanIds) {
+          const savedStatus = savedPlansDict[planId]["is_selected"];
+          initialPlansDict[planId]["is_selected"] = savedStatus;
+        }
       }
-      setPlansData(initialPlansData);
+      setplansDict(initialPlansDict);
       setIsLoading(false);
     }
   };
@@ -66,8 +59,8 @@ function SelectPlansContainer({ onComplete, onIncomplete }) {
 
   // Checking whether this section has been completed or not
   useEffect(() => {
-    if (plansData) {
-      const anySelected = areAnySelected(plansData);
+    if (plansDict) {
+      const anySelected = areAnySelected(plansDict);
 
       if (anySelected) {
         onComplete();
@@ -75,18 +68,20 @@ function SelectPlansContainer({ onComplete, onIncomplete }) {
         onIncomplete();
       }
     }
-  }, [plansData]);
+  }, [plansDict]);
 
   // Event handling
   const handleCheckChange = async (planId) => {
-    const updatedPlansData = switchBool(plansData, planId);
+    const updatedPlansDict = { ...plansDict };
+    const currentStatus = updatedPlansDict[planId]["is_selected"];
+    updatedPlansDict[planId]["is_selected"] = !currentStatus;
 
     // Saving the data on the server
-    const data = { plan_selection_status: updatedPlansData };
+    const data = { plan_selection_status: updatedPlansDict };
     const response = await updateFormDraft(data);
 
     if (response.ok) {
-      setPlansData(updatedPlansData);
+      setplansDict(updatedPlansDict);
     }
   };
 
@@ -100,7 +95,7 @@ function SelectPlansContainer({ onComplete, onIncomplete }) {
           <Spinner animation="border" variant="primary" />
         </div>
       ) : (
-        <SelectPlans plansData={plansData} onCheckChange={handleCheckChange} />
+        <SelectPlans plansDict={plansDict} onCheckChange={handleCheckChange} />
       )}
     </>
   );
