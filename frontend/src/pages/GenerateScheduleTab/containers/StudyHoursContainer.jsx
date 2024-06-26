@@ -5,13 +5,13 @@ import {
   getISODatesToZeroHours,
   updateManyHours,
   updateSingleHours,
-} from "../allocateHoursUtils";
+} from "../studyHoursUtils";
 import {
   createFormDraft,
   getFormDraft,
 } from "../../../services/scheduleRequests";
 import { updateFormDraft } from "../../../services/scheduleRequests";
-import AllocateHours from "../components/AllocateHours";
+import StudyHours from "../components/StudyHours";
 
 // Constants
 const NUMBER_DAYS_TO_RENDER = 182; // Half a year
@@ -26,7 +26,7 @@ const computeTotalHours = (dateToHours) => {
   return total;
 };
 
-function AllocateHoursContainer({ onComplete, onIncomplete }) {
+function StudyHoursContainer({ onComplete, onIncomplete }) {
   const [isLoading, setIsLoading] = useState(true);
   const [weekNumber, setWeekNumber] = useState(0);
   const [datesToHours, setDatesToHours] = useState(null);
@@ -134,7 +134,7 @@ function AllocateHoursContainer({ onComplete, onIncomplete }) {
           <Spinner animation="border" variant="primary" />
         </div>
       ) : (
-        <AllocateHours
+        <StudyHours
           datesToHours={datesToHours}
           weekNumber={weekNumber}
           onWeekNumberDecrement={handleWeekNumberDecrement}
@@ -147,4 +147,4 @@ function AllocateHoursContainer({ onComplete, onIncomplete }) {
   );
 }
 
-export default AllocateHoursContainer;
+export default StudyHoursContainer;

@@ -1,14 +1,14 @@
 import { useState } from "react";
 import { Card, Nav } from "react-bootstrap";
 
-import AllocateHoursContainer from "../containers/AllocateHoursContainer";
+import StudyHoursContainer from "../containers/StudyHoursContainer";
 import SelectPlansContainer from "../containers/SelectPlansContainer";
 import PlanProportionsContainer from "../containers/PlanProportionsContainer";
-import MakeAdjustments from "./MakeAdjustments";
+import TopicHoursContainer from "../containers/TopicHoursContainer";
 
 function GenerateSchedule() {
   const [tabNumber, setTabNumber] = useState(1);
-  const [isAllocateHoursComplete, setIsAllocateHoursComplete] = useState(false);
+  const [isStudyHoursComplete, setIsStudyHoursComplete] = useState(false);
   const [isSelectPlansComplete, setIsSelectPlansComplete] = useState(false);
   const [isPlanProportionsComplete, setIsPlanProportionsComplete] =
     useState(false);
@@ -31,7 +31,7 @@ function GenerateSchedule() {
           <Nav.Link
             eventKey={2}
             style={{ fontWeight: "bold" }}
-            disabled={!isAllocateHoursComplete}
+            disabled={!isStudyHoursComplete}
             onClick={() => setTabNumber(2)}
           >
             Select Plans
@@ -41,7 +41,7 @@ function GenerateSchedule() {
           <Nav.Link
             eventKey={3}
             style={{ fontWeight: "bold" }}
-            disabled={!(isAllocateHoursComplete && isSelectPlansComplete)}
+            disabled={!(isStudyHoursComplete && isSelectPlansComplete)}
             onClick={() => setTabNumber(3)}
           >
             Plan Time Allocation
@@ -53,7 +53,7 @@ function GenerateSchedule() {
             style={{ fontWeight: "bold" }}
             disabled={
               !(
-                isAllocateHoursComplete &&
+                isStudyHoursComplete &&
                 isSelectPlansComplete &&
                 isPlanProportionsComplete
               )
@@ -66,10 +66,10 @@ function GenerateSchedule() {
       </Nav>
 
       {tabNumber === 1 && (
-        <AllocateHoursContainer
-          onComplete={() => setIsAllocateHoursComplete(true)}
+        <StudyHoursContainer
+          onComplete={() => setIsStudyHoursComplete(true)}
           onIncomplete={() => {
-            setIsAllocateHoursComplete(false);
+            setIsStudyHoursComplete(false);
           }}
         />
       )}
@@ -87,7 +87,7 @@ function GenerateSchedule() {
           onIncomplete={() => setIsPlanProportionsComplete(false)}
         />
       )}
-      {tabNumber === 4 && <MakeAdjustments />}
+      {tabNumber === 4 && <TopicHoursContainer />}
     </Card>
   );
 }
