@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 import { Spinner } from "react-bootstrap";
 
-import { getPrivatePlans } from "../../../services/planRequests";
-
-import { plansListToDict } from "../utils";
+import {
+  getPrivatePlans,
+  updatePrivatePlan,
+} from "../../../services/planRequests";
 import SelectPlans from "../components/SelectPlans";
 
 // Utility functions
@@ -19,34 +20,16 @@ const areAnySelected = (plansDict) => {
 
 function SelectPlansContainer({ onComplete, onIncomplete }) {
   const [isLoading, setIsLoading] = useState(true);
-  const [plansDict, setplansDict] = useState(null);
+  const [plansData, setPlansData] = useState(null);
 
   // useEffects
   const updatePageData = async () => {
-    const [plansResponse, formsResponse] = await Promise.all([
-      getPrivatePlans(),
-      getFormDraft(),
-    ]);
+    const response = await getPrivatePlans();
 
-    if (plansResponse.ok) {
+    if (response.ok) {
       // Converting current plans list to dictionary format
-      const fetchedPlansList = await plansResponse.json();
-      let initialPlansDict = plansListToDict(fetchedPlansList, {
-        is_selected: false,
-      });
-
-      const savedFormDict = await formsResponse.json();
-      const savedPlansDict = savedFormDict["plan_selection_status"];
-
-      // Updating savded statuses from the server if any are saved
-      if (savedPlansDict) {
-        const allPlanIds = Object.keys(initialPlansDict);
-        for (const planId of allPlanIds) {
-          const savedStatus = savedPlansDict[planId]["is_selected"];
-          initialPlansDict[planId]["is_selected"] = savedStatus;
-        }
-      }
-      setplansDict(initialPlansDict);
+      const fetchedPlansData = await response.json();
+      setPlansData(fetchedPlansData);
       setIsLoading(false);
     }
   };
@@ -58,8 +41,8 @@ function SelectPlansContainer({ onComplete, onIncomplete }) {
 
   // Checking whether this section has been completed or not
   useEffect(() => {
-    if (plansDict) {
-      const anySelected = areAnySelected(plansDict);
+    if (plansData) {
+      const anySelected = areAnySelected(plansData);
 
       if (anySelected) {
         onComplete();
@@ -67,20 +50,15 @@ function SelectPlansContainer({ onComplete, onIncomplete }) {
         onIncomplete();
       }
     }
-  }, [plansDict]);
+  }, [plansData]);
 
   // Event handling
-  const handleCheckChange = async (planId) => {
-    const updatedPlansDict = { ...plansDict };
-    const currentStatus = updatedPlansDict[planId]["is_selected"];
-    updatedPlansDict[planId]["is_selected"] = !currentStatus;
-
-    // Saving the data on the server
-    const data = { plan_selection_status: updatedPlansDict };
-    const response = await updateFormDraft(data);
+  const handleCheckChange = async (planId, newCheck) => {
+    const data = { is_selected: newCheck };
+    const response = await updatePrivatePlan(planId, data);
 
     if (response.ok) {
-      setplansDict(updatedPlansDict);
+      updatePageData();
     }
   };
 
@@ -94,7 +72,7 @@ function SelectPlansContainer({ onComplete, onIncomplete }) {
           <Spinner animation="border" variant="primary" />
         </div>
       ) : (
-        <SelectPlans plansDict={plansDict} onCheckChange={handleCheckChange} />
+        <SelectPlans plansData={plansData} onCheckChange={handleCheckChange} />
       )}
     </>
   );

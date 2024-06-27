@@ -1,10 +1,8 @@
 import { Card, ListGroup, Form } from "react-bootstrap";
 
-import { plansDictToList } from "../utils";
-
-function SelectPlans({ plansDict, onCheckChange }) {
-  // Converting to list data format for display in the list group
-  const plansList = plansDictToList(plansDict);
+function SelectPlans({ plansData, onCheckChange }) {
+  // Ordering from highest to lowest id
+  plansData.sort((a, b) => b["id"] - a["id"]);
 
   return (
     <Card.Body
@@ -15,7 +13,7 @@ function SelectPlans({ plansDict, onCheckChange }) {
       </Card.Title>
       <div style={{ overflowY: "auto", flexGrow: 1 }}>
         <ListGroup as="ol" numbered="true">
-          {plansList.map((plan) => (
+          {plansData.map((plan) => (
             <ListGroup.Item
               key={plan["id"]}
               as="li"
@@ -29,8 +27,8 @@ function SelectPlans({ plansDict, onCheckChange }) {
                 reverse
                 name="group1"
                 checked={plan["is_selected"]}
-                onChange={() => {
-                  onCheckChange(plan["id"]);
+                onChange={(event) => {
+                  onCheckChange(plan["id"], event.target.checked);
                 }}
               />
             </ListGroup.Item>
