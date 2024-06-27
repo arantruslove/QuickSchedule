@@ -112,26 +112,6 @@ def private_plan_list_view(request):
         return Response(serializer.data)
 
 
-@api_view(["GET"])
-@permission_classes([IsAuthenticated])
-def private_plans_to_topics(request):
-    """
-    Obtains a dictionary data structure of all the user's PrivatePlan ids each to
-    a dictionary of TopicIds.
-    """
-    private_plans = PrivatePlan.objects.filter(user=request.user)
-    data = {}
-    for private_plan in private_plans:
-        topics = Topic.objects.filter(private_plan=private_plan.id)
-        topics_info = {}
-        for topic in topics:
-            topics_info[topic.id] = {"title": topic.title}
-
-        data[private_plan.id] = topics_info
-
-    return Response(data)
-
-
 @api_view(["POST", "PATCH", "DELETE"])
 @permission_classes([IsAuthenticated])
 def topic_view(request, pk=None):
