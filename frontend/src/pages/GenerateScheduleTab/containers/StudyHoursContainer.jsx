@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Spinner } from "react-bootstrap";
 
-import { getISODatesToZeroHours, computeTotalHours } from "../utils";
+import { getISODatesToZeroHours, computeTotalDictHours } from "../utils";
 import {
   createFormDraft,
   getFormDraft,
@@ -61,7 +61,7 @@ function StudyHoursContainer({ onComplete, onIncomplete }) {
   // registered
   useEffect(() => {
     if (datesToHours) {
-      const totalHours = computeTotalHours(datesToHours);
+      const totalHours = computeTotalDictHours(datesToHours);
 
       if (totalHours === 0) {
         onIncomplete();

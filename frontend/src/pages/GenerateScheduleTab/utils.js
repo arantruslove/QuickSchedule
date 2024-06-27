@@ -28,11 +28,30 @@ const DAY_STR_REP = {
   6: "Saturday",
 };
 
+/**Truncate the time part of the ISO format date. */
+export function truncateISODate(dateToTruncate) {
+  return dateToTruncate.split("T")[0];
+}
+
+/**Add back the time part of the ISO date and set it to midnight. */
+export function completeISODate(truncatedDate) {
+  return `${truncatedDate}T00:00:00.000Z`;
+}
+
+/**Format the date to a human readable form. */
+export function formatDate(isoDateString) {
+  const dateObject = new Date(isoDateString);
+  return `${dateObject.getDate()} ${
+    MONTH_STR_REP[dateObject.getMonth()]
+  } ${dateObject.getFullYear()}`;
+}
+
 /**Sets the time part of the ISO 8106 representation to midnight. */
-function getDateOnly() {
+export function getDateOnly() {
   const dateOnly = new Date();
-  dateOnly.setHours(0, 0, 0, 0);
-  return dateOnly;
+  const truncatedISODate = truncateISODate(dateOnly.toISOString());
+  const midnightISODate = completeISODate(truncatedISODate);
+  return new Date(midnightISODate);
 }
 
 /**Sorts a list of ISO format dates in order of earliest to latest. */
@@ -69,10 +88,7 @@ export function formatDatesInList(datesToHours) {
   for (const isoDate of datesList) {
     // Getting the formatted date representation
     const dateObj = new Date(isoDate);
-    const formattedRepresentation = `${dateObj.getDate()} ${
-      MONTH_STR_REP[dateObj.getMonth()]
-    } ${dateObj.getFullYear()}`;
-
+    const formattedRepresentation = formatDate(dateObj.toISOString());
     // Creating an object with all the necessary fields
     // snake_case used for fields to align with server variable conventions
     const formattedDateObj = {};
@@ -155,24 +171,155 @@ export function plansDictToList(plansDict) {
   return plansList;
 }
 
-/**Truncate the time part of the ISO format date. */
-export function truncateISODate(dateToTruncate) {
-  return dateToTruncate.split("T")[0];
-}
-
-/**Add back the time part of the ISO date and set it to midnight. */
-export function completeISODate(truncatedDate) {
-  return `${truncatedDate}T00:00:00.000Z`;
-}
-
 /*********************************************
  * Utility functions for TopicHours components
  *********************************************/
 
-export function computeTotalHours(datesToHours) {
+export function computeTotalDictHours(datesToHours) {
   const hoursList = Object.values(datesToHours);
   const total = hoursList.reduce((accumulator, currentValue) => {
     return accumulator + currentValue;
   });
   return total;
+}
+
+function computerTotalListHours(plansList) {
+  let total = 0;
+  for (const planDetails of plansList) {
+    total += planDetails["hours_allocated"];
+  }
+  return total;
+}
+
+function roundToNearestHalf(num) {
+  return Math.round(num * 2) / 2;
+}
+
+/**To check that two floats are equal to within typical floating point rounding error.
+ */
+function areFloatsEqual(num1, num2, epsilon = Number.EPSILON) {
+  return Math.abs(num1 - num2) < epsilon;
+}
+
+/**Enforcing that the sum of the hours_allocated fields match with that of the
+ * required hours (i.e. the total hours specified in the study schedule)
+ */
+export function enforceHours(plansDict, requiredHours) {
+  const plansList = plansDictToList(plansDict);
+  // Sorting from largest number of hours allocated to smallest
+  plansList.sort((planDetails1, planDetails2) => {
+    return planDetails2["hours_allocated"] - planDetails1["hours_allocated"];
+  });
+
+  // Enforcing the hours in the list format
+  let currentHours = computerTotalListHours(plansList);
+  let i = 0;
+  while (
+    !areFloatsEqual(currentHours, requiredHours) &&
+    i < 5 * plansList.length // To prevent a page freeze in case of an error
+  ) {
+    const index = i % plansList.length;
+    if (currentHours < requiredHours) {
+      plansList[index]["hours_allocated"] += 0.5;
+    } else {
+      plansList[index]["hours_allocated"] -= 0.5;
+    }
+
+    currentHours = computerTotalListHours(plansList);
+    i++;
+  }
+
+  // Updating the original input object
+  for (const planDetails of plansList) {
+    const id = planDetails["id"];
+    const updatedHours = planDetails["hours_allocated"];
+    plansDict[id]["hours_allocated"] = updatedHours;
+  }
+}
+
+/**Assigns the number of hours that each plan should be studied. */
+export function assignPlanHours(plansDict, totalHours) {
+  const updatedPlansDict = { ...plansDict };
+  for (const [planId, planDetails] of Object.entries(plansDict)) {
+    const fraction = planDetails["percent_allocated"] / 100;
+    const hoursToAllocate = roundToNearestHalf(fraction * totalHours);
+    updatedPlansDict[planId]["hours_allocated"] = hoursToAllocate;
+  }
+
+  // Ensuring that the sum of the hours allocated to each plan matched totalHours
+  enforceHours(updatedPlansDict, totalHours);
+  return updatedPlansDict;
+}
+
+/**Returns a list of the exam date index relative to the first date of study in
+ * datesToHours
+ */
+function getExamDateIndices(plansDict, datesToHours) {
+  // Creates a list of the final day that each plan can be studied on
+  const datesList = Object.keys(datesToHours);
+  const examDayNums = []; // Index of the exam date of a plan
+  for (const planDetails of Object.values(plansDict)) {
+    const examDate = planDetails["exam_date"];
+    const examDayNum = datesList.indexOf(examDate);
+    examDayNums.push(examDayNum);
+  }
+  examDayNums.sort((a, b) => a - b);
+  return examDayNums;
+}
+
+/**Gets the number of hours available before each exam. */
+function getAvailableHours(hoursList, examDateIndices) {
+  const availableHours = [];
+  let startIndex = 0;
+
+  for (let i = 0; i < examDateIndices.length; i++) {
+    const endIndex = examDateIndices[i];
+    const totalHours = hoursList
+      .slice(startIndex, endIndex)
+      .reduce((accumulator, currentValue) => {
+        return accumulator + currentValue;
+      }, 0);
+    availableHours.push(totalHours);
+    startIndex = endIndex;
+  }
+  return availableHours;
+}
+
+function getRemainingHours(plansList, availableHours) {
+  const remainders = [];
+  for (let i = 0; i < availableHours.length; i++) {
+    let remainder = availableHours[i] - plansList[i]["hours_allocated"];
+
+    if (i > 0) {
+      remainder += remainders[i - 1];
+    }
+    remainders.push(remainder);
+  }
+  return remainders;
+}
+
+export function isViable(plansDict, datesToHours) {
+  // Creates a list of the number of hours that should be studied on each day (index)
+  const hoursList = [];
+  for (const hour of Object.values(datesToHours)) {
+    hoursList.push(hour);
+  }
+  const plansList = plansDictToList(plansDict);
+  // Order plans by closest to furthest away
+  plansList.sort((dict1, dict2) => {
+    const date1 = new Date(dict1["exam_date"]);
+    const date2 = new Date(dict2["exam_date"]);
+    return date1.getTime() - date2.getTime();
+  });
+
+  const examDateIndices = getExamDateIndices(plansDict, datesToHours);
+  const availableHours = getAvailableHours(hoursList, examDateIndices);
+  const remainingHours = getRemainingHours(plansList, availableHours);
+
+  for (let i = 0; i < remainingHours.length; i++) {
+    if (remainingHours[i] < 0) {
+      return plansList[i];
+    }
+  }
+  return true;
 }

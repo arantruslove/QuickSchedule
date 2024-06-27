@@ -23,7 +23,7 @@ function GenerateSchedule() {
             disabled={false}
             onClick={() => setTabNumber(1)}
           >
-            Allocate Study Hours
+            1. Allocate Study Hours
           </Nav.Link>
         </Nav.Item>
         <Nav.Item>
@@ -33,7 +33,7 @@ function GenerateSchedule() {
             disabled={!isStudyHoursComplete}
             onClick={() => setTabNumber(2)}
           >
-            Select Plans
+            2. Select Plans
           </Nav.Link>
         </Nav.Item>
         <Nav.Item>
@@ -43,7 +43,7 @@ function GenerateSchedule() {
             disabled={!(isStudyHoursComplete && isSelectPlansComplete)}
             onClick={() => setTabNumber(3)}
           >
-            Plan Time Allocation
+            3. Plan Time Allocation
           </Nav.Link>
         </Nav.Item>
         <Nav.Item>
@@ -59,7 +59,7 @@ function GenerateSchedule() {
             }
             onClick={() => setTabNumber(4)}
           >
-            Allocate Topic Hours
+            4. Allocate Topic Hours
           </Nav.Link>
         </Nav.Item>
       </Nav>
