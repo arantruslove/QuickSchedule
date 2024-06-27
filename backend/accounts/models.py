@@ -1,5 +1,6 @@
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
+import pytz
 import secrets
 
 
@@ -40,12 +41,19 @@ class UserManager(BaseUserManager):
         return self._create_user(email, password, **extra_fields)
 
 
+# Getting all the timezones
+TIMEZONE_CHOICES = [(tz, tz) for tz in pytz.all_timezones]
+
+
 class User(AbstractUser):
     """Custom User model."""
 
     username = None
     email = models.EmailField(unique=True)
     is_verified = models.BooleanField(default=False)
+    time_zone = models.CharField(
+        max_length=63, choices=TIMEZONE_CHOICES, default="Europe/London"
+    )
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
