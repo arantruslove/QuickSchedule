@@ -8,7 +8,7 @@ import {
   Button,
 } from "react-bootstrap";
 
-import { formatDatesInList, splitByWeek } from "../utils";
+import { formatDate, getDay, splitByWeek } from "../utils";
 
 // Determining when the dropdown should start scrolling
 const HOUR_OPTIONS = [0, 0.5, 1, 1.5, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
@@ -17,16 +17,14 @@ const ITEM_HEIGHT = 34; // Approximate height of each item
 const dropdownMaxHeight = MAX_ITEMS_BEFORE_SCROLL * ITEM_HEIGHT;
 
 function StudyHours({
-  datesToHours,
+  datesHours,
   weekNumber,
   onWeekNumberDecrement,
   onWeekNumberIncrement,
   onHoursClick,
   onZeroAllHours,
 }) {
-  // Obtaining the current week data
-  const formattedDatesHoursDays = formatDatesInList(datesToHours);
-  const weekByWeekData = splitByWeek(formattedDatesHoursDays);
+  const weekByWeekData = splitByWeek(datesHours);
   const currentWeekData = weekByWeekData[weekNumber];
 
   return (
@@ -55,13 +53,13 @@ function StudyHours({
               className="d-flex justify-content-between align-items-start"
             >
               <div className="ms-2 me-auto fw-bold">
-                {dateObj.formatted_date} - {dateObj.day}
+                {formatDate(dateObj["date"])} - {getDay(dateObj["date"])}
               </div>
 
               <DropdownButton
                 variant="outline-secondary"
                 as={ButtonGroup}
-                title={`${dateObj.study_hours}h`}
+                title={`${dateObj["hours"]}h`}
                 id={`dropdown-${dateObj.day}`}
                 size="sm"
                 drop="start"
@@ -75,7 +73,7 @@ function StudyHours({
                   {HOUR_OPTIONS.map((hours, index) => (
                     <Dropdown.Item
                       key={index}
-                      onClick={() => onHoursClick(hours, dateObj.iso_date)}
+                      onClick={() => onHoursClick(hours, dateObj["id"])}
                     >
                       {hours}
                     </Dropdown.Item>

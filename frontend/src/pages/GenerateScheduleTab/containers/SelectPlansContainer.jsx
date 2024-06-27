@@ -2,10 +2,7 @@ import { useState, useEffect } from "react";
 import { Spinner } from "react-bootstrap";
 
 import { getPrivatePlans } from "../../../services/planRequests";
-import {
-  getFormDraft,
-  updateFormDraft,
-} from "../../../services/scheduleRequests";
+
 import { plansListToDict } from "../utils";
 import SelectPlans from "../components/SelectPlans";
 

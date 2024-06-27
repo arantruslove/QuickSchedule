@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { Spinner } from "react-bootstrap";
 
 import TopicHours from "../components/TopicHours";
-import { getFormDraft } from "../../../services/scheduleRequests";
 import {
   computeTotalDictHours,
   assignPlanHours,

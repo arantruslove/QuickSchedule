@@ -2,10 +2,6 @@ import { useState, useEffect } from "react";
 import { Spinner } from "react-bootstrap";
 
 import { getPrivatePlans } from "../../../services/planRequests";
-import {
-  getFormDraft,
-  updateFormDraft,
-} from "../../../services/scheduleRequests";
 import { plansListToDict, completeISODate } from "../utils";
 import PlanDetails from "../components/PlanDetails";
 

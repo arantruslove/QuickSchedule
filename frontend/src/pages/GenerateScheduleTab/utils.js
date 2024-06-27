@@ -46,6 +46,13 @@ export function formatDate(isoDateString) {
   } ${dateObject.getFullYear()}`;
 }
 
+/**Gets the human readable day of the week from an ISO format date string. */
+export function getDay(isoDateString) {
+  const dateObject = new Date(isoDateString);
+  const numericalDay = dateObject.getDay();
+  return DAY_STR_REP[numericalDay];
+}
+
 /**Sets the time part of the ISO 8106 representation to midnight. */
 export function getDateOnly() {
   const dateOnly = new Date();
@@ -110,7 +117,8 @@ export function splitByWeek(inputDates) {
   let week = [];
   for (const dateObj of inputDates) {
     week.push(dateObj);
-    if (dateObj["day"] === "Sunday") {
+    const day = getDay(dateObj["date"]);
+    if (day === "Sunday") {
       weekByWeekDates.push(week);
       week = [];
     }
