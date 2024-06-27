@@ -11,9 +11,44 @@ from schedules.date_time_utils import get_consecutive_dates
 from schedules.serializers import StudyDateHourSerializer
 
 
-@api_view(["POST", "PATCH"])
+@api_view(["PATCH"])
 @permission_classes([IsAuthenticated])
-def study_dates_hours_list_view(request):
+def study_date_hour_view(request, pk):
+    """Updates a StudyDateHour instance by pk."""
+    if request.method == "PATCH":
+        data = request.data
+
+        # Obtaing PrivatePlan instance
+        try:
+            study_date_hour = StudyDateHour.objects.get(pk=pk)
+        except:
+            return Response(
+                {"detail": f"StudyDateHour {pk} does not exist."},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+
+        # Checking if the user is authorized to access the PrivatePlan
+        if request.user != study_date_hour.user:
+            return Response(
+                {"detail": "You are not authorized to view this resource."},
+                status=status.HTTP_403_FORBIDDEN,
+            )
+
+        serializer = StudyDateHourSerializer(study_date_hour, data=data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def study_date_hour_list_view(request):
+    """
+    API view for updating study dates and hours based on the current date and returning
+    the list of instances.
+    """
     if request.method == "POST":
         study_dates_hours = StudyDateHour.objects.filter(user=request.user)
 
