@@ -108,6 +108,12 @@ def private_plan_list_view(request):
     if request.method == "GET":
         """Obtains a list of all the PrivatePlans associated with the user."""
         private_plans = PrivatePlan.objects.filter(user=request.user)
+
+        # Filtering by is_selected if included as a query parameter
+        is_selected = request.GET.get("is_selected")
+        if is_selected is not None:
+            private_plans = private_plans.filter(is_selected=is_selected)
+
         serializer = PrivatePlanSerializer(private_plans, many=True)
         return Response(serializer.data)
 
