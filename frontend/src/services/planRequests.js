@@ -43,8 +43,15 @@ export async function deletePrivatePlan(pk) {
 }
 
 /**Gets the list of PrivatePlans that are associated with the user.*/
-export async function getPrivatePlans() {
-  const url = `${BASE_URL}/private-plans/`;
+export async function getPrivatePlans(isSelected = null) {
+  let url;
+  if (isSelected === true) {
+    url = `${BASE_URL}/private-plans/?is_selected=True`;
+  } else if (isSelected === false) {
+    url = `${BASE_URL}/private-plans/?is_selected=False`;
+  } else {
+    url = `${BASE_URL}/private-plans/`;
+  }
   const response = await apiClient.get(url, true);
   return response;
 }

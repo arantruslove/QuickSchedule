@@ -35,7 +35,7 @@ function StudyHoursContainer({ onComplete, onIncomplete }) {
     if (datesHours) {
       let totalHours = 0;
       for (const dateObj of datesHours) {
-        totalHours += dateObj["hours"];
+        totalHours += Number(dateObj["hours"]);
       }
 
       if (totalHours === 0) {

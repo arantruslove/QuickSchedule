@@ -1,19 +1,17 @@
 import React from "react";
 import { Card, ListGroup, Form } from "react-bootstrap";
 
-import { plansDictToList, truncateISODate } from "../utils";
-
 function PlanDetails({
-  plansDict,
-  totalPercent,
+  plansData,
+  totalFraction,
   onPercentChange,
   onDateChange,
 }) {
-  // Formatting to list for presentation
-  const plansList = plansDictToList(plansDict);
+  // Sorting by id
+  plansData.sort((a, b) => b["id"] - a["id"]);
 
-  const totalPercentStyle = {
-    color: totalPercent === 100 ? "green" : "red",
+  const totalFractionStyle = {
+    color: totalFraction === 1 ? "green" : "red",
   };
 
   return (
@@ -25,7 +23,7 @@ function PlanDetails({
       </Card.Title>
       <div style={{ overflowY: "auto", flexGrow: 1 }}>
         <ListGroup as="ol" numbered>
-          {plansList.map((plan) => (
+          {plansData.map((plan) => (
             <ListGroup.Item
               key={plan["id"]}
               as="li"
@@ -40,26 +38,30 @@ function PlanDetails({
                 placeholder="% Time allocation"
                 className="me-2"
                 style={{ width: "20%" }}
-                value={plan["percent_allocated"]}
+                value={
+                  Number(plan["fraction"]) === 0
+                    ? ""
+                    : Math.round(100 * plan["fraction"])
+                }
                 onChange={(event) => {
-                  onPercentChange(event.target.value, plan["id"]);
+                  onPercentChange(plan["id"], event.target.value);
                 }}
               />
               <Form.Control
                 type="date"
                 className="me-2"
                 style={{ width: "20%" }}
-                value={truncateISODate(plan["exam_date"])}
+                value={plan["exam_date"]}
                 onChange={(event) => {
-                  onDateChange(event.target.value, plan["id"]);
+                  onDateChange(plan["id"], event.target.value);
                 }}
               />
             </ListGroup.Item>
           ))}
         </ListGroup>
       </div>
-      <Card.Text className="mt-4" style={totalPercentStyle}>
-        Total: {totalPercent}%
+      <Card.Text className="mt-4" style={totalFractionStyle}>
+        Total: {Math.round(100 * totalFraction)}%
       </Card.Text>
     </Card.Body>
   );

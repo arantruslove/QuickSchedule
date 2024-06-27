@@ -13,4 +13,13 @@ class PrivatePlanSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = PrivatePlan
-        fields = ["id", "user", "title", "is_user_author", "is_selected", "topics"]
+        fields = [
+            "id",
+            "user",
+            "title",
+            "is_user_author",
+            "is_selected",
+            "exam_date",
+            "fraction",
+            "topics",
+        ]

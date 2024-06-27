@@ -1,4 +1,6 @@
 from django.db import models
+from django.core.validators import MaxValueValidator, MinValueValidator
+from decimal import Decimal
 
 from accounts.models import User
 
@@ -16,6 +18,16 @@ class PrivatePlan(models.Model):
     title = models.CharField()
     is_user_author = models.BooleanField()
     is_selected = models.BooleanField(default=False)
+    fraction = models.DecimalField(
+        max_digits=3,
+        decimal_places=2,
+        default=Decimal("0.00"),
+        validators=[
+            MinValueValidator(Decimal("0.00")),
+            MaxValueValidator(Decimal("1.00")),
+        ],
+    )
+    exam_date = models.DateField(null=True, blank=True, default=None)
 
 
 class Topic(models.Model):
