@@ -1,3 +1,4 @@
+from django.db import transaction
 from django.utils.dateparse import parse_date
 from rest_framework import status
 from rest_framework.decorators import api_view
@@ -49,23 +50,27 @@ def study_date_hour_list_view(request):
     API view for updating study dates and hours based on the current date and returning
     the list of instances.
     """
-    if request.method == "POST":
-        study_dates_hours = StudyDateHour.objects.filter(user=request.user)
 
-        # Storing a map of the date representation to hours
+    with transaction.atomic():
+        # Locking the rows for the current user
+        study_dates_hours = StudyDateHour.objects.filter(
+            user=request.user
+        ).select_for_update(nowait=True)
+
+        # Create a map of dates to hours
         dates_to_hours = {
-            study_date_hour.date.strftime("%Y-%m-%d"): study_date_hour.hours
-            for study_date_hour in study_dates_hours
+            sdh.date.strftime("%Y-%m-%d"): sdh.hours for sdh in study_dates_hours
         }
 
-        # Delete all the dates as they will be replaced with fresh ones
+        # Delete existing records
         StudyDateHour.objects.filter(user=request.user).delete()
 
-        # Create consecutive date instances for a set number of dates
+        # Generate new dates
         N_DAYS = 180  # Approximately half a year
         user_time_zone = request.user.time_zone
         dates_list = get_consecutive_dates(N_DAYS, user_time_zone)
 
+        # Prepare new instances
         new_instances = []
         for date_str in dates_list:
             hours = dates_to_hours.get(date_str, 0)
@@ -74,11 +79,31 @@ def study_date_hour_list_view(request):
             )
             new_instances.append(new_instance)
 
-        # Bulk create all new instances
+        # Bulk create new instances
         StudyDateHour.objects.bulk_create(new_instances)
 
-        # Return a list of all of the StudyDateHour instances
-        instances = StudyDateHour.objects.filter(user=request.user)
-        serializer = StudyDateHourSerializer(instances, many=True)
+        # Fetch and serialize all new instances for the response
+        new_study_dates_hours = StudyDateHour.objects.filter(
+            user=request.user
+        ).order_by("date")
+        serializer = StudyDateHourSerializer(new_study_dates_hours, many=True)
 
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+@api_view(["PATCH"])
+@permission_classes([IsAuthenticated])
+def study_date_hour_list_zero(request):
+    """
+    Updates all of the instances associated with the user to zero hours.
+    """
+    instances = StudyDateHour.objects.filter(user=request.user)
+
+    for instance in instances:
+        instance.hours = 0
+    StudyDateHour.objects.bulk_update(instances, ["hours"])
+
+    # Return a list of all of the StudyDateHour instances
+    instances = StudyDateHour.objects.filter(user=request.user)
+    serializer = StudyDateHourSerializer(instances, many=True)
+    return Response(serializer.data)

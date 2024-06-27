@@ -4,6 +4,7 @@ import { Spinner } from "react-bootstrap";
 import {
   getUpdateStudyDatesHours,
   updateStudyDateHour,
+  zeroStudyDatesHours,
 } from "../../../services/scheduleRequests";
 import StudyHours from "../components/StudyHours";
 
@@ -63,19 +64,10 @@ function StudyHoursContainer({ onComplete, onIncomplete }) {
   };
 
   const handleZeroAllHours = async () => {
-    // Creating a new array with all hours set to zero
-    // const updatedDatesToHours = { ...datesToHours };
-    // for (const date of Object.keys(updatedDatesToHours)) {
-    //   updatedDatesToHours[date] = 0;
-    // }
-
-    // // Save the updated hours on the server
-    // const data = { daily_study_hours: updatedDatesToHours };
-    // const response = await updateFormDraft(data);
-
-    // Updating the state with the new hours
+    const response = await zeroStudyDatesHours();
     if (response.ok) {
-      // setDatesToHours(updatedDatesToHours);
+      setIsLoading(true);
+      updatePageData();
     }
   };
 
