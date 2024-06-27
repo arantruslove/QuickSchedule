@@ -123,10 +123,11 @@ def private_plans_to_topics(request):
     data = {}
     for private_plan in private_plans:
         topics = Topic.objects.filter(private_plan=private_plan.id)
-        serializer = TopicSerializer(topics, many=True)
-        # Sort the serialized data by 'id' field from smallest to largest
-        sorted_data = sorted(serializer.data, key=lambda x: x["id"])
-        data[private_plan.id] = sorted_data
+        topics_info = {}
+        for topic in topics:
+            topics_info[topic.id] = {"title": topic.title}
+
+        data[private_plan.id] = topics_info
 
     return Response(data)
 
