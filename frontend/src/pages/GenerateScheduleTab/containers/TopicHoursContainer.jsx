@@ -4,18 +4,48 @@ import { Spinner } from "react-bootstrap";
 import TopicHours from "../components/TopicHours";
 import { formatDate } from "../utils";
 import { getPlansWithRequiredHours } from "../../../services/scheduleRequests";
+import { updateTopic } from "../../../services/planRequests";
+
+// Utility functions
+/**Adding topic_hours field to each plan based on the hours assigned to each topic. */
+const addTopicHoursField = (plansData) => {
+  for (const plan of plansData) {
+    const topics = plan["topics"];
+
+    let total = 0;
+    for (const topic of topics) {
+      total += topic["hours"];
+    }
+    plan["topic_hours"] = total;
+  }
+};
+
+/**Checking whether the topic_hours of each plan equals the required_hours. */
+const areTopicHoursComplete = (plansData) => {
+  for (const plan of plansData) {
+    if (plan["topic_hours"] != plan["required_hours"]) {
+      return false;
+    }
+  }
+  return true;
+};
 
 function TopicHoursContainer() {
   const [isLoading, setIsLoading] = useState(true);
   const [plansData, setPlansData] = useState(null);
   const [notViablePlan, setNotViablePlan] = useState(null);
+  const [isComplete, setIsComplete] = useState(false);
 
   const updatePageData = async () => {
     const response = await getPlansWithRequiredHours();
 
     if (response.ok) {
       const fetchedPlansData = await response.json();
+      fetchedPlansData.sort((a, b) => b["id"] - a["id"]);
+      addTopicHoursField(fetchedPlansData);
+
       setPlansData(fetchedPlansData);
+      setIsComplete(areTopicHoursComplete(fetchedPlansData));
       setIsLoading(false);
     } else if (response.status === 400) {
       // If the user input data cannot form a feasible schedule within their study
@@ -29,6 +59,16 @@ function TopicHoursContainer() {
   useEffect(() => {
     updatePageData();
   }, []);
+
+  // Event handling
+  const handeHoursClick = async (topicId, hours) => {
+    const data = { hours: hours };
+    const response = await updateTopic(topicId, data);
+
+    if (response.ok) {
+      updatePageData();
+    }
+  };
 
   return (
     <>
@@ -49,7 +89,11 @@ function TopicHoursContainer() {
               <strong>{formatDate(notViablePlan["exam_date"])}.</strong>
             </p>
           ) : (
-            <TopicHours />
+            <TopicHours
+              plansData={plansData}
+              onHoursClick={handeHoursClick}
+              isGenerateScheduleActive={isComplete}
+            />
           )}
         </>
       )}

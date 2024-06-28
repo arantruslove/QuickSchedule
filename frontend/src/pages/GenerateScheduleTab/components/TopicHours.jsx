@@ -1,39 +1,99 @@
-import { Card, Accordion } from "react-bootstrap";
+import { useState } from "react";
+import {
+  Card,
+  ListGroup,
+  ButtonGroup,
+  DropdownButton,
+  Dropdown,
+  Pagination,
+  Button,
+} from "react-bootstrap";
 
-function TopicHours() {
+// Determining when the dropdown should start scrolling
+const HOUR_OPTIONS = [0, 0.5, 1, 1.5, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+const MAX_ITEMS_BEFORE_SCROLL = 5; // Set the number of items before scroll
+const ITEM_HEIGHT = 34; // Approximate height of each item
+const dropdownMaxHeight = MAX_ITEMS_BEFORE_SCROLL * ITEM_HEIGHT;
+
+function TopicHours({ plansData, onHoursClick, isGenerateScheduleActive }) {
+  const [topicNumber, setTopicNumber] = useState(0);
+
+  const currentPlan = plansData[topicNumber];
+  const currentTopics = currentPlan["topics"];
+  currentTopics.sort((a, b) => a["id"] - b["id"]);
+
+  const requiredHoursClass =
+    currentPlan["required_hours"] === currentPlan["topic_hours"]
+      ? "text-success"
+      : "text-danger";
+
   return (
     <Card.Body
       style={{ display: "flex", flexDirection: "column", height: "80%" }}
     >
-      <Card.Title className="mb-3">
-        Specify the Number of Hours to Spend on Each Topic
+      <Card.Title className="mb-3 d-flex justify-content-between align-items-center">
+        <div>
+          {currentPlan["title"]} -{" "}
+          <span className={requiredHoursClass}>
+            {currentPlan["topic_hours"]}/{currentPlan["required_hours"]}h
+          </span>
+        </div>
+        <Pagination className="mb-0">
+          <Pagination.Prev
+            disabled={topicNumber === 0}
+            onClick={() => setTopicNumber(topicNumber - 1)}
+          />
+          <Pagination.Next
+            disabled={topicNumber === plansData.length - 1}
+            onClick={() => {
+              setTopicNumber(topicNumber + 1);
+            }}
+          />
+        </Pagination>
       </Card.Title>
-      <Accordion defaultActiveKey="0">
-        <Accordion.Item eventKey="0">
-          <Accordion.Header>Accordian Item #1 (1/5h) </Accordion.Header>
-          <Accordion.Body>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-            aliquip ex ea commodo consequat. Duis aute irure dolor in
-            reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-            pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-            culpa qui officia deserunt mollit anim id est laborum.
-          </Accordion.Body>
-        </Accordion.Item>
-        <Accordion.Item eventKey="1">
-          <Accordion.Header>Accordion Item #2</Accordion.Header>
-          <Accordion.Body>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-            aliquip ex ea commodo consequat. Duis aute irure dolor in
-            reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-            pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-            culpa qui officia deserunt mollit anim id est laborum.
-          </Accordion.Body>
-        </Accordion.Item>
-      </Accordion>
+      <div style={{ overflowY: "auto", flexGrow: 1 }}>
+        <ListGroup numbered="true">
+          {currentTopics.map((topic, index) => (
+            <ListGroup.Item
+              key={index}
+              as="li"
+              className="d-flex justify-content-between align-items-start"
+            >
+              <div className="ms-2 me-auto fw-bold">{topic["title"]}</div>
+
+              <DropdownButton
+                variant="outline-secondary"
+                as={ButtonGroup}
+                title={`${topic["hours"]}h`}
+                id={index}
+                size="sm"
+                drop="start"
+              >
+                <div
+                  style={{
+                    maxHeight: dropdownMaxHeight,
+                    overflowY: "auto",
+                  }}
+                >
+                  {HOUR_OPTIONS.map((hours, index) => (
+                    <Dropdown.Item
+                      key={index}
+                      onClick={() => onHoursClick(topic["id"], hours)}
+                    >
+                      {hours}
+                    </Dropdown.Item>
+                  ))}
+                </div>
+              </DropdownButton>
+            </ListGroup.Item>
+          ))}
+        </ListGroup>
+      </div>
+      <div className="d-flex justify-content-start">
+        <Button variant="success" disabled={!isGenerateScheduleActive}>
+          Generate Schedule
+        </Button>
+      </div>
     </Card.Body>
   );
 }
