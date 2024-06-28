@@ -2,32 +2,28 @@ import { useState, useEffect } from "react";
 import { Spinner } from "react-bootstrap";
 
 import TopicHours from "../components/TopicHours";
-import {
-  computeTotalDictHours,
-  assignPlanHours,
-  isViable,
-  formatDate,
-} from "../utils";
+import { formatDate } from "../utils";
+import { getPlansWithRequiredHours } from "../../../services/scheduleRequests";
 
 function TopicHoursContainer() {
   const [isLoading, setIsLoading] = useState(true);
+  const [plansData, setPlansData] = useState(null);
   const [notViablePlan, setNotViablePlan] = useState(null);
 
   const updatePageData = async () => {
-    const [formResponse] = await Promise.all([getFormDraft()]);
-    const formData = await formResponse.json();
+    const response = await getPlansWithRequiredHours();
 
-    const totalHours = computeTotalDictHours(formData["daily_study_hours"]);
-    const plansDict = assignPlanHours(formData["plan_details"], totalHours);
-    const isInfoViable = isViable(plansDict, formData["daily_study_hours"]);
-
-    // Sets notViablePlan to the plan details of the plan in which there are not
-    // enough study hours allocated to before the exam
-    if (isInfoViable != true) {
-      setNotViablePlan(isInfoViable);
+    if (response.ok) {
+      const fetchedPlansData = await response.json();
+      setPlansData(fetchedPlansData);
+      setIsLoading(false);
+    } else if (response.status === 400) {
+      // If the user input data cannot form a feasible schedule within their study
+      // hour time constraints
+      const fetchedNotViablePlan = await response.json();
+      setNotViablePlan(fetchedNotViablePlan);
+      setIsLoading(false);
     }
-
-    setIsLoading(false);
   };
 
   useEffect(() => {

@@ -23,3 +23,10 @@ export async function zeroStudyDatesHours() {
   const response = await apiClient.patch(url, true);
   return response;
 }
+
+/**Fetching plan and topics data with required_hours field by user id.*/
+export async function getPlansWithRequiredHours() {
+  const url = `${BASE_URL}/plan-required-hours/`;
+  const response = await apiClient.get(url, true);
+  return response;
+}
