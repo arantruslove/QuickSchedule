@@ -11,7 +11,7 @@ import {
 import { formatDate, getDay, splitByWeek } from "../utils";
 
 // Determining when the dropdown should start scrolling
-const HOUR_OPTIONS = [0, 0.5, 1, 1.5, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+const HOUR_OPTIONS = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 const MAX_ITEMS_BEFORE_SCROLL = 5; // Set the number of items before scroll
 const ITEM_HEIGHT = 34; // Approximate height of each item
 const dropdownMaxHeight = MAX_ITEMS_BEFORE_SCROLL * ITEM_HEIGHT;
