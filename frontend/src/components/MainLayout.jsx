@@ -23,7 +23,7 @@ function MainLayout() {
 
   return (
     <Container fluid>
-      <Row className="vh-100">
+      <Row>
         {/* Top Navbar for mobile */}
         <Navbar bg="light" expand="lg" className="d-md-none">
           <Container>
@@ -51,7 +51,12 @@ function MainLayout() {
         </Col>
 
         {/* Main Content */}
-        <Col xs={12} md={9} lg={10} className="content vh-100">
+        <Col
+          xs={12}
+          md={9}
+          lg={10}
+          className="content vh-100 d-flex flex-column"
+        >
           {/* Top Section within Main Content */}
           <Row style={topbarStyle} className="d-none d-md-flex">
             <Col>
@@ -59,8 +64,8 @@ function MainLayout() {
             </Col>
           </Row>
 
-          <Row className="p-4">
-            <Col>
+          <Row className="p-4 flex-grow-1">
+            <Col className="d-flex flex-column">
               <Outlet />
             </Col>
           </Row>
