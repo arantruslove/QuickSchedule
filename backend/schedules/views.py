@@ -6,8 +6,8 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import permission_classes
 
-from plans.models import PrivatePlan
-from plans.serializers import PrivatePlanSerializer
+from plans.models import PrivatePlan, Topic
+from plans.serializers import PrivatePlanSerializer, TopicSerializer
 from schedules.models import StudyDateHour
 from schedules.date_time_utils import get_consecutive_dates
 from schedules.serializers import StudyDateHourSerializer
@@ -18,8 +18,8 @@ from schedules.algorithms.functions import (
     are_plan_hours_viable,
     add_required_hours_field,
     format_viability_result,
-    validate_plans,
     allocate_topics,
+    create_schedule_topic_instances,
 )
 
 
@@ -170,34 +170,62 @@ def plan_required_hours(request):
         )
 
 
-@api_view(["GET"])
+@api_view(["GET", "POST"])
 @permission_classes([IsAuthenticated])
-def generate_schedule(request):
+@transaction.atomic
+def schedule_view(request):
     """Generates a schedules based on the user's plans and topics."""
-    try:
-        # Getting hours list and start date
-        dates_hours_instances = StudyDateHour.objects.filter(
-            user=request.user
-        ).order_by("date")
-        hours_list, start_date = convert_date_queryset_to_hours_list(
-            dates_hours_instances
+
+    if request.method == "GET":
+        """Fetches the user's schedule Topic instances."""
+        schedule_topics = Topic.objects.filter(
+            user=request.user, study_date__isnull=False
         )
+        serializer = TopicSerializer(schedule_topics, many=True)
+        return Response(serializer.data)
 
-        # Getting plan objects from plan instances
-        plan_instances = PrivatePlan.objects.filter(user=request.user, is_selected=True)
-        plan_classes = convert_plan_queryset_to_class_instances(
-            plan_instances, len(hours_list), start_date
-        )
+    if request.method == "POST":
+        """Generates a schedule based on the user's Plans and Topics information."""
+        try:
+            # Deleting any existing schedule Topic instances
+            existing_schedule_topics = Topic.objects.filter(
+                user=request.user, study_date__isnull=False
+            ).select_for_update(nowait=True)
+            existing_schedule_topics.delete()
 
-        schedule = allocate_topics(plan_classes, hours_list)
+            # Getting hours list and start date
+            dates_hours_instances = StudyDateHour.objects.filter(
+                user=request.user
+            ).order_by("date")
+            hours_list, start_date = convert_date_queryset_to_hours_list(
+                dates_hours_instances
+            )
 
-        return Response({"schedule": repr(schedule)})
+            # Getting plan objects from plan instances
+            plan_instances = PrivatePlan.objects.filter(
+                user=request.user, is_selected=True
+            )
+            plan_classes = convert_plan_queryset_to_class_instances(
+                plan_instances, len(hours_list), start_date
+            )
 
-    except ValueError as e:
-        # User should not have been able to make this request since selected plan
-        # fractions did not sum to 1
-        return Response({"detail": str(e)}, status=status.HTTP_403_FORBIDDEN)
-    except Exception as e:
-        return Response(
-            {"detail": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
-        )
+            # Create the schedule and the schedule Topic instances
+            schedule = allocate_topics(plan_classes, hours_list)
+            create_schedule_topic_instances(schedule, start_date)
+
+            # Returning the schedule Topics in the response
+            schedule_topics = Topic.objects.filter(
+                user=request.user, study_date__isnull=False
+            ).order_by("study_date")
+            serializer = TopicSerializer(schedule_topics, many=True)
+
+            return Response(serializer.data)
+
+        except ValueError as e:
+            # User should not have been able to make this request since selected plan
+            # fractions did not sum to 1
+            return Response({"detail": str(e)}, status=status.HTTP_403_FORBIDDEN)
+        except Exception as e:
+            return Response(
+                {"detail": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )

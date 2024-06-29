@@ -1,10 +1,13 @@
 from typing import List, Dict, Tuple
-from datetime import datetime
+from datetime import datetime, timedelta
 from copy import deepcopy
 from django.db.models.query import QuerySet
+
+
 from .classes import Topic, Plan
 from schedules.models import StudyDateHour
-from plans.models import PrivatePlan
+from plans import models
+from plans.serializers import TopicSerializer
 
 
 # Utilities
@@ -57,7 +60,7 @@ def validate_plans(plans: List[Plan], n_days: int) -> None:
 
 
 def convert_plan_queryset_to_class_instances(
-    plan_queryset: QuerySet[PrivatePlan], n_days: int, start_date: str
+    plan_queryset: QuerySet[models.PrivatePlan], n_days: int, start_date: str
 ) -> List[Plan]:
     """
     Converts the plan queryset to Plan and Topic dataclass structures.
@@ -149,7 +152,7 @@ def are_plan_hours_viable(plans: List[Plan], hours_list: List[int]) -> Dict:
 
 
 def add_required_hours_field(
-    plan_instances: List[PrivatePlan], plan_classes: List[Plan]
+    plan_instances: List[models.PrivatePlan], plan_classes: List[Plan]
 ) -> None:
     """
     Adding the each Plan object's required hours field to the Plan model instance.
@@ -204,3 +207,34 @@ def allocate_topics(plans: List[Plan], hours_list: List[int]) -> List[List[Topic
                 day += 1
 
     return schedule
+
+
+def create_schedule_topic_instances(
+    schedule: List[List[Topic]], start_date: str
+) -> None:
+    """
+    Creates the schedule topic instances on the db based off the schedule data
+    structure and start date.
+    """
+    schedule_topics = []
+    date_obj = datetime.strptime(start_date, "%Y-%m-%d")
+    for day in schedule:
+        for topic in day:
+            # Fetch the associated Topic instance from the db
+            original_instance = models.Topic.objects.get(id=topic.id)
+            topic_data = TopicSerializer(original_instance).data
+
+            # Adjust the data fields
+            topic_data["id"] = None
+            topic_data["study_date"] = date_obj.strftime("%Y-%m-%d")
+
+            # Save the schedule Topic instance
+            serializer = TopicSerializer(data=topic_data)
+            if serializer.is_valid():
+                serializer.save()
+            else:
+                raise RuntimeError(
+                    "There was an error creating the schedule Topic instance."
+                )
+        # Moving the date to the next day
+        date_obj = date_obj + timedelta(days=1)
