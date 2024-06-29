@@ -43,3 +43,5 @@ class Topic(models.Model):
 
     title = models.CharField()
     hours = models.FloatField(default=0)
+    # Included in a study schedule if this field is not null
+    study_date = models.DateField(null=True, blank=True)

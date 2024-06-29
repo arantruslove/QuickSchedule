@@ -5,7 +5,7 @@ from plans.models import PrivatePlan, Topic
 class TopicSerializer(serializers.ModelSerializer):
     class Meta:
         model = Topic
-        fields = ["id", "user", "private_plan", "title", "hours"]
+        fields = ["id", "user", "private_plan", "title", "hours", "study_date"]
 
 
 class PrivatePlanSerializer(serializers.ModelSerializer):
