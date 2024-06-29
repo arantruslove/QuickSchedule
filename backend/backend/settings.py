@@ -78,6 +78,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "rest_framework.authtoken",
     "corsheaders",
+    "django_migration_linter",
     # Custom apps
     "accounts",
     "plans",
