@@ -216,7 +216,6 @@ def create_schedule_topic_instances(
     Creates the schedule topic instances on the db based off the schedule data
     structure and start date.
     """
-    schedule_topics = []
     date_obj = datetime.strptime(start_date, "%Y-%m-%d")
     for day in schedule:
         for topic in day:
@@ -227,6 +226,7 @@ def create_schedule_topic_instances(
             # Adjust the data fields
             topic_data["id"] = None
             topic_data["study_date"] = date_obj.strftime("%Y-%m-%d")
+            topic_data["private_plan"] = None
 
             # Save the schedule Topic instance
             serializer = TopicSerializer(data=topic_data)
