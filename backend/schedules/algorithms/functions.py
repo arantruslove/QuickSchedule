@@ -56,7 +56,7 @@ def validate_plans(plans: List[Plan], n_days: int) -> None:
         raise ValueError(f"Relative proportion does not sum to 1 ({total_fraction})")
 
 
-def convert_plan_queryset_to_plan_class_instances(
+def convert_plan_queryset_to_class_instances(
     plan_queryset: QuerySet[PrivatePlan], n_days: int, start_date: str
 ) -> List[Plan]:
     """
@@ -74,6 +74,7 @@ def convert_plan_queryset_to_plan_class_instances(
             title=plan_instance.title,
             final_day=final_day,
             fraction=float(plan_instance.fraction),
+            required_hours=plan_instance.required_hours,
             topics=[],
         )
 
@@ -86,6 +87,8 @@ def convert_plan_queryset_to_plan_class_instances(
                 hours=topic.hours,
             )
             topics.append(topic)
+
+        topics.sort(key=lambda topic: topic.id)
 
         plan.topics = topics
         plans.append(plan)
@@ -194,7 +197,7 @@ def allocate_topics(plans: List[Plan], hours_list: List[int]) -> List[List[Topic
         while topic.hours > 0 and day < len(hours_list):
             if hours_list[day] > 0:
                 hours_to_add = min(topic.hours, hours_list[day])
-                schedule[day].append(Topic(topic.name, hours_to_add))
+                schedule[day].append(Topic(topic.id, topic.title, hours_to_add))
                 topic.hours -= hours_to_add
                 hours_list[day] -= hours_to_add
             if hours_list[day] == 0:
