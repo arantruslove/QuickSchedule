@@ -1,9 +1,10 @@
 from typing import List, Dict, Tuple
 from datetime import datetime
 from copy import deepcopy
-import math
-
+from django.db.models.query import QuerySet
 from .classes import Topic, Plan
+from schedules.models import StudyDateHour
+from plans.models import PrivatePlan
 
 
 # Utilities
@@ -19,28 +20,21 @@ def n_days_difference(date: str, reference_date: str) -> int:
 
 
 # Converting to data types that are
-def convert_dates_to_hours_list(dates_hours: List[Dict]) -> Tuple[List, str]:
+def convert_date_queryset_to_hours_list(
+    dates_hours_queryset: QuerySet[StudyDateHour],
+) -> Tuple[List, str]:
     """
-    Converts a list of dictionaries containing a date field and an hours field to
-    a dictionary containing a list of hours and the date string of the initial date.
+    Converts a StudyDateHour queryset to a tuple containing a list of
+    hours and the date string of the initial date.
     """
-
-    def date_hour_to_ms(date_hour: Dict) -> float:
-        date_str = date_hour["date"]
-        date_format = "%Y-%m-%d"
-        dt = datetime.strptime(date_str, date_format)
-        return dt.timestamp()
-
-    # Sort from nearest in time to furthest away
-    sorted_dates_hours = sorted(dates_hours, key=date_hour_to_ms)
 
     hours_list = []
-    start_date = sorted_dates_hours[0]["date"]
-    for date_hour in sorted_dates_hours:
-        hours = float(date_hour["hours"])
+    start_date_str = dates_hours_queryset[0].date.isoformat()
+    for date_hour in dates_hours_queryset:
+        hours = float(date_hour.hours)
         hours_list.append(hours)
 
-    return hours_list, start_date
+    return hours_list, start_date_str
 
 
 # Validate that the plans provided are suitable for forming a schedule
@@ -62,35 +56,34 @@ def validate_plans(plans: List[Plan], n_days: int) -> None:
         raise ValueError(f"Relative proportion does not sum to 1 ({total_fraction})")
 
 
-def convert_dicts_to_plan_objects(
-    data: List[Dict], n_days: int, start_date: str
+def convert_plan_queryset_to_plan_class_instances(
+    plan_queryset: QuerySet[PrivatePlan], n_days: int, start_date: str
 ) -> List[Plan]:
     """
-    Converts the serialized list of dictionaries representation of plans and topics to
-    the Plan and Topic dataclass structure. These are then used in the scheduling
-    algorithm functions.
+    Converts the plan queryset to Plan and Topic dataclass structures.
     """
 
     plans = []
-    for plan_details in data:
-        final_day = n_days_difference(plan_details["exam_date"], start_date) - 1
+    for plan_instance in plan_queryset:
+        exam_date_str = plan_instance.exam_date.isoformat()
+        final_day = n_days_difference(exam_date_str, start_date) - 1
 
         # Initialising a plan instance
         plan = Plan(
-            id=plan_details["id"],
-            title=plan_details["title"],
+            id=plan_instance.id,
+            title=plan_instance.title,
             final_day=final_day,
-            fraction=float(plan_details["fraction"]),
+            fraction=float(plan_instance.fraction),
             topics=[],
         )
 
         # Adding the topics
         topics = []
-        for topic_details in plan_details["topics"]:
+        for topic in plan_instance.topics.all():
             topic = Topic(
-                id=topic_details["id"],
-                title=topic_details["title"],
-                hours=topic_details["hours"],
+                id=topic.id,
+                title=topic.title,
+                hours=topic.hours,
             )
             topics.append(topic)
 
@@ -152,15 +145,17 @@ def are_plan_hours_viable(plans: List[Plan], hours_list: List[int]) -> Dict:
     return {"is_viable": True, "id": None}
 
 
-def add_required_hours_field(data: List[Dict], plans: List[Plan]) -> None:
+def add_required_hours_field(
+    plan_instances: List[PrivatePlan], plan_classes: List[Plan]
+) -> None:
     """
-    Adding the each Plan object required hours field to the relevant data
-    dictionary.
+    Adding the each Plan object's required hours field to the Plan model instance.
     """
-    for plan in plans:
-        for plan_details in data:
-            if plan.id == plan_details["id"]:
-                plan_details["required_hours"] = plan.required_hours
+    for plan_instance in plan_instances:
+        for plan_class in plan_classes:
+            if plan_instance.id == plan_class.id:
+                plan_instance.required_hours = plan_class.required_hours
+                plan_instance.save()
 
 
 def format_viability_result(viability_result: Dict, plans_data: List[Dict]) -> None:
@@ -171,3 +166,38 @@ def format_viability_result(viability_result: Dict, plans_data: List[Dict]) -> N
         if plan_details["id"] == viability_result["id"]:
             viability_result["title"] = plan_details["title"]
             viability_result["exam_date"] = plan_details["exam_date"]
+
+
+# Generating the study schedule based on the user input data
+def allocate_topics(plans: List[Plan], hours_list: List[int]) -> List[List[Topic]]:
+    """
+    Allocates the topics in each plan to each day adhering to the constraint
+    of the number of hours in a day.
+    """
+    # Ensure immutability of original variables
+    plans = deepcopy(plans)
+    hours_list = hours_list.copy()
+
+    # Order plans by their final day from closest to furthest away from start
+    ordered_plans = sorted(plans, key=obtain_final_day)
+
+    # Combine all topics into a single list
+    topics = []
+    for course in ordered_plans:
+        for topic in course.topics:
+            topics.append(deepcopy(topic))
+
+    # Distribute topics to each day of the schedule
+    schedule = [[] for _ in range(len(hours_list))]
+    day = 0
+    for topic in topics:
+        while topic.hours > 0 and day < len(hours_list):
+            if hours_list[day] > 0:
+                hours_to_add = min(topic.hours, hours_list[day])
+                schedule[day].append(Topic(topic.name, hours_to_add))
+                topic.hours -= hours_to_add
+                hours_list[day] -= hours_to_add
+            if hours_list[day] == 0:
+                day += 1
+
+    return schedule

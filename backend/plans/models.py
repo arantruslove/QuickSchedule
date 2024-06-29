@@ -27,6 +27,7 @@ class PrivatePlan(models.Model):
             MaxValueValidator(Decimal("1.00")),
         ],
     )
+    required_hours = models.FloatField(default=0)
     exam_date = models.DateField(null=True, blank=True, default=None)
 
 

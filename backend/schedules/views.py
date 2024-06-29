@@ -12,12 +12,14 @@ from schedules.models import StudyDateHour
 from schedules.date_time_utils import get_consecutive_dates
 from schedules.serializers import StudyDateHourSerializer
 from schedules.algorithms.functions import (
-    convert_dates_to_hours_list,
-    convert_dicts_to_plan_objects,
+    convert_date_queryset_to_hours_list,
+    convert_plan_queryset_to_plan_class_instances,
     allocate_required_hours,
     are_plan_hours_viable,
     add_required_hours_field,
     format_viability_result,
+    validate_plans,
+    allocate_topics,
 )
 
 
@@ -118,7 +120,7 @@ def study_date_hour_list_zero(request):
     return Response(serializer.data)
 
 
-@api_view(["GET"])
+@api_view(["PATCH"])
 @permission_classes([IsAuthenticated])
 def plan_required_hours(request):
     """
@@ -130,6 +132,50 @@ def plan_required_hours(request):
     """
     try:
         # Getting hours list and start date
+        dates_hours_instances = StudyDateHour.objects.filter(
+            user=request.user
+        ).order_by("date")
+        hours_list, start_date = convert_date_queryset_to_hours_list(
+            dates_hours_instances
+        )
+
+        # Getting plan objects from plan instances
+        plan_instances = PrivatePlan.objects.filter(user=request.user, is_selected=True)
+        plan_classes = convert_plan_queryset_to_plan_class_instances(
+            plan_instances, len(hours_list), start_date
+        )
+
+        # Allocated required hours to the plan classes
+        allocate_required_hours(plan_classes, sum(hours_list))
+
+        # Checking if the plans can form a viable schedule
+        viability_result = are_plan_hours_viable(plan_classes, hours_list)
+
+        if viability_result["is_viable"] == True:
+            add_required_hours_field(plan_instances, plan_classes)
+            serializer = PrivatePlanSerializer(plan_instances, many=True)
+            return Response(serializer.data)
+        else:
+            serializer = PrivatePlanSerializer(plan_instances, many=True)
+            format_viability_result(viability_result, serializer.data)
+            return Response(viability_result, status=status.HTTP_400_BAD_REQUEST)
+
+    except ValueError as e:
+        # User should not have been able to make this request since selected plan
+        # fractions did not sum to 1
+        return Response({"detail": str(e)}, status=status.HTTP_403_FORBIDDEN)
+    except Exception as e:
+        return Response(
+            {"detail": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
+
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def generate_schedule(request):
+    """Generates a schedules based on the user's plans and topics."""
+    try:
+        # Getting hours list and start date
         dates_hours_instances = StudyDateHour.objects.filter(user=request.user)
         dates_hours_serializer = StudyDateHourSerializer(
             dates_hours_instances, many=True
@@ -138,27 +184,25 @@ def plan_required_hours(request):
             dates_hours_serializer.data
         )
 
-        # Gettins plans data
+        # Getting plans data
         plan_instances = PrivatePlan.objects.filter(user=request.user, is_selected=True)
         plans_serializer = PrivatePlanSerializer(plan_instances, many=True)
         plans_data = plans_serializer.data
 
-        # Obtaining the list of Plan objects and allocating the required hours
+        # Obtaining the list of Plan objects
         n_days = len(hours_list)
         plans = convert_dicts_to_plan_objects(plans_data, n_days, start_date)
-        total_hours = sum(hours_list)
-        allocate_required_hours(plans, total_hours)
+        validate_plans(plans)
 
-        # Check if the plans' required hours can form a viable schedule within the study
-        # hour constraints
+        # Checking if a viable schedule can be formed
         viability_result = are_plan_hours_viable(plans, hours_list)
-
-        if viability_result["is_viable"]:
-            add_required_hours_field(plans_data, plans)
-            return Response(plans_data)
-        else:
+        if viability_result["is_viable"] == False:
             format_viability_result(viability_result, plans_data)
             return Response(viability_result, status=status.HTTP_400_BAD_REQUEST)
+
+        # Create the schedule from the topics
+        schedule = allocate_topics(plans, hours_list)
+        return Response(repr(schedule))
 
     except ValueError as e:
         # User should not have been able to make this request since selected plan

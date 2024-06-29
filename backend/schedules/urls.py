@@ -8,4 +8,5 @@ urlpatterns = [
     path("study-date-hour-list/", views.study_date_hour_list_view),
     path("study-date-hour-list/zero/", views.study_date_hour_list_zero),
     path("plan-required-hours/", views.plan_required_hours),
+    path("generate-schedule/", views.generate_schedule),
 ]

@@ -19,7 +19,8 @@ class PrivatePlanSerializer(serializers.ModelSerializer):
             "title",
             "is_user_author",
             "is_selected",
-            "exam_date",
             "fraction",
+            "required_hours",
+            "exam_date",
             "topics",
         ]
