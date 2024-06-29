@@ -16,7 +16,6 @@ function PrivatePlanContainer() {
   const [privatePlanTitle, setPrivatePlanTitle] = useState("");
   const [topicsData, setTopicsData] = useState([]);
   const [newTopicTitle, setNewTopicTitle] = useState("");
-  const [newTopicHours, setNewTopicHours] = useState(2);
 
   // Getting the PrivatePlan id
   const url = useLocation().pathname;
@@ -51,30 +50,16 @@ function PrivatePlanContainer() {
     setNewTopicTitle(newTitle);
   };
 
-  const handleNewTopicHoursClick = (newHours) => {
-    setNewTopicHours(newHours);
-  };
-
   const handleSubmitClick = async () => {
     const data = {
       private_plan: privatePlanId,
       title: newTopicTitle,
-      hours: newTopicHours,
     };
     const response = await createTopic(data);
 
     if (response.ok) {
       setNewTopicTitle("");
       await getPageData();
-    }
-  };
-
-  const handleEditTopicHours = async (hours, topicId) => {
-    const data = { hours: hours };
-    const response = await updateTopic(topicId, data);
-
-    if (response.ok) {
-      getPageData();
     }
   };
 
@@ -101,11 +86,8 @@ function PrivatePlanContainer() {
       privatePlanTitle={privatePlanTitle}
       topicsData={topicsData}
       newTopicTitle={newTopicTitle}
-      newTopicHours={newTopicHours}
       onNewTopicTitleChange={handleNewTopicTitleChange}
-      onNewTopicHoursClick={handleNewTopicHoursClick}
       onSubmitClick={handleSubmitClick}
-      onEditTopicHours={handleEditTopicHours}
       onEditTopicTitle={handleEditTopicTitle}
       onDeleteTopic={handleDeleteTopic}
     />

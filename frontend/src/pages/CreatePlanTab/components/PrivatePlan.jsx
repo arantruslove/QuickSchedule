@@ -6,8 +6,6 @@ import {
   Form,
   ListGroup,
   Spinner,
-  DropdownButton,
-  Dropdown,
   ButtonGroup,
   Placeholder,
 } from "react-bootstrap";
@@ -19,22 +17,13 @@ function PrivatePlan({
   privatePlanTitle,
   topicsData,
   newTopicTitle,
-  newTopicHours,
   onNewTopicTitleChange,
-  onNewTopicHoursClick,
   onSubmitClick,
-  onEditTopicHours,
   onEditTopicTitle,
   onDeleteTopic,
 }) {
   const [displayEditModal, setDisplayEditModal] = useState(false);
   const [modalId, setModalId] = useState(0);
-
-  // Variables
-  const hourOptions = [0.5, 1, 1.5, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
-  const maxItemsBeforeScroll = 5; // Set the number of items before scroll
-  const itemHeight = 34; // Approximate height of each item
-  const dropdownMaxHeight = maxItemsBeforeScroll * itemHeight;
 
   return (
     <>
@@ -75,24 +64,6 @@ function PrivatePlan({
                 value={newTopicTitle}
                 onChange={(event) => onNewTopicTitleChange(event.target.value)}
               />
-              <DropdownButton
-                variant="outline-secondary"
-                title={`${newTopicHours}h`}
-                align="end"
-              >
-                <div
-                  style={{ maxHeight: dropdownMaxHeight, overflowY: "auto" }}
-                >
-                  {hourOptions.map((hours, index) => (
-                    <Dropdown.Item
-                      key={index}
-                      onClick={() => onNewTopicHoursClick(hours)}
-                    >
-                      {hours}
-                    </Dropdown.Item>
-                  ))}
-                </div>
-              </DropdownButton>
               <Button variant="outline-secondary" type="submit">
                 Submit
               </Button>
@@ -119,32 +90,6 @@ function PrivatePlan({
                       <div className="fw-bold">{topic["title"]}</div>
                     </div>
                     <ButtonGroup>
-                      <DropdownButton
-                        variant="secondary"
-                        as={ButtonGroup}
-                        title={`${topic["hours"]}h`}
-                        id="bg-nested-dropdown"
-                        size="sm"
-                        drop="start"
-                      >
-                        <div
-                          style={{
-                            maxHeight: dropdownMaxHeight,
-                            overflowY: "auto",
-                          }}
-                        >
-                          {hourOptions.map((hours, index) => (
-                            <Dropdown.Item
-                              key={index}
-                              onClick={() =>
-                                onEditTopicHours(hours, topic["id"])
-                              }
-                            >
-                              {hours}
-                            </Dropdown.Item>
-                          ))}
-                        </div>
-                      </DropdownButton>
                       <Button
                         variant="primary"
                         size="sm"
