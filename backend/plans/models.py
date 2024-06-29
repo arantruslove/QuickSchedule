@@ -41,4 +41,4 @@ class Topic(models.Model):
     )
 
     title = models.CharField()
-    hours = models.FloatField()
+    hours = models.FloatField(default=0)
