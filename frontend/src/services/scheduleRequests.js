@@ -30,3 +30,17 @@ export async function getPlansWithRequiredHours() {
   const response = await apiClient.patch(url, true);
   return response;
 }
+
+/**Fetching the user's schedule topics.*/
+export async function getScheduleTopics() {
+  const url = `${BASE_URL}/`;
+  const response = await apiClient.get(url, true);
+  return response;
+}
+
+/**Generating a study schedule.*/
+export async function generateSchedule() {
+  const url = `${BASE_URL}/`;
+  const response = await apiClient.post(url, true);
+  return response;
+}

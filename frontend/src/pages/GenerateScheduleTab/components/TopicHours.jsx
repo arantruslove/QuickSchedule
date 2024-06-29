@@ -15,7 +15,12 @@ const MAX_ITEMS_BEFORE_SCROLL = 5; // Set the number of items before scroll
 const ITEM_HEIGHT = 34; // Approximate height of each item
 const dropdownMaxHeight = MAX_ITEMS_BEFORE_SCROLL * ITEM_HEIGHT;
 
-function TopicHours({ plansData, onHoursClick, isGenerateScheduleActive }) {
+function TopicHours({
+  plansData,
+  onHoursClick,
+  isGenerateScheduleActive,
+  onGenerateScheduleClick,
+}) {
   const [topicNumber, setTopicNumber] = useState(0);
 
   const currentPlan = plansData[topicNumber];
@@ -90,7 +95,11 @@ function TopicHours({ plansData, onHoursClick, isGenerateScheduleActive }) {
         </ListGroup>
       </div>
       <div className="d-flex justify-content-start">
-        <Button variant="success" disabled={!isGenerateScheduleActive}>
+        <Button
+          variant="success"
+          disabled={!isGenerateScheduleActive}
+          onClick={onGenerateScheduleClick}
+        >
           Generate Schedule
         </Button>
       </div>

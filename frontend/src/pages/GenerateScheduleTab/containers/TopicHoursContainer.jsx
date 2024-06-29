@@ -1,9 +1,13 @@
 import { useState, useEffect } from "react";
 import { Spinner } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 
 import TopicHours from "../components/TopicHours";
 import { formatDate } from "../utils";
-import { getPlansWithRequiredHours } from "../../../services/scheduleRequests";
+import {
+  generateSchedule,
+  getPlansWithRequiredHours,
+} from "../../../services/scheduleRequests";
 import { updateTopic } from "../../../services/planRequests";
 
 // Utility functions
@@ -35,6 +39,8 @@ function TopicHoursContainer() {
   const [plansData, setPlansData] = useState(null);
   const [notViablePlan, setNotViablePlan] = useState(null);
   const [isComplete, setIsComplete] = useState(false);
+
+  const navigate = useNavigate();
 
   const updatePageData = async () => {
     const response = await getPlansWithRequiredHours();
@@ -70,6 +76,14 @@ function TopicHoursContainer() {
     }
   };
 
+  const handleGenerateScheduleClick = async () => {
+    const response = await generateSchedule();
+
+    if (response.ok) {
+      navigate("/home");
+    }
+  };
+
   return (
     <>
       {isLoading ? (
@@ -93,6 +107,7 @@ function TopicHoursContainer() {
               plansData={plansData}
               onHoursClick={handeHoursClick}
               isGenerateScheduleActive={isComplete}
+              onGenerateScheduleClick={handleGenerateScheduleClick}
             />
           )}
         </>
