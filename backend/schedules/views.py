@@ -140,7 +140,11 @@ def plan_required_hours(request):
         )
 
         # Getting plan objects from plan instances
-        plan_instances = PrivatePlan.objects.filter(user=request.user, is_selected=True)
+        plan_instances = (
+            PrivatePlan.objects.filter(user=request.user, is_selected=True)
+            .order_by("id")
+            .reverse()
+        )
         plan_classes = convert_plan_queryset_to_class_instances(
             plan_instances, len(hours_list), start_date
         )
