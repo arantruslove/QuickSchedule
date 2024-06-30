@@ -22,7 +22,7 @@ function CreatePlanContainer() {
 
     if (response.ok) {
       // Ordering from most recent to least
-      setPrivatePlansData(data.reverse());
+      setPrivatePlansData(data);
       setIsLoading(false);
     }
   };
