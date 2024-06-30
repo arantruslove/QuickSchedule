@@ -48,7 +48,7 @@ function CreatePlan({
             }}
           >
             <InputGroup className="mb-3">
-              <InputGroup.Text>Plan Title</InputGroup.Text>
+              <InputGroup.Text>Create Plan</InputGroup.Text>
               <Form.Control
                 placeholder="Enter plan title"
                 value={planTitle}
@@ -69,6 +69,11 @@ function CreatePlan({
             </div>
           ) : (
             <div style={{ overflowY: "auto", flexGrow: 1 }}>
+              {privatePlansData.length === 0 && (
+                <Card.Text className="text-danger">
+                  * You do not have any Plans. Create a Plan above.
+                </Card.Text>
+              )}
               <ListGroup as="ol">
                 {privatePlansData.map((privatePlan) => (
                   <ListGroup.Item

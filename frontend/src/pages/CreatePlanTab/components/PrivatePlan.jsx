@@ -50,7 +50,6 @@ function PrivatePlan({
           ) : (
             <Card.Title className="mb-3">{privatePlanTitle}</Card.Title>
           )}
-
           <Form
             onSubmit={(event) => {
               event.preventDefault();
@@ -58,7 +57,7 @@ function PrivatePlan({
             }}
           >
             <InputGroup className="mb-3">
-              <InputGroup.Text>Topic Title</InputGroup.Text>
+              <InputGroup.Text>Add Topic</InputGroup.Text>
               <Form.Control
                 placeholder="Enter topic title"
                 value={newTopicTitle}
@@ -79,6 +78,12 @@ function PrivatePlan({
             </div>
           ) : (
             <div style={{ overflowY: "auto", flexGrow: 1 }}>
+              {topicsData.length === 0 && (
+                <Card.Text className="text-danger">
+                  * There are currently no Topics associated with this Plan. Add
+                  Topics above.
+                </Card.Text>
+              )}
               <ListGroup as="ol" numbered="true">
                 {topicsData.map((topic) => (
                   <ListGroup.Item

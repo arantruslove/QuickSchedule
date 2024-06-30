@@ -57,6 +57,11 @@ function TopicHours({
         </Pagination>
       </Card.Title>
       <div style={{ overflowY: "auto", flexGrow: 1 }}>
+        {currentTopics.length === 0 && (
+          <Card.Text className="text-danger">
+            * This Plan does not have any Topics. Please add Topics to it.
+          </Card.Text>
+        )}
         <ListGroup numbered="true">
           {currentTopics.map((topic, index) => (
             <ListGroup.Item

@@ -12,6 +12,11 @@ function SelectPlans({ plansData, onCheckChange }) {
         Select Plans to Include in the Schedule
       </Card.Title>
       <div style={{ overflowY: "auto", flexGrow: 1 }}>
+        {plansData.length === 0 && (
+          <Card.Text className="text-danger">
+            * You currently do not have any plans. Please create a Plan.
+          </Card.Text>
+        )}
         <ListGroup as="ol" numbered="true">
           {plansData.map((plan) => (
             <ListGroup.Item
