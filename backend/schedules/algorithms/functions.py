@@ -225,8 +225,9 @@ def create_schedule_topic_instances(
 
             # Adjust the data fields
             topic_data["id"] = None
-            topic_data["study_date"] = date_obj.strftime("%Y-%m-%d")
             topic_data["private_plan"] = None
+            topic_data["study_date"] = date_obj.strftime("%Y-%m-%d")
+            topic_data["hours"] = topic.hours
 
             # Save the schedule Topic instance
             serializer = TopicSerializer(data=topic_data)
