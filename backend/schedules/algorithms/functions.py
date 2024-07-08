@@ -255,6 +255,23 @@ def add_constraints(
         model.add(sum(day_indicators.values()) == int(n_topics))
 
 
+def objective_func(plans: List[Plan]):
+    """
+    Objective function for optimising the days that the Topics are allocated to.
+    Use in minimising the difference between the latter half of the Topics from their
+    final day.
+    """
+    weighted_diffs = []
+    for plan in plans:
+        halfway_index = len(plan.topics) // 2
+        for i in range(halfway_index, len(plan.topics) - 1):
+            topic = plan.topics[i]
+            diff = plan.final_day - topic.assigned_day
+            weighted_diffs.append(diff)
+
+    return sum(weighted_diffs)
+
+
 def convert_assigned_days_to_ints(plans: List[Plan], solver: cp_model.CpSolver) -> None:
     """Converts the IntVar type to integer after the model has been solved."""
     for plan in plans:
@@ -296,7 +313,9 @@ def create_schedule(
 
     # Carry out the constrained optimisation
     add_constraints(topic_split_plans, model, n_topics_per_day)
-    model.maximize(0)  # Currently not optimising anything but this can be changed
+    objective = objective_func(topic_split_plans)
+    model.minimize(objective)
+
     solver = cp_model.CpSolver()
     status = solver.Solve(model)
 
