@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from typing import List
+from ortools.sat.python import cp_model
 
 
 @dataclass
@@ -7,6 +8,8 @@ class Topic:
     id: int
     title: str
     hours: float
+    # Assigned when used in OR Tools scheduling
+    assigned_day: cp_model.IntVar | int = None
 
 
 @dataclass

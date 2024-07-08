@@ -18,7 +18,7 @@ from schedules.algorithms.functions import (
     are_plan_hours_viable,
     add_required_hours_field,
     format_viability_result,
-    allocate_topics,
+    create_schedule,
     create_schedule_topic_instances,
 )
 
@@ -214,7 +214,7 @@ def schedule_view(request):
             )
 
             # Create the schedule and the schedule Topic instances
-            schedule = allocate_topics(plan_classes, hours_list)
+            schedule = create_schedule(plan_classes, hours_list)
             create_schedule_topic_instances(schedule, start_date)
 
             # Returning the schedule Topics in the response
