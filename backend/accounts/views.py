@@ -178,23 +178,11 @@ def initiate_password_reset(request):
             status=status.HTTP_404_NOT_FOUND,
         )
 
-    # Checking if there is already a password reset link that is yet to be used
-    # Check for existing, unused password reset link
-    existing_reset = PasswordReset.objects.filter(user=user).first()
-    if existing_reset:
-        return Response(
-            {"detail": "A password reset link has already been sent."},
-            status=status.HTTP_409_CONFLICT,
-        )
-
-    if user is None:
-        return Response(
-            {"detail": "No user with the provided username or email."},
-            status=status.HTTP_400_BAD_REQUEST,
-        )
-
     # Proceed with password reset
     with transaction.atomic():
+        # Delete any existing PasswordReset instances for the user
+        PasswordReset.objects.filter(user=user).delete()
+        
         serializer = PasswordResetSerializer(data={"user": user.id})
         if serializer.is_valid():
             password_reset = serializer.save()
