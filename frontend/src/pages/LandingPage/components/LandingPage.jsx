@@ -13,9 +13,10 @@ function LandingPage() {
             <Logo />
           </h1>
           <p className="lead mt-4">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-            nec neque ipsum. Phasellus hendrerit blandit diam, ut scelerisque
-            elit egestas sed. Duis sollicitudin diam sit amet est auctor congue.
+            QuickSchedule lets users create personalised revision schedules that
+            are tailored to fit with their routine. Simply create Plans and
+            Topics for each exam, specify how many hours you want to work on
+            each day and let our algorithm handle the rest.
           </p>
           <div className="d-flex justify-content-center mt-4">
             <Link to="/login">
