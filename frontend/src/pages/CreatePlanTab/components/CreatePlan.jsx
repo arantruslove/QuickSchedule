@@ -40,7 +40,7 @@ function CreatePlan({
         <Card.Body
           style={{ display: "flex", flexDirection: "column", height: "100%" }}
         >
-          <Card.Title className="mb-3">Create Plan</Card.Title>
+          <Card.Title className="mb-3">Your Plans</Card.Title>
           <Form
             onSubmit={(event) => {
               event.preventDefault();
