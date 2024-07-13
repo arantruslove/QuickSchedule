@@ -32,7 +32,7 @@ function LoginContainer() {
       // User login succeeded
 
       await updateLoginStatus();
-      navigate("/account");
+      navigate("/home");
     } else if (response.status === 401) {
       // User provided incorrect credentials
 
