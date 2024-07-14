@@ -6,19 +6,36 @@ import Logo from "../../../components/Logo";
 
 function LandingPage() {
   return (
-    <Container fluid className="min-vh-100 d-flex align-items-center bg-light">
-      <Row className="justify-content-md-center">
-        <Col md={8} className="text-center">
-          <h1 className="display-6">
+    <Container fluid className="min-vh-100 bg-light">
+      <Row style={{ height: "15vh" }} />
+      <Row>
+        <Col xs={2} />
+        <Col xs={8}>
+          <h1 className="display-5">
             <Logo />
           </h1>
-          <p className="lead mt-4">
-            QuickSchedule lets users create personalised revision schedules that
-            are tailored to fit with their routine. Simply create Plans and
-            Topics for each exam, specify how many hours you want to work on
-            each day and let our algorithm handle the rest.
-          </p>
-          <div className="d-flex justify-content-center mt-4">
+          <div className="lead">
+            <p>
+              <strong>QuickSchedule</strong> helps you create personalized
+              revision schedules that seamlessly integrate with your routine,
+              ensuring efficient and balanced study plans.
+            </p>
+            <ul>
+              <li>
+                Create <strong>Plans</strong> and add <strong>Topics</strong>{" "}
+                for each of your exams.
+              </li>
+              <li>
+                Specify the <strong>number of hours</strong> you aim to work on
+                each day and your <strong>exam dates</strong>.
+              </li>
+              <li>
+                Let our <strong>unique algorithm</strong> create a personalised
+                schedule based on the information you provided.
+              </li>
+            </ul>
+          </div>
+          <div className="d-flex justify-content-center mt-5">
             <Link to="/login">
               <Button variant="primary" className="mx-2">
                 Login
@@ -31,6 +48,7 @@ function LandingPage() {
             </Link>
           </div>
         </Col>
+        <Col xs={2} />
       </Row>
     </Container>
   );
