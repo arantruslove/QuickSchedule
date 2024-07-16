@@ -22,12 +22,11 @@ function SignUp({
   onPasswordChange,
   onConfirmPasswordChange,
   isSubmittable,
+  isLoading,
   onSignUp,
   signUpFailed,
   signUpSuccess,
 }) {
-  const [isLoading, setIsLoading] = useState(false);
-
   return (
     <Container
       className="align-items-center justify-content-center"
@@ -66,7 +65,6 @@ function SignUp({
                 <Form
                   onSubmit={(event) => {
                     event.preventDefault(); // Prevent the default form submission
-                    setIsLoading(true);
                     onSignUp();
                   }}
                 >

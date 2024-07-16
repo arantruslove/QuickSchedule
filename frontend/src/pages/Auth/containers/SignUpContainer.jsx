@@ -27,6 +27,7 @@ function SignUpContainer() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isEmailTaken, setIsEmailTaken] = useState(false);
   const [isInputsValid, setIsInputsValid] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [signUpFailed, setSignUpFailed] = useState(false);
   const [signUpSuccess, setSignUpSuccess] = useState(false);
 
@@ -61,6 +62,7 @@ function SignUpContainer() {
 
   // Signs up a new user when the sign up button is pressed
   const handleSignUp = async () => {
+    setIsLoading(true);
     const userInfo = { email: email, password: password };
     const response = await createUser(userInfo);
 
@@ -69,6 +71,8 @@ function SignUpContainer() {
     } else {
       setSignUpFailed(true);
     }
+
+    setIsLoading(false);
   };
 
   return (
@@ -82,6 +86,7 @@ function SignUpContainer() {
       onConfirmPasswordChange={handleConfirmPasswordChange}
       onSignUp={handleSignUp}
       isSubmittable={isInputsValid}
+      isLoading={isLoading}
       signUpFailed={signUpFailed}
       signUpSuccess={signUpSuccess}
     />

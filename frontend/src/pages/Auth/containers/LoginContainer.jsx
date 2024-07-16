@@ -12,6 +12,7 @@ function LoginContainer() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoginIncorrect, setIsLoginIncorrect] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Event handles
   const handleEmailChange = (newText) => {
@@ -25,6 +26,7 @@ function LoginContainer() {
   };
 
   const handleLogin = async () => {
+    setIsLoading(true);
     const data = { email: email, password: password };
     const response = await getAuthToken(data);
 
@@ -41,6 +43,8 @@ function LoginContainer() {
       // Another error occurred
       console.log("There has been an error processing your request.");
     }
+
+    setIsLoading(false);
   };
 
   return (
@@ -51,6 +55,7 @@ function LoginContainer() {
       onPasswordChange={handlePasswordChange}
       onLogin={handleLogin}
       isLoginIncorrect={isLoginIncorrect}
+      isLoading={isLoading}
     />
   );
 }

@@ -20,9 +20,8 @@ function Login({
   onPasswordChange,
   onLogin,
   isLoginIncorrect,
+  isLoading,
 }) {
-  const [isLoading, setIsLoading] = useState(false);
-
   let isLoginActive = false;
 
   if (email.length > 0 && password.length > 0) {
@@ -62,7 +61,6 @@ function Login({
                 noValidate
                 onSubmit={(event) => {
                   event.preventDefault(); // Prevent the default form submission
-                  setIsLoading(true);
                   onLogin();
                 }}
               >
