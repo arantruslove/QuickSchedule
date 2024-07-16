@@ -34,6 +34,18 @@ const areInputDatesValid = (plansData) => {
   return true;
 };
 
+/**Updates plansData based on id */
+const updatePlansDataFraction = (plansData, id, fraction) => {
+  const updatedPlansData = [...plansData];
+  for (const plan of updatedPlansData) {
+    if (plan["id"] === id) {
+      plan["fraction"] = fraction;
+    }
+  }
+
+  return updatedPlansData;
+};
+
 function PlanDetailsContainer({ onComplete, onIncomplete }) {
   const [isLoading, setIsLoading] = useState(true);
   const [plansData, setPlansData] = useState(null);
@@ -74,12 +86,20 @@ function PlanDetailsContainer({ onComplete, onIncomplete }) {
     if (Number(newPercent) < 0) {
       return null;
     }
-    const data = { fraction: Number(newPercent) / 100 };
-    const response = await updatePrivatePlan(planId, data);
+    const updatedFraction = Number(newPercent) / 100;
+    const data = { fraction: updatedFraction };
+    await updatePrivatePlan(planId, data);
 
-    if (response.ok) {
-      updatePageData();
-    }
+    // Optamistic update of percent input for responsiveness
+    const updatedPlansData = updatePlansDataFraction(
+      plansData,
+      planId,
+      updatedFraction
+    );
+    setPlansData(updatedPlansData);
+
+    // To ensure consistency with the server data
+    updatePageData();
   };
 
   const handleDateChange = async (planId, newExamDate) => {
