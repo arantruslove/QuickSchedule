@@ -7,6 +7,7 @@ import {
   Dropdown,
   Pagination,
   Button,
+  Spinner,
 } from "react-bootstrap";
 
 // Determining when the dropdown should start scrolling
@@ -22,6 +23,7 @@ function TopicHours({
   onGenerateScheduleClick,
 }) {
   const [topicNumber, setTopicNumber] = useState(0);
+  const [isGenerating, setIsGenerating] = useState(false);
 
   const currentPlan = plansData[topicNumber];
   const currentTopics = currentPlan["topics"];
@@ -100,13 +102,29 @@ function TopicHours({
         </ListGroup>
       </div>
       <div className="d-flex justify-content-start">
-        <Button
-          variant="success"
-          disabled={!isGenerateScheduleActive}
-          onClick={onGenerateScheduleClick}
-        >
-          Generate Schedule
-        </Button>
+        {isGenerating ? (
+          <Button variant="success" disabled>
+            <Spinner
+              as="span"
+              animation="grow"
+              size="sm"
+              role="status"
+              aria-hidden="true"
+            />
+            &nbsp;Generating...
+          </Button>
+        ) : (
+          <Button
+            variant="success"
+            disabled={!isGenerateScheduleActive}
+            onClick={() => {
+              onGenerateScheduleClick();
+              setIsGenerating(true);
+            }}
+          >
+            Generate Schedule
+          </Button>
+        )}
       </div>
     </Card.Body>
   );
