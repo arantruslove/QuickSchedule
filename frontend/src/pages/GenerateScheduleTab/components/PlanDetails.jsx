@@ -19,7 +19,7 @@ function PlanDetails({
       style={{ display: "flex", flexDirection: "column", height: "80%" }}
     >
       <Card.Title className="mb-3">
-        Enter the Percentage of Time to Spend and the Exam Date of Each Plan
+        Enter the Exam Dates and Percentage of Time to Spend on Each Plan
       </Card.Title>
       <div style={{ overflowY: "auto", flexGrow: 1 }}>
         <ListGroup as="ol" numbered>
