@@ -1,10 +1,14 @@
-import Button from "react-bootstrap/Button";
-import Form from "react-bootstrap/Form";
-import Container from "react-bootstrap/Container";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import Card from "react-bootstrap/Card";
-import Nav from "react-bootstrap/Nav";
+import { useState } from "react";
+import {
+  Button,
+  Form,
+  Container,
+  Row,
+  Col,
+  Card,
+  Nav,
+  Spinner,
+} from "react-bootstrap";
 import { Link } from "react-router-dom";
 
 import Logo from "../../../components/Logo";
@@ -22,6 +26,8 @@ function SignUp({
   signUpFailed,
   signUpSuccess,
 }) {
+  const [isLoading, setIsLoading] = useState(false);
+
   return (
     <Container
       className="align-items-center justify-content-center"
@@ -60,6 +66,7 @@ function SignUp({
                 <Form
                   onSubmit={(event) => {
                     event.preventDefault(); // Prevent the default form submission
+                    setIsLoading(true);
                     onSignUp();
                   }}
                 >
@@ -105,13 +112,25 @@ function SignUp({
                     )}
                   </Form.Group>
 
-                  <Button
-                    variant="primary"
-                    type="submit"
-                    disabled={!isSubmittable}
-                  >
-                    Sign Up
-                  </Button>
+                  {isLoading ? (
+                    <Button variant="primary" disabled>
+                      <Spinner
+                        as="span"
+                        animation="grow"
+                        size="sm"
+                        role="status"
+                        aria-hidden="true"
+                      />
+                    </Button>
+                  ) : (
+                    <Button
+                      variant="primary"
+                      type="submit"
+                      disabled={!isSubmittable}
+                    >
+                      Sign Up
+                    </Button>
+                  )}
                 </Form>
               )}
             </Card.Body>

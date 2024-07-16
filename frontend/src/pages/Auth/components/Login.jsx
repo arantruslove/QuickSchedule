@@ -1,10 +1,14 @@
-import Button from "react-bootstrap/Button";
-import Form from "react-bootstrap/Form";
-import Container from "react-bootstrap/Container";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import Card from "react-bootstrap/Card";
-import Nav from "react-bootstrap/Nav";
+import { useState } from "react";
+import {
+  Button,
+  Form,
+  Container,
+  Row,
+  Col,
+  Card,
+  Nav,
+  Spinner,
+} from "react-bootstrap";
 import { Link } from "react-router-dom";
 
 import Logo from "../../../components/Logo";
@@ -17,6 +21,8 @@ function Login({
   onLogin,
   isLoginIncorrect,
 }) {
+  const [isLoading, setIsLoading] = useState(false);
+
   let isLoginActive = false;
 
   if (email.length > 0 && password.length > 0) {
@@ -56,6 +62,7 @@ function Login({
                 noValidate
                 onSubmit={(event) => {
                   event.preventDefault(); // Prevent the default form submission
+                  setIsLoading(true);
                   onLogin();
                 }}
               >
@@ -91,13 +98,26 @@ function Login({
                 <Form.Group className="mb-3">
                   <Link to="/initiate-password-reset">Forgot Password?</Link>
                 </Form.Group>
-                <Button
-                  variant="primary"
-                  type="submit"
-                  disabled={!isLoginActive}
-                >
-                  Login
-                </Button>
+
+                {isLoading ? (
+                  <Button variant="primary" disabled>
+                    <Spinner
+                      as="span"
+                      animation="grow"
+                      size="sm"
+                      role="status"
+                      aria-hidden="true"
+                    />
+                  </Button>
+                ) : (
+                  <Button
+                    variant="primary"
+                    type="submit"
+                    disabled={!isLoginActive}
+                  >
+                    Login
+                  </Button>
+                )}
               </Form>
             </Card.Body>
           </Card>
