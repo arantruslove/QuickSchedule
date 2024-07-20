@@ -19,7 +19,10 @@ function PlanDetails({
       style={{ display: "flex", flexDirection: "column", height: "80%" }}
     >
       <Card.Title className="mb-3">
-        Enter the Exam Dates and Percentage of Time to Spend on Each Plan
+        Enter the Exam Dates and Percentage of Time to Spend on Each Plan -{" "}
+        <span style={totalFractionStyle}>
+          {Math.round(100 * totalFraction)}/100%
+        </span>
       </Card.Title>
       <div style={{ overflowY: "auto", flexGrow: 1 }}>
         <ListGroup as="ol" numbered>
@@ -57,9 +60,6 @@ function PlanDetails({
           ))}
         </ListGroup>
       </div>
-      <Card.Text className="mt-4" style={totalFractionStyle}>
-        Total: {Math.round(100 * totalFraction)}%
-      </Card.Text>
     </Card.Body>
   );
 }
