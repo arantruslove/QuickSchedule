@@ -37,11 +37,15 @@ function StudyHours({
           <Pagination.Prev
             disabled={weekNumber === 0}
             onClick={onWeekNumberDecrement}
-          />
+          >
+            &lt; Previous Week
+          </Pagination.Prev>
           <Pagination.Next
             disabled={weekNumber === weekByWeekData.length - 2}
             onClick={onWeekNumberIncrement}
-          />
+          >
+            Next Week &gt;
+          </Pagination.Next>
         </Pagination>
       </Card.Title>
       <div style={{ overflowY: "auto", flexGrow: 1 }}>
