@@ -49,13 +49,17 @@ function TopicHours({
           <Pagination.Prev
             disabled={topicNumber === 0}
             onClick={() => setTopicNumber(topicNumber - 1)}
-          />
+          >
+            &lt; Previous Subject
+          </Pagination.Prev>
           <Pagination.Next
             disabled={topicNumber === plansData.length - 1}
             onClick={() => {
               setTopicNumber(topicNumber + 1);
             }}
-          />
+          >
+            Next Subject &gt;
+          </Pagination.Next>
         </Pagination>
       </Card.Title>
       <div style={{ overflowY: "auto", flexGrow: 1 }}>
