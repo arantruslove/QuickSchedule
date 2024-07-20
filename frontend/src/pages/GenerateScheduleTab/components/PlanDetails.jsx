@@ -29,10 +29,7 @@ function PlanDetails({
               as="li"
               className="d-flex justify-content-between align-items-start"
             >
-              <div className="ms-2 me-auto">
-                <div className="fw-bold">{plan["title"]}</div>
-                id: {plan["id"]}
-              </div>
+              <div className="fw-bold ms-2 me-auto">{plan["title"]}</div>
               <Form.Control
                 type="text"
                 placeholder="% Time allocation"
