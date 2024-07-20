@@ -50,7 +50,7 @@ class User(AbstractUser):
 
     username = None
     email = models.EmailField(unique=True)
-    is_verified = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=False)
     time_zone = models.CharField(
         max_length=63, choices=TIMEZONE_CHOICES, default="Europe/London"
     )
