@@ -29,7 +29,7 @@ resource "aws_iam_instance_profile" "ssm_instance_profile" {
 # Create EC2 instances
 resource "aws_instance" "instance_1" {
   ami                         = "ami-01f10c2d6bce70d90"
-  instance_type               = "t2.micro"
+  instance_type               = "t2.medium"
   subnet_id                   = var.ec2_subnet_id
   vpc_security_group_ids      = [var.ec2_sg_id]
   private_ip                  = "10.0.1.101"
@@ -47,7 +47,7 @@ resource "aws_instance" "instance_1" {
 
 resource "aws_instance" "instance_2" {
   ami                         = "ami-01f10c2d6bce70d90"
-  instance_type               = "t2.micro"
+  instance_type               = "t2.medium"
   subnet_id                   = var.ec2_subnet_id
   vpc_security_group_ids      = [var.ec2_sg_id]
   private_ip                  = "10.0.1.102"
