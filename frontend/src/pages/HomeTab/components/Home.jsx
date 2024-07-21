@@ -4,7 +4,10 @@ import listPlugin from "@fullcalendar/list";
 import HomeModal from "./HomeModal";
 
 function Home({ events, displayModal }) {
-  const initialDate = events[0]["date"];
+  let initialDate;
+  if (events.length > 0) {
+    initialDate = events[0]["date"];
+  }
   return (
     <>
       {displayModal && <HomeModal />}
