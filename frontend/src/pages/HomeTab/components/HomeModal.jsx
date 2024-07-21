@@ -14,11 +14,12 @@ function HomeModal() {
         <ol className="mt-3">
           <li>
             If this is your first time logging in or you are yet to add any
-            Plans, please click Add Plans.
+            Plans, please click{" "}
+            <span style={{ fontWeight: "bold" }}>Add Plans</span>.
           </li>
           <li>
-            If you have already added Plans and Topics, please click Generate
-            Schedule.
+            If you have already added Plans and Topics, please click{" "}
+            <span style={{ fontWeight: "bold" }}>Generate Schedule</span>.
           </li>
         </ol>
       </Modal.Body>
