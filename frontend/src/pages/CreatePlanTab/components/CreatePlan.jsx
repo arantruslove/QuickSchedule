@@ -84,9 +84,8 @@ function CreatePlan({
                     style={{ cursor: "pointer" }}
                     onClick={() => onTabClick(privatePlan["id"])}
                   >
-                    <div className="ms-2 me-auto">
-                      <div className="fw-bold">{privatePlan["title"]}</div>
-                      id: {privatePlan["id"]}
+                    <div className="fw-bold ms-2 me-auto">
+                      {privatePlan["title"]}
                     </div>
                     <ButtonGroup>
                       <Button
