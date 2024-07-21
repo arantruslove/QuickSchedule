@@ -1,6 +1,11 @@
 import { Card, ListGroup, Form, Button } from "react-bootstrap";
 
-function SelectPlans({ plansData, onCheckChange }) {
+function SelectPlans({
+  plansData,
+  isComplete,
+  onCheckChange,
+  onNextStepClick,
+}) {
   // Ordering from highest to lowest id
   plansData.sort((a, b) => b["id"] - a["id"]);
 
@@ -42,7 +47,12 @@ function SelectPlans({ plansData, onCheckChange }) {
         </ListGroup>
       </div>
       <div className="d-flex justify-content-start mt-4">
-        <Button variant="success" className="me-2">
+        <Button
+          variant="success"
+          className="me-2"
+          disabled={!isComplete}
+          onClick={onNextStepClick}
+        >
           Next Step
         </Button>
       </div>

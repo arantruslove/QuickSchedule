@@ -18,9 +18,10 @@ const areAnySelected = (plansDict) => {
   return false;
 };
 
-function SelectPlansContainer({ onComplete, onIncomplete }) {
+function SelectPlansContainer({ onComplete, onIncomplete, onNextStepClick }) {
   const [isLoading, setIsLoading] = useState(true);
   const [plansData, setPlansData] = useState(null);
+  const [isComplete, setIsComplete] = useState(false);
 
   // useEffects
   const updatePageData = async () => {
@@ -46,8 +47,10 @@ function SelectPlansContainer({ onComplete, onIncomplete }) {
 
       if (anySelected) {
         onComplete();
+        setIsComplete(true);
       } else {
         onIncomplete();
+        setIsComplete(false);
       }
     }
   }, [plansData]);
@@ -72,7 +75,12 @@ function SelectPlansContainer({ onComplete, onIncomplete }) {
           <Spinner animation="border" variant="primary" />
         </div>
       ) : (
-        <SelectPlans plansData={plansData} onCheckChange={handleCheckChange} />
+        <SelectPlans
+          plansData={plansData}
+          isComplete={isComplete}
+          onCheckChange={handleCheckChange}
+          onNextStepClick={onNextStepClick}
+        />
       )}
     </>
   );

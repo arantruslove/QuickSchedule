@@ -85,6 +85,7 @@ function GenerateSchedule() {
           onIncomplete={() => {
             setIsSelectPlansComplete(false);
           }}
+          onNextStepClick={() => setTabNumber(3)}
         />
       )}
       {tabNumber === 3 && (
