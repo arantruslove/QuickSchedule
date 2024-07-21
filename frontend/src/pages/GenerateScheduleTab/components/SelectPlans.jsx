@@ -1,4 +1,4 @@
-import { Card, ListGroup, Form } from "react-bootstrap";
+import { Card, ListGroup, Form, Button } from "react-bootstrap";
 
 function SelectPlans({ plansData, onCheckChange }) {
   // Ordering from highest to lowest id
@@ -39,6 +39,11 @@ function SelectPlans({ plansData, onCheckChange }) {
             </ListGroup.Item>
           ))}
         </ListGroup>
+      </div>
+      <div className="d-flex justify-content-start mt-4">
+        <Button variant="success" className="me-2">
+          Next Step
+        </Button>
       </div>
     </Card.Body>
   );

@@ -20,6 +20,7 @@ function GenerateSchedule() {
           <Nav.Link
             eventKey={1}
             style={{ fontWeight: "bold" }}
+            active={tabNumber === 1}
             disabled={false}
             onClick={() => setTabNumber(1)}
           >
@@ -30,6 +31,7 @@ function GenerateSchedule() {
           <Nav.Link
             eventKey={2}
             style={{ fontWeight: "bold" }}
+            active={tabNumber === 2}
             disabled={!isStudyHoursComplete}
             onClick={() => setTabNumber(2)}
           >
@@ -40,6 +42,7 @@ function GenerateSchedule() {
           <Nav.Link
             eventKey={3}
             style={{ fontWeight: "bold" }}
+            active={tabNumber === 3}
             disabled={!(isStudyHoursComplete && isSelectPlansComplete)}
             onClick={() => setTabNumber(3)}
           >
@@ -50,6 +53,7 @@ function GenerateSchedule() {
           <Nav.Link
             eventKey={4}
             style={{ fontWeight: "bold" }}
+            active={tabNumber === 4}
             disabled={
               !(
                 isStudyHoursComplete &&
@@ -70,6 +74,9 @@ function GenerateSchedule() {
           onIncomplete={() => {
             setIsStudyHoursComplete(false);
           }}
+          onNextStepClick={() => {
+            setTabNumber(2);
+          }}
         />
       )}
       {tabNumber === 2 && (
@@ -84,6 +91,7 @@ function GenerateSchedule() {
         <PlanDetailsContainer
           onComplete={() => setIsPlanDetailsComplete(true)}
           onIncomplete={() => setIsPlanDetailsComplete(false)}
+          onNextStepClick={() => setTabNumber(4)}
         />
       )}
       {tabNumber === 4 && <TopicHoursContainer />}

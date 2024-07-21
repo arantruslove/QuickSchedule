@@ -46,17 +46,17 @@ const updatePlansDataFraction = (plansData, id, fraction) => {
   return updatedPlansData;
 };
 
-function PlanDetailsContainer({ onComplete, onIncomplete }) {
+function PlanDetailsContainer({ onComplete, onIncomplete, onNextStepClick }) {
   const [isLoading, setIsLoading] = useState(true);
   const [plansData, setPlansData] = useState(null);
   const [totalFraction, setTotalFraction] = useState(0);
+  const [isComplete, setIsComplete] = useState(false);
 
   const updatePageData = async () => {
     const response = await getPrivatePlans(true);
 
     if (response.ok) {
       const fetchedPlansData = await response.json();
-      console.log(fetchedPlansData);
       setPlansData(fetchedPlansData);
       setIsLoading(false);
     }
@@ -74,8 +74,10 @@ function PlanDetailsContainer({ onComplete, onIncomplete }) {
       setTotalFraction(total);
       if (areInputDatesValid(plansData) && total === 1) {
         onComplete();
+        setIsComplete(true);
       } else {
         onIncomplete();
+        setIsComplete(false);
       }
     }
   }, [plansData]);
@@ -124,8 +126,10 @@ function PlanDetailsContainer({ onComplete, onIncomplete }) {
         <PlanDetails
           plansData={plansData}
           totalFraction={totalFraction}
+          isComplete={isComplete}
           onPercentChange={handlePercentChange}
           onDateChange={handleDateChange}
+          onNextStepClick={onNextStepClick}
         />
       )}
     </>

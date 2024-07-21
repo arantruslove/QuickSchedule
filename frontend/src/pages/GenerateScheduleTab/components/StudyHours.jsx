@@ -19,10 +19,12 @@ const dropdownMaxHeight = MAX_ITEMS_BEFORE_SCROLL * ITEM_HEIGHT;
 function StudyHours({
   datesHours,
   weekNumber,
+  isComplete,
   onWeekNumberDecrement,
   onWeekNumberIncrement,
   onHoursClick,
   onZeroAllHours,
+  onNextStepClick,
 }) {
   const weekByWeekData = splitByWeek(datesHours);
   const currentWeekData = weekByWeekData[weekNumber];
@@ -88,7 +90,15 @@ function StudyHours({
           ))}
         </ListGroup>
       </div>
-      <div className="d-flex justify-content-start">
+      <div className="d-flex justify-content-start mt-4">
+        <Button
+          variant="success"
+          className="me-2"
+          disabled={!isComplete}
+          onClick={onNextStepClick}
+        >
+          Next Step
+        </Button>
         <Button variant="secondary" onClick={onZeroAllHours}>
           Zero All Hours
         </Button>

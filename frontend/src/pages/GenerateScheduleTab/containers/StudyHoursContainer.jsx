@@ -8,10 +8,11 @@ import {
 } from "../../../services/scheduleRequests";
 import StudyHours from "../components/StudyHours";
 
-function StudyHoursContainer({ onComplete, onIncomplete }) {
+function StudyHoursContainer({ onComplete, onIncomplete, onNextStepClick }) {
   const [isLoading, setIsLoading] = useState(true);
   const [weekNumber, setWeekNumber] = useState(0);
   const [datesHours, setDatesHours] = useState(null);
+  const [isComplete, setIsComplete] = useState(false);
 
   // useEffects
   const updatePageData = async () => {
@@ -40,8 +41,10 @@ function StudyHoursContainer({ onComplete, onIncomplete }) {
 
       if (totalHours === 0) {
         onIncomplete();
+        setIsComplete(false);
       } else {
         onComplete();
+        setIsComplete(true);
       }
     }
   }, [datesHours]);
@@ -84,10 +87,12 @@ function StudyHoursContainer({ onComplete, onIncomplete }) {
         <StudyHours
           datesHours={datesHours}
           weekNumber={weekNumber}
+          isComplete={isComplete}
           onWeekNumberDecrement={handleWeekNumberDecrement}
           onWeekNumberIncrement={handleWeekNumberIncrement}
           onHoursClick={handleHoursClick}
           onZeroAllHours={handleZeroAllHours}
+          onNextStepClick={onNextStepClick}
         />
       )}
     </>

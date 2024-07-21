@@ -1,11 +1,13 @@
 import React from "react";
-import { Card, ListGroup, Form } from "react-bootstrap";
+import { Card, ListGroup, Form, Button } from "react-bootstrap";
 
 function PlanDetails({
   plansData,
   totalFraction,
+  isComplete,
   onPercentChange,
   onDateChange,
+  onNextStepClick,
 }) {
   // Sorting by id
   plansData.sort((a, b) => b["id"] - a["id"]);
@@ -59,6 +61,16 @@ function PlanDetails({
             </ListGroup.Item>
           ))}
         </ListGroup>
+      </div>
+      <div className="d-flex justify-content-start mt-4">
+        <Button
+          variant="success"
+          className="me-2"
+          disabled={!isComplete}
+          onClick={onNextStepClick}
+        >
+          Next Step
+        </Button>
       </div>
     </Card.Body>
   );
