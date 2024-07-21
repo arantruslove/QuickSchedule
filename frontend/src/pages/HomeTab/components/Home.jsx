@@ -4,6 +4,7 @@ import listPlugin from "@fullcalendar/list";
 import HomeModal from "./HomeModal";
 
 function Home({ events, displayModal }) {
+  const initialDate = events[0]["date"];
   return (
     <>
       {displayModal && <HomeModal />}
@@ -15,6 +16,7 @@ function Home({ events, displayModal }) {
           firstDay={1}
           events={events}
           allDayText=""
+          initialDate={initialDate}
         />
       </div>
     </>
