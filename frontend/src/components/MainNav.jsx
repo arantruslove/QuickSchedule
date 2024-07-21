@@ -16,7 +16,7 @@ function MainNav() {
           navigate("/home");
         }}
       >
-        Home
+        Your Schedule
       </Nav.Link>
       <Nav.Link
         eventKey="generate-schedule"
