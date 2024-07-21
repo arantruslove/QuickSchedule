@@ -9,7 +9,7 @@ function SelectPlans({ plansData, onCheckChange }) {
       style={{ display: "flex", flexDirection: "column", height: "80%" }}
     >
       <Card.Title className="mb-3">
-        Select Plans to Include in the Schedule
+        Tick Check Boxes to Include Plans in the Schedule
       </Card.Title>
       <div style={{ overflowY: "auto", flexGrow: 1 }}>
         {plansData.length === 0 && (
@@ -17,25 +17,26 @@ function SelectPlans({ plansData, onCheckChange }) {
             * You currently do not have any plans. Please create a Plan.
           </Card.Text>
         )}
-        <ListGroup as="ol" numbered="true">
+        <ListGroup as="ul">
           {plansData.map((plan) => (
             <ListGroup.Item
               key={plan["id"]}
               as="li"
               className="d-flex justify-content-between align-items-start"
             >
-              <div className="ms-2 me-auto">
-                <div className="fw-bold">{plan["title"]}</div>
-                id: {plan["id"]}
-              </div>
               <Form.Check
-                reverse
+                className="me-2"
                 name="group1"
+                style={{ transform: "scale(1.3)" }}
+                isValid={true}
                 checked={plan["is_selected"]}
                 onChange={(event) => {
                   onCheckChange(plan["id"], event.target.checked);
                 }}
               />
+              <div className="ms-2 me-auto">
+                <div className="fw-bold">{plan["title"]}</div>
+              </div>
             </ListGroup.Item>
           ))}
         </ListGroup>
