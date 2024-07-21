@@ -46,6 +46,17 @@ const updatePlansDataFraction = (plansData, id, fraction) => {
   return updatedPlansData;
 };
 
+const updatePlansDataDate = (plansData, id, date) => {
+  const updatedPlansData = [...plansData];
+  for (const plan of updatedPlansData) {
+    if (plan["id"] === id) {
+      plan["exam_date"] = date;
+    }
+  }
+
+  return updatedPlansData;
+};
+
 function PlanDetailsContainer({ onComplete, onIncomplete, onNextStepClick }) {
   const [isLoading, setIsLoading] = useState(true);
   const [plansData, setPlansData] = useState(null);
@@ -105,12 +116,17 @@ function PlanDetailsContainer({ onComplete, onIncomplete, onNextStepClick }) {
   };
 
   const handleDateChange = async (planId, newExamDate) => {
-    const data = { exam_date: newExamDate };
-    const response = await updatePrivatePlan(planId, data);
+    // Updating on client-side
+    const updatedPlansData = updatePlansDataDate(
+      plansData,
+      planId,
+      newExamDate
+    );
+    setPlansData(updatedPlansData);
 
-    if (response.ok) {
-      updatePageData();
-    }
+    // Updating on server-side
+    const data = { exam_date: newExamDate };
+    await updatePrivatePlan(planId, data);
   };
 
   return (
