@@ -56,11 +56,17 @@ function SignUp({
                 </Nav.Item>
               </Nav>
               {signUpSuccess ? (
-                <p>
-                  Thank you for signing up! We&apos;ve just dispatched a
-                  verification email to your inbox. Please check your email and
-                  follow the instructions to complete your registration.
-                </p>
+                <>
+                  <p>
+                    Thank you for signing up! We&apos;ve just dispatched a
+                    verification email to your inbox. Please check your email
+                    and follow the instructions to complete your registration.
+                  </p>
+                  <p style={{ fontWeight: "bold" }}>
+                    *If you can&apos;t see an email in your main inbox, check
+                    your junk mail as it could be there.
+                  </p>
+                </>
               ) : (
                 <Form
                   onSubmit={(event) => {
