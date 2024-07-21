@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Card,
   ListGroup,
@@ -24,6 +25,8 @@ function TopicHours({
 }) {
   const [topicNumber, setTopicNumber] = useState(0);
   const [isGenerating, setIsGenerating] = useState(false);
+
+  const navigate = useNavigate();
 
   const currentPlan = plansData[topicNumber];
   const currentTopics = currentPlan["topics"];
@@ -65,7 +68,17 @@ function TopicHours({
       <div style={{ overflowY: "auto", flexGrow: 1 }}>
         {currentTopics.length === 0 && (
           <Card.Text className="text-danger">
-            * This Plan does not have any Topics. Please add Topics to it.
+            * This Plan does not have any Topics.{" "}
+            <span
+              style={{
+                textDecoration: "underline",
+                fontWeight: "bold",
+                cursor: "pointer",
+              }}
+              onClick={() => navigate(`/create-plan/${currentPlan["id"]}`)}
+            >
+              Click here to add Topics.
+            </span>
           </Card.Text>
         )}
         <ListGroup numbered="true">
