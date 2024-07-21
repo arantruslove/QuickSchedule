@@ -207,7 +207,7 @@ def schedule_view(request):
 
             # Getting plan objects from plan instances
             plan_instances = PrivatePlan.objects.filter(
-                user=request.user, is_selected=True
+                user=request.user, is_selected=True, required_hours__gt=0
             )
             plan_classes = convert_plan_queryset_to_class_instances(
                 plan_instances, len(hours_list), start_date
