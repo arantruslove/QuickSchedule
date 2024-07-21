@@ -50,7 +50,12 @@ function TopicHoursContainer() {
       fetchedPlansData.sort((a, b) => b["id"] - a["id"]);
       addTopicHoursField(fetchedPlansData);
 
-      setPlansData(fetchedPlansData);
+      // Filtering out any plans that have required_hours === 0
+      const filteredPlansData = fetchedPlansData.filter(
+        (plan) => plan["required_hours"] != 0
+      );
+
+      setPlansData(filteredPlansData);
       setIsComplete(areTopicHoursComplete(fetchedPlansData));
       setIsLoading(false);
     } else if (response.status === 400) {
