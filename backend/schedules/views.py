@@ -178,13 +178,12 @@ def plan_required_hours(request):
 @permission_classes([IsAuthenticated])
 @transaction.atomic
 def schedule_view(request):
-    """Generates a schedules based on the user's plans and topics."""
 
     if request.method == "GET":
         """Fetches the user's schedule Topic instances."""
         schedule_topics = Topic.objects.filter(
             user=request.user, study_date__isnull=False
-        )
+        ).order_by("study_date")
         serializer = TopicSerializer(schedule_topics, many=True)
         return Response(serializer.data)
 
