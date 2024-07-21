@@ -45,7 +45,7 @@ function HomeContainer() {
           <Spinner animation="border" variant="primary" />
         </div>
       ) : (
-        <Home events={events} displayModal={true} />
+        <Home events={events} displayModal={events.length === 0} />
       )}
     </>
   );
