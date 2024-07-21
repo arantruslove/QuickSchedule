@@ -18,12 +18,12 @@ function LandingPage() {
             <p>
               <strong>QuickSchedule</strong> helps you create personalized
               revision schedules that seamlessly integrate with your routine,
-              ensuring efficient and balanced study plans.
+              ensuring efficient and balanced study schedules.
             </p>
             <ul>
               <li>
-                Create <strong>Plans</strong> and add <strong>Topics</strong>{" "}
-                for each of your exams.
+                Add <strong>Subjects</strong> and <strong>Topics</strong> for
+                each of your exams.
               </li>
               <li>
                 Specify the <strong>number of hours</strong> you aim to work on

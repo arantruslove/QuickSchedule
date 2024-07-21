@@ -48,7 +48,7 @@ function MainNav() {
           navigate("/create-plan");
         }}
       >
-        Your Plans
+        Your Subjects
       </Nav.Link>
       <Nav.Link eventKey="account" onClick={() => navigate("/account")}>
         Account

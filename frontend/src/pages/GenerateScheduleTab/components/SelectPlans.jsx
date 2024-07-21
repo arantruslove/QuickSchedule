@@ -17,12 +17,12 @@ function SelectPlans({
       style={{ display: "flex", flexDirection: "column", height: "80%" }}
     >
       <Card.Title className="mb-3">
-        Tick Check Boxes to Include Plans in the Schedule
+        Tick Check Boxes to Include Subjects in the Schedule
       </Card.Title>
       <div style={{ overflowY: "auto", flexGrow: 1 }}>
         {plansData.length === 0 && (
           <Card.Text className="text-danger">
-            * You currently do not have any plans.{" "}
+            * You currently do not have any Subjects.{" "}
             <span
               style={{
                 textDecoration: "underline",
@@ -31,7 +31,7 @@ function SelectPlans({
               }}
               onClick={() => navigate(`/create-plan`)}
             >
-              Click here to create a Plan.
+              Click here to add a Subject.
             </span>
           </Card.Text>
         )}

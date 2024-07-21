@@ -40,7 +40,7 @@ function CreatePlan({
         <Card.Body
           style={{ display: "flex", flexDirection: "column", height: "100%" }}
         >
-          <Card.Title className="mb-3">Your Plans</Card.Title>
+          <Card.Title className="mb-3">Your Subjects</Card.Title>
           <Form
             onSubmit={(event) => {
               event.preventDefault();
@@ -48,9 +48,9 @@ function CreatePlan({
             }}
           >
             <InputGroup className="mb-3">
-              <InputGroup.Text>Create Plan</InputGroup.Text>
+              <InputGroup.Text>Add Subject</InputGroup.Text>
               <Form.Control
-                placeholder="Enter plan title"
+                placeholder="Enter subject title"
                 value={planTitle}
                 onChange={(event) => onInputChange(event.target.value)}
               />

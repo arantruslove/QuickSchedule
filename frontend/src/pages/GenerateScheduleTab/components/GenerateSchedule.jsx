@@ -35,7 +35,7 @@ function GenerateSchedule() {
             disabled={!isStudyHoursComplete}
             onClick={() => setTabNumber(2)}
           >
-            2. Select Plans
+            2. Select Subjects
           </Nav.Link>
         </Nav.Item>
         <Nav.Item>
@@ -46,7 +46,7 @@ function GenerateSchedule() {
             disabled={!(isStudyHoursComplete && isSelectPlansComplete)}
             onClick={() => setTabNumber(3)}
           >
-            3. Plan Time Allocation
+            3. Allocate Time to Subjects
           </Nav.Link>
         </Nav.Item>
         <Nav.Item>

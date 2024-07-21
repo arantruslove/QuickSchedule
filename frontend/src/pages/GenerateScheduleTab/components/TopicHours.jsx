@@ -68,7 +68,7 @@ function TopicHours({
       <div style={{ overflowY: "auto", flexGrow: 1 }}>
         {currentTopics.length === 0 && (
           <Card.Text className="text-danger">
-            * This Plan does not have any Topics.{" "}
+            * This Subject does not have any Topics.{" "}
             <span
               style={{
                 textDecoration: "underline",
