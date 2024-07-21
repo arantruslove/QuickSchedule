@@ -1,4 +1,5 @@
 import { Card, ListGroup, Form, Button } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 
 function SelectPlans({
   plansData,
@@ -6,6 +7,8 @@ function SelectPlans({
   onCheckChange,
   onNextStepClick,
 }) {
+  const navigate = useNavigate();
+
   // Ordering from highest to lowest id
   plansData.sort((a, b) => b["id"] - a["id"]);
 
@@ -19,7 +22,17 @@ function SelectPlans({
       <div style={{ overflowY: "auto", flexGrow: 1 }}>
         {plansData.length === 0 && (
           <Card.Text className="text-danger">
-            * You currently do not have any plans. Please create a Plan.
+            * You currently do not have any plans.{" "}
+            <span
+              style={{
+                textDecoration: "underline",
+                fontWeight: "bold",
+                cursor: "pointer",
+              }}
+              onClick={() => navigate(`/create-plan`)}
+            >
+              Click here to create a Plan.
+            </span>
           </Card.Text>
         )}
         <ListGroup as="ul">
