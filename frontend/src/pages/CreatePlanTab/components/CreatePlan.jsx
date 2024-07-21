@@ -71,7 +71,7 @@ function CreatePlan({
             <div style={{ overflowY: "auto", flexGrow: 1 }}>
               {privatePlansData.length === 0 && (
                 <Card.Text className="text-danger">
-                  * You do not have any Plans. Create a Plan above.
+                  * You do not have any Subjects. Add a Subject above.
                 </Card.Text>
               )}
               <ListGroup as="ol">
