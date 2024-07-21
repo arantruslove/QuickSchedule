@@ -16,24 +16,25 @@ function LandingPage() {
           </h1>
           <div className="lead">
             <p>
-              <strong>QuickSchedule</strong> helps you create personalized
-              revision schedules that seamlessly integrate with your routine,
-              ensuring efficient and balanced study schedules.
+              <strong>QuickSchedule</strong> helps you easily create
+              personalized study schedules that seamlessly integrate with your
+              routine.
             </p>
-            <ul>
+            <ol>
               <li>
                 Add <strong>Subjects</strong> and <strong>Topics</strong> for
                 each of your exams.
               </li>
               <li>
-                Specify the <strong>number of hours</strong> you aim to work on
+                Specify the <strong>number of hours</strong> you plan to work on
                 each day and your <strong>exam dates</strong>.
               </li>
               <li>
-                Let our <strong>unique algorithm</strong> create a personalised
-                schedule based on the information you provided.
+                Let our unique algorithm create a{" "}
+                <strong>personalized study schedule</strong> based on the
+                information you provided.
               </li>
-            </ul>
+            </ol>
           </div>
           <div className="d-flex justify-content-center mt-5">
             <Link to="/login">
