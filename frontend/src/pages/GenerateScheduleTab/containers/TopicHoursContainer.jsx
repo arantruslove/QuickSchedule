@@ -39,6 +39,8 @@ function TopicHoursContainer() {
   const [plansData, setPlansData] = useState(null);
   const [notViablePlan, setNotViablePlan] = useState(null);
   const [isComplete, setIsComplete] = useState(false);
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [isGenerateError, setIsGenerateError] = useState(false);
 
   const navigate = useNavigate();
 
@@ -82,10 +84,14 @@ function TopicHoursContainer() {
   };
 
   const handleGenerateScheduleClick = async () => {
+    setIsGenerating(true);
     const response = await generateSchedule();
 
     if (response.ok) {
       navigate("/home");
+    } else {
+      setIsGenerating(false);
+      setIsGenerateError(true);
     }
   };
 
@@ -112,7 +118,10 @@ function TopicHoursContainer() {
               plansData={plansData}
               onHoursClick={handeHoursClick}
               isGenerateScheduleActive={isComplete}
+              isGenerating={isGenerating}
+              displayError={isGenerateError}
               onGenerateScheduleClick={handleGenerateScheduleClick}
+              onHideModal={() => setIsGenerateError(false)}
             />
           )}
         </>
