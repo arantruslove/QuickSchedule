@@ -10,7 +10,7 @@ def send_verification_email(user, base_url, token):
     """
 
     # For tracking email verification
-    verification_link = f"{base_url}/verify-email/{token}"
+    verification_link = f"https://{base_url}/verify-email/{token}"
 
     subject = "Verify your email"
     message = f"Click the link to verify your email: {verification_link}"
@@ -25,7 +25,7 @@ def send_password_reset_email(user, base_url, token):
     """Sends a password reset email with a link to a page where a user can reset their
     password."""
 
-    verification_link = f"{base_url}/reset-password/{token}"
+    verification_link = f"https://{base_url}/reset-password/{token}"
 
     subject = "Reset your password"
     message = f"Click the link to reset your password: {verification_link}"
