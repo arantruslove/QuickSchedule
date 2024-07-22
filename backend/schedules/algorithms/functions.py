@@ -70,7 +70,10 @@ def convert_plan_queryset_to_class_instances(
     plans = []
     for plan_instance in plan_queryset:
         exam_date_str = plan_instance.exam_date.isoformat()
-        final_day = n_days_difference(exam_date_str, start_date) - 1
+
+        # Setting final_day to be the number of days fromt he start date or the last
+        # day in the n_days provided, which ever is smaller
+        final_day = min(n_days_difference(exam_date_str, start_date) - 1, n_days - 1)
 
         # Initialising a plan instance
         plan = Plan(
@@ -129,6 +132,11 @@ def are_plan_hours_viable(plans: List[Plan], hours_list: List[int]) -> Dict:
 
     # Order plans by final day
     ordered_plans: List[Plan] = sorted(plans, key=obtain_final_day)
+
+    # Checking if any of the final days are negative: these can't form a viable plan
+    for plan in ordered_plans:
+        if plan.final_day < 0:
+            return {"is_viable": False, "id": plan.id}
 
     # Creating a list of the available number of hours for each course
     available_hours_list = []
