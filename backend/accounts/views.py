@@ -39,9 +39,8 @@ def sign_up(request):
         # Sends the verification link in an email
         try:
             full_host = request.get_host()
-            scheme = request.scheme
             domain = urlsplit(f"//{full_host}").hostname
-            base_url = f"{scheme}://{domain}"
+            base_url = f"https://{domain}"
             send_verification_email(user, base_url, verification.token)
 
         except Exception as e:
@@ -182,7 +181,7 @@ def initiate_password_reset(request):
     with transaction.atomic():
         # Delete any existing PasswordReset instances for the user
         PasswordReset.objects.filter(user=user).delete()
-        
+
         serializer = PasswordResetSerializer(data={"user": user.id})
         if serializer.is_valid():
             password_reset = serializer.save()
@@ -191,7 +190,7 @@ def initiate_password_reset(request):
         full_host = request.get_host()
         scheme = request.scheme
         domain = urlsplit(f"//{full_host}").hostname
-        base_url = f"{scheme}://{domain}"
+        base_url = f"https://{domain}"
         send_password_reset_email(user, base_url, password_reset.token)
 
     return Response({"detail": "Password reset email sent."})
